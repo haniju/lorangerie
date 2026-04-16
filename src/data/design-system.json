@@ -1,0 +1,20 @@
+{
+  "title": "Design System",
+  "sections": {
+    "colors": "Couleurs",
+    "typography": "Typographie",
+    "textBlocks": "Blocs texte",
+    "buttons": "Boutons",
+    "table": "Tableau"
+  },
+  "table": {
+    "headers": ["Composant", "Variante", "Usage", "Statut"],
+    "rows": [
+      ["Bouton", "Filled", "Action principale", "Actif"],
+      ["Bouton", "Outlined", "Action secondaire", "Actif"],
+      ["Bouton", "Link", "Navigation inline", "Actif"],
+      ["Bloc texte", "Body", "Contenu courant", "Actif"],
+      ["Bloc texte", "Highlight", "Mise en avant", "Actif"]
+    ]
+  }
+}

@@ -1,0 +1,27 @@
+// ─── Container ──────────────────────────────────────────────
+
+.u-container {
+  max-width: var(--grid-max-width);
+  padding-inline: var(--grid-gutter);
+  margin-inline: auto;
+}
+
+// ─── Grid ───────────────────────────────────────────────────
+
+.u-grid {
+  display: grid;
+  gap: var(--grid-gutter);
+  grid-template-columns: repeat(var(--grid-columns), 1fr);
+}
+
+// ─── Flow (vertical rhythm) ─────────────────────────────────
+
+.u-flow > * + * {
+  margin-top: var(--flow-space, var(--space-m));
+}
+
+// ─── Section spacing ────────────────────────────────────────
+
+.u-section {
+  padding-block: var(--space-xl-2xl);
+}

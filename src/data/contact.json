@@ -1,0 +1,11 @@
+{
+  "title": "Contact",
+  "intro": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut enim ad minim veniam, quis nostrud exercitation.",
+  "form": {
+    "name": "Nom",
+    "email": "Email",
+    "subject": "Objet",
+    "message": "Message",
+    "submit": "Envoyer"
+  }
+}

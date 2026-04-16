@@ -1,0 +1,9 @@
+{
+  "logo": "L'Orangerie",
+  "links": [
+    { "label": "Accueil", "href": "/", "id": "home" },
+    { "label": "Contact", "href": "/contact.html", "id": "contact" },
+    { "label": "Design System", "href": "/design-system.html", "id": "designsystem" }
+  ],
+  "footer": "L'Orangerie"
+}

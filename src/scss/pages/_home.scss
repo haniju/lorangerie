@@ -1,0 +1,16 @@
+// ─── Home ───────────────────────────────────────────────────
+
+.hero {
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-block: var(--space-3xl);
+}
+
+.hero__content {
+  max-width: 45rem;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-m-l);
+}

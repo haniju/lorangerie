@@ -1,0 +1,62 @@
+// ─── Base button reset ──────────────────────────────────────
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  background: none;
+  transition: all var(--duration-normal) var(--ease-out);
+}
+
+// ─── Filled ─────────────────────────────────────────────────
+
+.btn--filled {
+  padding: var(--space-xs) var(--space-m);
+  background-color: var(--color-accent);
+  color: var(--color-text-inverse);
+  border: 1px solid transparent;
+
+  &:hover {
+    background-color: transparent;
+    color: var(--color-accent);
+    border-color: var(--color-accent);
+  }
+}
+
+// ─── Outlined ───────────────────────────────────────────────
+
+.btn--outlined {
+  padding: var(--space-xs) var(--space-m);
+  background-color: transparent;
+  color: var(--color-accent);
+  border: 1px solid var(--color-accent);
+
+  &:hover {
+    background-color: var(--color-accent);
+    color: var(--color-text-inverse);
+  }
+}
+
+// ─── Link (underlined hyperlink) ────────────────────────────
+
+.btn--link {
+  padding: 0;
+  font-size: var(--step-0);
+  text-transform: none;
+  letter-spacing: var(--tracking-normal);
+  color: var(--color-text-primary);
+  text-decoration: underline;
+  text-underline-offset: 0.3em;
+  text-decoration-thickness: 1px;
+
+  &:hover {
+    text-decoration-thickness: 2px;
+  }
+}
