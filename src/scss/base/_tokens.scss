@@ -64,13 +64,20 @@
   --color-border-strong: #1a1a1a;
 
   --color-accent: #1a1a1a;
+
+  // Brand palette
+  --color-orange: #FF692F;
+  --color-yellow: #DDD12C;
+  --color-green: #5EA74F;
+  --color-teal: #0D5D56;
+  --color-red: #A10702;
 }
 
 // ─── Typography ─────────────────────────────────────────────
 
 :root {
-  --font-heading: 'Georgia', 'Times New Roman', serif;
-  --font-body: -apple-system, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  --font-heading: 'Ortica Linear', 'Georgia', 'Times New Roman', serif;
+  --font-body: 'DM Sans', -apple-system, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
 
   --leading-tight: 1.1;
   --leading-snug: 1.3;

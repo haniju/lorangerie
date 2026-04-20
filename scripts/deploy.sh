@@ -24,10 +24,14 @@ npm run build
 # ─── Deploy ──────────────────────────────────────────────────
 echo "→ Deploying to $S3_BUCKET..."
 
-aws s3 sync dist/ "s3://$S3_BUCKET" \
-  --endpoint-url "$S3_ENDPOINT" \
-  --delete \
-  --cache-control "max-age=3600" \
-  --no-progress
+s3cmd sync dist/ "s3://$S3_BUCKET/" \
+  --host="$(echo $S3_ENDPOINT | sed 's|https://||')" \
+  --host-bucket="%(bucket)s.$(echo $S3_ENDPOINT | sed 's|https://||')" \
+  --access_key="$S3_ACCESS_KEY" \
+  --secret_key="$S3_SECRET_KEY" \
+  --no-mime-magic \
+  --no-check-certificate \
+  --delete-removed \
+  --add-header="Cache-Control:max-age=3600"
 
 echo "✓ Deployed to $S3_ENDPOINT/$S3_BUCKET"

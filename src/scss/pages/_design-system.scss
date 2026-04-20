@@ -37,9 +37,14 @@
   font-family: var(--font-body);
   border: 1px solid var(--color-border);
 
-  &--light { background-color: var(--color-bg-light); color: var(--color-text-primary); }
-  &--mid   { background-color: var(--color-bg-mid); color: var(--color-text-primary); }
-  &--dark  { background-color: var(--color-bg-dark); color: var(--color-text-inverse); }
+  &--light  { background-color: var(--color-bg-light); color: var(--color-text-primary); }
+  &--mid    { background-color: var(--color-bg-mid); color: var(--color-text-primary); }
+  &--dark   { background-color: var(--color-bg-dark); color: var(--color-text-inverse); }
+  &--orange { background-color: var(--color-orange); color: #fff; }
+  &--yellow { background-color: var(--color-yellow); color: var(--color-text-primary); }
+  &--green  { background-color: var(--color-green); color: #fff; }
+  &--teal   { background-color: var(--color-teal); color: #fff; }
+  &--red    { background-color: var(--color-red); color: #fff; }
 }
 
 // ─── Type specimens ─────────────────────────────────────────
