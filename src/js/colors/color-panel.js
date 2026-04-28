@@ -161,14 +161,14 @@ function renderCatalog() {
 
   catalogEl.innerHTML = html
 
-  // Bind catalog clicks
+  // Bind catalog clicks — load HSL values as starting point
+  // but keep editing the original tint (don't switch editingTintId)
   catalogEl.querySelectorAll('[data-catalog-tint-id]').forEach(el => {
     el.addEventListener('click', () => {
       const tint = getTintById(el.dataset.catalogTintId)
       if (tint) {
         currentHsl = { ...tint.hsl }
-        currentName = tint.name
-        editingTintId = tint.id
+        // Keep the original tint's name and editingTintId unchanged
         renderPanel()
         updateLivePreview()
       }

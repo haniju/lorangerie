@@ -30,11 +30,11 @@
       "id": "bg-light",
       "name": "Bg Light",
       "variable": "color-bg-light",
-      "hex": "#f3f3ed",
+      "hex": "#e7f1e5",
       "hsl": {
-        "h": 60,
-        "s": 19,
-        "l": 94
+        "h": 110,
+        "s": 29,
+        "l": 92
       },
       "groupId": "fonds",
       "order": 0
@@ -43,11 +43,11 @@
       "id": "bg-mid",
       "name": "Bg Mid",
       "variable": "color-bg-mid",
-      "hex": "#e8e8e3",
+      "hex": "#e2eeed",
       "hsl": {
-        "h": 60,
-        "s": 10,
-        "l": 90
+        "h": 175,
+        "s": 28,
+        "l": 91
       },
       "groupId": "fonds",
       "order": 1
@@ -69,11 +69,11 @@
       "id": "text-primary",
       "name": "Text Primary",
       "variable": "color-text-primary",
-      "hex": "#1a1a1a",
+      "hex": "#300908",
       "hsl": {
-        "h": 0,
-        "s": 0,
-        "l": 10
+        "h": 2,
+        "s": 72,
+        "l": 11
       },
       "groupId": "texte",
       "order": 0
@@ -82,11 +82,11 @@
       "id": "text-secondary",
       "name": "Text Secondary",
       "variable": "color-text-secondary",
-      "hex": "#6b6b6b",
+      "hex": "#18170c",
       "hsl": {
-        "h": 0,
-        "s": 0,
-        "l": 42
+        "h": 56,
+        "s": 35,
+        "l": 7
       },
       "groupId": "texte",
       "order": 1
