@@ -49,29 +49,36 @@
   --grid-columns: 12;
 }
 
-// ─── Colors (greyscale) ─────────────────────────────────────
+/* COLORS:START */
 
 :root {
-  --color-bg-light: #f5f5f0;
+  // Fonds
+  --color-bg-light: #f3f3ed;
   --color-bg-mid: #e8e8e3;
   --color-bg-dark: #1a1a1a;
 
+  // Texte
   --color-text-primary: #1a1a1a;
   --color-text-secondary: #6b6b6b;
   --color-text-inverse: #f5f5f0;
 
+  // Bordures
   --color-border: #d4d4cf;
   --color-border-strong: #1a1a1a;
 
-  --color-accent: #1a1a1a;
-
-  // Brand palette
+  // Brand
   --color-orange: #FF692F;
   --color-yellow: #DDD12C;
   --color-green: #5EA74F;
   --color-teal: #0D5D56;
   --color-red: #A10702;
+
+  // Sans groupe
+  --color-accent: #1a1a1a;
+
 }
+
+/* COLORS:END */
 
 // ─── Typography ─────────────────────────────────────────────
 

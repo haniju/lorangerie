@@ -1,0 +1,436 @@
+// ─── Color Tabs ─────────────────────────────────────────────
+
+.ds-colors__header {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-m);
+  margin-bottom: var(--space-l);
+  flex-wrap: wrap;
+}
+
+.ds-colors__tabs {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-xs);
+  font-family: var(--font-body);
+  font-size: var(--step--2);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+}
+
+.ds-colors__tab {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: var(--color-text-secondary);
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  position: relative;
+  transition: color var(--duration-fast) var(--ease-out);
+
+  &::before {
+    content: '|';
+    position: relative;
+    margin-right: var(--space-xs);
+    color: var(--color-text-secondary);
+    pointer-events: none;
+  }
+
+  &:first-child::before {
+    display: none;
+  }
+
+  &:hover {
+    color: var(--color-text-primary);
+  }
+
+  &.is-active {
+    color: var(--color-text-primary);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+}
+
+.ds-colors__tab-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3xs);
+  margin-left: var(--space-3xs);
+}
+
+.ds-colors__tab-btn {
+  background: none;
+  border: none;
+  padding: 0.15em;
+  cursor: pointer;
+  color: var(--color-text-secondary);
+  font-size: var(--step--1);
+  line-height: 1;
+  transition: color var(--duration-fast) var(--ease-out);
+
+  &:hover {
+    color: var(--color-text-primary);
+  }
+}
+
+// ─── Tab content visibility ─────────────────────────────────
+
+[data-tab-content] {
+  display: none;
+
+  &.is-active {
+    display: block;
+  }
+}
+
+// ─── Charte layout (grid of swatches) ───────────────────────
+
+.ds-charte__group {
+  margin-bottom: var(--space-l);
+}
+
+.ds-charte__group-name {
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  font-weight: 500;
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-s);
+}
+
+.ds-charte__swatches {
+  display: flex;
+  gap: var(--space-s);
+  flex-wrap: wrap;
+}
+
+.ds-charte__swatch {
+  flex: 1;
+  min-width: 8rem;
+  max-width: 16rem;
+  cursor: pointer;
+  position: relative;
+  transition: opacity var(--duration-fast) var(--ease-out);
+
+  &:hover {
+    opacity: 0.85;
+  }
+
+  &:hover .ds-charte__swatch-edit {
+    opacity: 1;
+  }
+}
+
+.ds-charte__swatch-color {
+  aspect-ratio: 3 / 2;
+  border: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ds-charte__swatch-edit {
+  opacity: 0;
+  color: inherit;
+  font-size: var(--step-1);
+  transition: opacity var(--duration-fast) var(--ease-out);
+  pointer-events: none;
+}
+
+.ds-charte__swatch-info {
+  padding-top: var(--space-3xs);
+  font-family: var(--font-body);
+  font-size: var(--step--2);
+}
+
+.ds-charte__swatch-hex {
+  color: var(--color-text-secondary);
+}
+
+.ds-charte__swatch-name {
+  color: var(--color-text-primary);
+}
+
+// ─── General layout (list) ──────────────────────────────────
+
+.ds-general__header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-s);
+  margin-bottom: var(--space-m);
+}
+
+.ds-general__groups {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-l);
+
+  @media (max-width: 40rem) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ds-general__group {
+  // Each group block
+}
+
+.ds-general__group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-xs);
+}
+
+.ds-general__group-name {
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.ds-general__group-actions {
+  display: flex;
+  gap: var(--space-3xs);
+  opacity: 0;
+  transition: opacity var(--duration-fast) var(--ease-out);
+
+  .ds-general__group:hover & {
+    opacity: 1;
+  }
+}
+
+.ds-general__group-btn {
+  background: none;
+  border: none;
+  padding: 0.2em 0.4em;
+  cursor: pointer;
+  color: var(--color-text-secondary);
+  font-size: var(--step--2);
+  font-family: var(--font-body);
+  transition: color var(--duration-fast) var(--ease-out);
+
+  &:hover {
+    color: var(--color-text-primary);
+  }
+}
+
+.ds-general__tint {
+  display: flex;
+  align-items: center;
+  gap: var(--space-s);
+  padding: var(--space-3xs) 0;
+  cursor: pointer;
+  position: relative;
+  transition: background-color var(--duration-fast) var(--ease-out);
+
+  &:hover {
+    .ds-general__tint-check {
+      opacity: 1;
+    }
+    .ds-general__tint-name {
+      font-weight: 600;
+    }
+  }
+
+  &.is-selected {
+    .ds-general__tint-check {
+      opacity: 1;
+    }
+    .ds-general__tint-name {
+      font-weight: 600;
+    }
+  }
+}
+
+.ds-general__tint-swatch {
+  width: 40%;
+  aspect-ratio: 4 / 1;
+  border: 1px solid var(--color-border);
+  flex-shrink: 0;
+  display: flex;
+  align-items: flex-end;
+  padding: var(--space-3xs);
+}
+
+.ds-general__tint-hex {
+  font-family: var(--font-body);
+  font-size: var(--step--2);
+  opacity: 0.8;
+}
+
+.ds-general__tint-name {
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  color: var(--color-text-primary);
+  transition: font-weight var(--duration-fast) var(--ease-out);
+}
+
+.ds-general__tint-check {
+  margin-left: auto;
+  opacity: 0;
+  cursor: pointer;
+  accent-color: var(--color-text-primary);
+  width: 1rem;
+  height: 1rem;
+  transition: opacity var(--duration-fast) var(--ease-out);
+}
+
+// ─── Charte dropdown ────────────────────────────────────────
+
+.ds-charte__dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 100;
+  background: var(--color-bg-light);
+  border: 1px solid var(--color-border);
+  padding: var(--space-s);
+  min-width: 16rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  display: none;
+
+  &.is-open {
+    display: block;
+  }
+}
+
+.ds-charte__dropdown-title {
+  font-family: var(--font-body);
+  font-size: var(--step--2);
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  margin-bottom: var(--space-xs);
+}
+
+.ds-charte__dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-3xs) 0;
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  cursor: grab;
+
+  &:active {
+    cursor: grabbing;
+  }
+
+  input[type="checkbox"] {
+    accent-color: var(--color-text-primary);
+  }
+
+  .drag-handle {
+    color: var(--color-text-secondary);
+    cursor: grab;
+    user-select: none;
+  }
+}
+
+// ─── Buttons ────────────────────────────────────────────────
+
+.ds-colors__btn {
+  background: none;
+  border: 1px solid var(--color-border);
+  padding: var(--space-3xs) var(--space-xs);
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: var(--step--2);
+  color: var(--color-text-primary);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  transition: all var(--duration-fast) var(--ease-out);
+
+  &:hover {
+    background: var(--color-text-primary);
+    color: var(--color-text-inverse);
+    border-color: var(--color-text-primary);
+  }
+
+  &--primary {
+    background: var(--color-text-primary);
+    color: var(--color-text-inverse);
+
+    &:hover {
+      background: var(--color-text-secondary);
+    }
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    &:hover {
+      background: none;
+      color: var(--color-text-primary);
+      border-color: var(--color-border);
+    }
+  }
+}
+
+// ─── Selection bar ──────────────────────────────────────────
+
+.ds-general__selection-bar {
+  display: none;
+  align-items: center;
+  gap: var(--space-s);
+  padding: var(--space-xs);
+  background: var(--color-bg-mid);
+  margin-bottom: var(--space-m);
+
+  &.is-visible {
+    display: flex;
+  }
+}
+
+.ds-general__selection-count {
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  color: var(--color-text-secondary);
+}
+
+// ─── Popup / Modal ──────────────────────────────────────────
+
+.ds-popup {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.3);
+
+  &.is-open {
+    display: flex;
+  }
+}
+
+.ds-popup__content {
+  background: var(--color-bg-light);
+  border: 1px solid var(--color-border);
+  padding: var(--space-m);
+  max-width: 24rem;
+  width: 90%;
+}
+
+.ds-popup__title {
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  font-weight: 600;
+  margin-bottom: var(--space-s);
+}
+
+.ds-popup__text {
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-m);
+}
+
+.ds-popup__actions {
+  display: flex;
+  gap: var(--space-xs);
+  justify-content: flex-end;
+}

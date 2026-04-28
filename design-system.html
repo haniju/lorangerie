@@ -37,36 +37,30 @@
 
     <!-- Colors -->
     <section class="ds-section" data-fade-in>
-      <h2 class="ds-section__title">Couleurs</h2>
-      <div class="ds-swatches">
-        <div class="ds-swatch ds-swatch--light">
-          <span>Light — #f5f5f0</span>
+      <div class="ds-colors">
+        <div class="ds-colors__header">
+          <h2 class="ds-section__title" style="margin-bottom: 0;">Couleurs</h2>
+          <div class="ds-colors__tabs">
+            <button class="ds-colors__tab is-active" data-tab="charte">Charte</button>
+            <button class="ds-colors__tab" data-tab="general">General</button>
+          </div>
         </div>
-        <div class="ds-swatch ds-swatch--mid">
-          <span>Mid — #e8e8e3</span>
-        </div>
-        <div class="ds-swatch ds-swatch--dark">
-          <span>Dark — #1a1a1a</span>
-        </div>
-      </div>
-      <div class="ds-swatches" style="margin-top: var(--space-s);">
-        <div class="ds-swatch ds-swatch--orange">
-          <span>Orange — #FF692F</span>
-        </div>
-        <div class="ds-swatch ds-swatch--yellow">
-          <span>Yellow — #DDD12C</span>
-        </div>
-        <div class="ds-swatch ds-swatch--green">
-          <span>Green — #5EA74F</span>
-        </div>
-        <div class="ds-swatch ds-swatch--teal">
-          <span>Teal — #0D5D56</span>
-        </div>
-        <div class="ds-swatch ds-swatch--red">
-          <span>Red — #A10702</span>
-        </div>
+        <div class="ds-colors__content" data-tab-content="charte"></div>
+        <div class="ds-colors__content" data-tab-content="general"></div>
       </div>
     </section>
+
+    <!-- Color Panel -->
+    <div class="ds-color-panel" id="color-panel"></div>
+
+    <!-- Popup container -->
+    <div class="ds-popup" id="color-popup">
+      <div class="ds-popup__content">
+        <h3 class="ds-popup__title"></h3>
+        <p class="ds-popup__text"></p>
+        <div class="ds-popup__actions"></div>
+      </div>
+    </div>
 
     <!-- Typography -->
     <section class="ds-section" data-fade-in>

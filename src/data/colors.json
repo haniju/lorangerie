@@ -1,0 +1,215 @@
+{
+  "groups": [
+    {
+      "id": "fonds",
+      "name": "Fonds",
+      "order": 0,
+      "showInCharte": true
+    },
+    {
+      "id": "texte",
+      "name": "Texte",
+      "order": 1,
+      "showInCharte": true
+    },
+    {
+      "id": "bordures",
+      "name": "Bordures",
+      "order": 2,
+      "showInCharte": true
+    },
+    {
+      "id": "brand",
+      "name": "Brand",
+      "order": 3,
+      "showInCharte": true
+    }
+  ],
+  "tints": [
+    {
+      "id": "bg-light",
+      "name": "Bg Light",
+      "variable": "color-bg-light",
+      "hex": "#f3f3ed",
+      "hsl": {
+        "h": 60,
+        "s": 19,
+        "l": 94
+      },
+      "groupId": "fonds",
+      "order": 0
+    },
+    {
+      "id": "bg-mid",
+      "name": "Bg Mid",
+      "variable": "color-bg-mid",
+      "hex": "#e8e8e3",
+      "hsl": {
+        "h": 60,
+        "s": 10,
+        "l": 90
+      },
+      "groupId": "fonds",
+      "order": 1
+    },
+    {
+      "id": "bg-dark",
+      "name": "Bg Dark",
+      "variable": "color-bg-dark",
+      "hex": "#1a1a1a",
+      "hsl": {
+        "h": 0,
+        "s": 0,
+        "l": 10
+      },
+      "groupId": "fonds",
+      "order": 2
+    },
+    {
+      "id": "text-primary",
+      "name": "Text Primary",
+      "variable": "color-text-primary",
+      "hex": "#1a1a1a",
+      "hsl": {
+        "h": 0,
+        "s": 0,
+        "l": 10
+      },
+      "groupId": "texte",
+      "order": 0
+    },
+    {
+      "id": "text-secondary",
+      "name": "Text Secondary",
+      "variable": "color-text-secondary",
+      "hex": "#6b6b6b",
+      "hsl": {
+        "h": 0,
+        "s": 0,
+        "l": 42
+      },
+      "groupId": "texte",
+      "order": 1
+    },
+    {
+      "id": "text-inverse",
+      "name": "Text Inverse",
+      "variable": "color-text-inverse",
+      "hex": "#f5f5f0",
+      "hsl": {
+        "h": 60,
+        "s": 19,
+        "l": 95
+      },
+      "groupId": "texte",
+      "order": 2
+    },
+    {
+      "id": "border",
+      "name": "Border",
+      "variable": "color-border",
+      "hex": "#d4d4cf",
+      "hsl": {
+        "h": 60,
+        "s": 5,
+        "l": 82
+      },
+      "groupId": "bordures",
+      "order": 0
+    },
+    {
+      "id": "border-strong",
+      "name": "Border Strong",
+      "variable": "color-border-strong",
+      "hex": "#1a1a1a",
+      "hsl": {
+        "h": 0,
+        "s": 0,
+        "l": 10
+      },
+      "groupId": "bordures",
+      "order": 1
+    },
+    {
+      "id": "accent",
+      "name": "Accent",
+      "variable": "color-accent",
+      "hex": "#1a1a1a",
+      "hsl": {
+        "h": 0,
+        "s": 0,
+        "l": 10
+      },
+      "groupId": null,
+      "order": 0
+    },
+    {
+      "id": "orange",
+      "name": "Orange",
+      "variable": "color-orange",
+      "hex": "#FF692F",
+      "hsl": {
+        "h": 17,
+        "s": 100,
+        "l": 59
+      },
+      "groupId": "brand",
+      "order": 0
+    },
+    {
+      "id": "yellow",
+      "name": "Yellow",
+      "variable": "color-yellow",
+      "hex": "#DDD12C",
+      "hsl": {
+        "h": 56,
+        "s": 75,
+        "l": 52
+      },
+      "groupId": "brand",
+      "order": 1
+    },
+    {
+      "id": "green",
+      "name": "Green",
+      "variable": "color-green",
+      "hex": "#5EA74F",
+      "hsl": {
+        "h": 110,
+        "s": 36,
+        "l": 48
+      },
+      "groupId": "brand",
+      "order": 2
+    },
+    {
+      "id": "teal",
+      "name": "Teal",
+      "variable": "color-teal",
+      "hex": "#0D5D56",
+      "hsl": {
+        "h": 175,
+        "s": 76,
+        "l": 21
+      },
+      "groupId": "brand",
+      "order": 3
+    },
+    {
+      "id": "red",
+      "name": "Red",
+      "variable": "color-red",
+      "hex": "#A10702",
+      "hsl": {
+        "h": 2,
+        "s": 97,
+        "l": 32
+      },
+      "groupId": "brand",
+      "order": 4
+    }
+  ],
+  "charteUngroupedTintIds": [
+    "accent"
+  ]
+}

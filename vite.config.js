@@ -1,8 +1,10 @@
 import { resolve } from 'path'
 import { defineConfig } from 'vite'
+import colorsPlugin from './vite-plugin-colors.js'
 
 export default defineConfig({
   root: '.',
+  plugins: [colorsPlugin()],
   build: {
     outDir: 'dist',
     rollupOptions: {
