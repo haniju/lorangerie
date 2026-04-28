@@ -46,10 +46,12 @@ export function openPanel(tintId = null) {
   renderPanel()
   isOpen = true
   panelEl.classList.add('is-open')
+  highlightEditingTint()
 }
 
 export function closePanel() {
   if (!panelEl) return
+  clearEditingHighlight()
   isOpen = false
   panelEl.classList.remove('is-open')
   editingTintId = null
@@ -302,4 +304,18 @@ async function handleDelete() {
     await save()
     closePanel()
   }
+}
+
+function highlightEditingTint() {
+  clearEditingHighlight()
+  if (!editingTintId) return
+  document.querySelectorAll(`[data-tint-id="${editingTintId}"]`).forEach(el => {
+    el.classList.add('is-editing')
+  })
+}
+
+function clearEditingHighlight() {
+  document.querySelectorAll('.is-editing').forEach(el => {
+    el.classList.remove('is-editing')
+  })
 }

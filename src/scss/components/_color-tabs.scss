@@ -121,6 +121,10 @@
   &:hover .ds-charte__swatch-edit {
     opacity: 1;
   }
+
+  &.is-editing .ds-charte__swatch-color {
+    border-color: var(--color-text-secondary);
+  }
 }
 
 .ds-charte__swatch-color {
@@ -243,6 +247,10 @@
       font-weight: 600;
     }
   }
+}
+
+.ds-general__tint.is-editing .ds-general__tint-swatch {
+  border-color: var(--color-text-secondary);
 }
 
 .ds-general__tint-swatch {

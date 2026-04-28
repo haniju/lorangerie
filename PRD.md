@@ -103,11 +103,13 @@ Le panel s'ouvre en bas de page et contient :
 
 1. **Cible d'edition stable** : quand le panel est ouvert pour une teinte X, `editingTintId` reste X pendant toute la session du panel, quels que soient les clics dans le catalogue. Selectionner une teinte A dans le catalogue charge uniquement ses valeurs HSL dans les sliders — c'est un raccourci pour partir d'une couleur existante. Le nom reste celui de X. L'enregistrement modifie X, jamais A.
 
-2. **Live preview** : les modifications des sliders sont immediatement refletees sur la CSS custom property de la teinte en cours d'edition et sur les swatches visibles.
+2. **Highlight de la cible** : quand le panel est ouvert pour une teinte X, le contour de la boite de X (swatch dans CHARTE, tint-swatch dans GENERAL) est legerement renforce (classe `.is-editing`, border passe a `--color-text-secondary`) pour indiquer visuellement quelle teinte est en cours d'edition.
 
-3. **Annulation** : restaure les valeurs HSL originales de la teinte et ferme le panel.
+3. **Live preview** : les modifications des sliders sont immediatement refletees sur la CSS custom property de la teinte en cours d'edition et sur les swatches visibles.
 
-4. **Suppression** : verifie l'usage de la variable dans les SCSS avant de supprimer. Propose une confirmation si la variable est utilisee.
+4. **Annulation** : restaure les valeurs HSL originales de la teinte et ferme le panel.
+
+5. **Suppression** : verifie l'usage de la variable dans les SCSS avant de supprimer. Propose une confirmation si la variable est utilisee.
 
 ---
 
