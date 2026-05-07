@@ -96,10 +96,10 @@ function renderSwatch(tint) {
   return `<div class="ds-charte__swatch" data-tint-id="${tint.id}">
     <div class="ds-charte__swatch-color" style="background-color: ${tint.hex}; color: ${textColor};">
       <span class="ds-charte__swatch-edit">&#9998;</span>
-    </div>
-    <div class="ds-charte__swatch-info">
-      <div class="ds-charte__swatch-hex">${tint.hex.toUpperCase()}</div>
-      <div class="ds-charte__swatch-name">${tint.name}</div>
+      <div class="ds-charte__swatch-info">
+        <div class="ds-charte__swatch-hex">${tint.hex.toUpperCase()}</div>
+        <div class="ds-charte__swatch-name">${tint.name}</div>
+      </div>
     </div>
   </div>`
 }

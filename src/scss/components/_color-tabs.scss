@@ -133,6 +133,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
 }
 
 .ds-charte__swatch-edit {
@@ -144,17 +145,20 @@
 }
 
 .ds-charte__swatch-info {
-  padding-top: var(--space-3xs);
+  position: absolute;
+  bottom: var(--space-3xs);
+  left: var(--space-3xs);
   font-family: var(--font-body);
   font-size: var(--step--2);
+  color: inherit;
 }
 
 .ds-charte__swatch-hex {
-  color: var(--color-text-secondary);
+  opacity: 0.7;
 }
 
 .ds-charte__swatch-name {
-  color: var(--color-text-primary);
+  // inherits color from .ds-charte__swatch-color
 }
 
 // ─── General layout (list) ──────────────────────────────────
