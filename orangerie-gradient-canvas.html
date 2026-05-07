@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Orangerie — Gradient Canvas</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: #F4EFE6; }
+canvas { display: block; position: fixed; inset: 0; width: 100%; height: 100%; }
+#grain { position: fixed; inset: 0; pointer-events: none; z-index: 2; }
+
+/* ── PANEL ── */
+#panel {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 100;
+  font-family: 'Helvetica Neue', Helvetica, sans-serif;
+  font-size: 12px;
+  width: 260px;
+}
+
+#toggle {
+  width: 100%;
+  background: rgba(255,255,255,0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 0.5px solid rgba(160,130,110,0.25);
+  border-radius: 10px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  color: rgba(70,50,35,0.7);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 10px;
+  font-weight: 500;
+  transition: background 0.2s;
+  user-select: none;
+}
+#toggle:hover { background: rgba(255,255,255,0.85); }
+
+#toggle-arrow {
+  transition: transform 0.3s ease;
+  font-size: 9px;
+  opacity: 0.5;
+}
+#panel.open #toggle-arrow { transform: rotate(180deg); }
+
+#panel-body {
+  display: none;
+  margin-top: 6px;
+  background: rgba(255,255,255,0.72);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 0.5px solid rgba(160,130,110,0.2);
+  border-radius: 10px;
+  overflow: hidden;
+}
+#panel.open #panel-body { display: block; }
+
+.section {
+  padding: 14px 16px;
+  border-bottom: 0.5px solid rgba(160,130,110,0.12);
+}
+.section:last-child { border-bottom: none; }
+
+.section-title {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(100,75,55,0.45);
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+
+/* couleurs */
+.colors-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 6px;
+}
+.color-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.color-wrap label {
+  font-size: 9px;
+  color: rgba(90,65,45,0.4);
+  letter-spacing: 0.05em;
+}
+input[type="color"] {
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 50%;
+  padding: 0;
+  cursor: pointer;
+  background: none;
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+  overflow: hidden;
+}
+input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; border-radius: 50%; }
+input[type="color"]::-webkit-color-swatch { border: none; border-radius: 50%; }
+
+/* sliders */
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.row:last-child { margin-bottom: 0; }
+.row label {
+  color: rgba(80,58,40,0.6);
+  font-size: 11px;
+  flex: 0 0 auto;
+  min-width: 90px;
+}
+.row .val {
+  color: rgba(80,58,40,0.5);
+  font-size: 10px;
+  min-width: 30px;
+  text-align: right;
+  flex: 0 0 auto;
+}
+input[type="range"] {
+  flex: 1;
+  margin: 0 8px;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 2px;
+  background: rgba(160,130,110,0.25);
+  border-radius: 1px;
+  outline: none;
+  cursor: pointer;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  background: rgba(100,75,55,0.55);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+input[type="range"]::-webkit-slider-thumb:hover { background: rgba(100,75,55,0.8); }
+
+/* reset */
+#reset {
+  width: 100%;
+  padding: 8px;
+  background: none;
+  border: 0.5px solid rgba(160,130,110,0.25);
+  border-radius: 6px;
+  color: rgba(90,65,45,0.5);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+#reset:hover { background: rgba(160,130,110,0.08); color: rgba(80,55,35,0.8); }
+</style>
+</head>
+<body>
+
+<canvas id="gradient"></canvas>
+<canvas id="grain"></canvas>
+
+<!-- ── PANEL ── -->
+<div id="panel">
+  <div id="toggle">
+    <span>Configuration</span>
+    <span id="toggle-arrow">▼</span>
+  </div>
+  <div id="panel-body">
+
+    <div class="section">
+      <p class="section-title">Couleurs des orbes</p>
+      <div class="colors-grid" id="color-grid"></div>
+    </div>
+
+    <div class="section">
+      <p class="section-title">Mouvement</p>
+      <div class="row">
+        <label>Vitesse</label>
+        <input type="range" id="speed" min="0.1" max="5" step="0.1" value="1">
+        <span class="val" id="speed-val">1.0×</span>
+      </div>
+      <div class="row">
+        <label>Amplitude</label>
+        <input type="range" id="amplitude" min="0.1" max="2" step="0.05" value="1">
+        <span class="val" id="amplitude-val">1.0×</span>
+      </div>
+      <div class="row">
+        <label>Taille orbes</label>
+        <input type="range" id="radius" min="0.2" max="1.5" step="0.05" value="1">
+        <span class="val" id="radius-val">1.0×</span>
+      </div>
+    </div>
+
+    <div class="section">
+      <p class="section-title">Bruit</p>
+      <div class="row">
+        <label>Opacité</label>
+        <input type="range" id="grain-opacity" min="0" max="0.18" step="0.005" value="0.05">
+        <span class="val" id="grain-val">5%</span>
+      </div>
+      <div class="row">
+        <label>Taille</label>
+        <input type="range" id="grain-scale" min="1" max="8" step="1" value="1">
+        <span class="val" id="grain-scale-val">1×</span>
+      </div>
+      <div class="row">
+        <label>Scintillement</label>
+        <input type="range" id="grain-freq" min="1" max="10" step="1" value="3">
+        <span class="val" id="grain-freq-val">3</span>
+      </div>
+      <div class="row">
+        <label>Teinte</label>
+        <input type="color" id="grain-tint" value="#808080" style="width:24px;height:24px;border-radius:50%;flex:0 0 auto;">
+        <input type="range" id="grain-tint-mix" min="0" max="1" step="0.05" value="0">
+        <span class="val" id="grain-tint-val">0%</span>
+      </div>
+    </div>
+
+    <div class="section">
+      <p class="section-title">Alpha</p>
+      <div class="row">
+        <label>Alpha orbes</label>
+        <input type="range" id="orb-alpha" min="0.1" max="1" step="0.02" value="0.82">
+        <span class="val" id="alpha-val">82%</span>
+      </div>
+      <div class="row">
+        <label>Voile fond</label>
+        <input type="range" id="veil" min="0" max="0.6" step="0.01" value="0.22">
+        <span class="val" id="veil-val">22%</span>
+      </div>
+    </div>
+
+    <div class="section">
+      <button id="reset">Réinitialiser</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const canvas = document.getElementById('gradient');
+const ctx = canvas.getContext('2d');
+const grainCanvas = document.getElementById('grain');
+const grainCtx = grainCanvas.getContext('2d');
+
+// ── DEFAULTS ──
+const DEFAULTS = {
+  colors: [
+    [242, 196, 178],
+    [200, 220, 202],
+    [218, 208, 238],
+    [248, 230, 165],
+    [208, 228, 236],
+    [240, 210, 192],
+  ],
+  speed: 1,
+  amplitude: 1,
+  radius: 1,
+  grainOpacity: 0.05,
+  grainScale: 1,
+  grainFreq: 3,
+  grainTint: [128, 128, 128],
+  grainTintMix: 0,
+  orbAlpha: 0.82,
+  veil: 0.22,
+};
+
+// ── CONFIG LIVE (muté par les contrôles) ──
+const cfg = {
+  colors: DEFAULTS.colors.map(c => [...c]),
+  speed: DEFAULTS.speed,
+  amplitude: DEFAULTS.amplitude,
+  radius: DEFAULTS.radius,
+  grainOpacity: DEFAULTS.grainOpacity,
+  grainScale: DEFAULTS.grainScale,
+  grainFreq: DEFAULTS.grainFreq,
+  grainTint: [...DEFAULTS.grainTint],
+  grainTintMix: DEFAULTS.grainTintMix,
+  orbAlpha: DEFAULTS.orbAlpha,
+  veil: DEFAULTS.veil,
+};
+
+// ── ORBES ──
+const ORB_BASE = [
+  { px: 0.50, py: 0.40, ax: 0.38, ay: 0.28, fx: 0.00017, fy: 0.00013, r: 0.62, ci: 0, p: 0.0 },
+  { px: 0.30, py: 0.65, ax: 0.28, ay: 0.32, fx: 0.00012, fy: 0.00018, r: 0.56, ci: 1, p: 1.4 },
+  { px: 0.75, py: 0.30, ax: 0.35, ay: 0.26, fx: 0.00015, fy: 0.00011, r: 0.58, ci: 2, p: 2.7 },
+  { px: 0.20, py: 0.50, ax: 0.25, ay: 0.35, fx: 0.00010, fy: 0.00016, r: 0.52, ci: 3, p: 4.1 },
+  { px: 0.65, py: 0.70, ax: 0.32, ay: 0.30, fx: 0.00019, fy: 0.00014, r: 0.50, ci: 4, p: 5.5 },
+  { px: 0.45, py: 0.20, ax: 0.30, ay: 0.27, fx: 0.00014, fy: 0.00020, r: 0.48, ci: 5, p: 3.2 },
+];
+
+let W, H, dpr;
+const GRAIN_FRAMES = 5;
+const grainCache = [];
+let grainIdx = 0;
+let lastGrainScale = 1;
+let lastGrainTint = [128, 128, 128];
+let lastGrainTintMix = 0;
+
+// ── CANVAS RESIZE ──
+function resize() {
+  dpr = Math.min(window.devicePixelRatio || 1, 2);
+  W = window.innerWidth;
+  H = window.innerHeight;
+
+  canvas.width = W * dpr;
+  canvas.height = H * dpr;
+  ctx.scale(dpr, dpr);
+
+  grainCanvas.width = W * dpr;
+  grainCanvas.height = H * dpr;
+  grainCanvas.style.width = W + 'px';
+  grainCanvas.style.height = H + 'px';
+
+  buildGrain();
+}
+
+function buildGrain() {
+  grainCache.length = 0;
+  const s = cfg.grainScale;
+  const pw = Math.ceil(W * dpr / s);
+  const ph = Math.ceil(H * dpr / s);
+  const [tr, tg, tb] = cfg.grainTint;
+  const mix = cfg.grainTintMix;
+
+  // small offscreen canvas for scaled grain
+  const offscreen = document.createElement('canvas');
+  offscreen.width = pw;
+  offscreen.height = ph;
+  const offCtx = offscreen.getContext('2d');
+
+  for (let f = 0; f < GRAIN_FRAMES; f++) {
+    const id = offCtx.createImageData(pw, ph);
+    const d = id.data;
+    for (let i = 0; i < d.length; i += 4) {
+      const v = (Math.random() * 255) | 0;
+      d[i]   = Math.round(v * (1 - mix) + tr * mix);
+      d[i+1] = Math.round(v * (1 - mix) + tg * mix);
+      d[i+2] = Math.round(v * (1 - mix) + tb * mix);
+      d[i+3] = 255;
+    }
+    offCtx.putImageData(id, 0, 0);
+
+    // draw scaled up onto full-size grain canvas, then capture
+    grainCtx.imageSmoothingEnabled = false;
+    grainCtx.drawImage(offscreen, 0, 0, pw, ph, 0, 0, W * dpr, H * dpr);
+    grainCache.push(grainCtx.getImageData(0, 0, W * dpr, H * dpr));
+  }
+  lastGrainScale = s;
+  lastGrainTint = [...cfg.grainTint];
+  lastGrainTintMix = cfg.grainTintMix;
+}
+
+function grainNeedsRebuild() {
+  return cfg.grainScale !== lastGrainScale
+    || cfg.grainTintMix !== lastGrainTintMix
+    || cfg.grainTint[0] !== lastGrainTint[0]
+    || cfg.grainTint[1] !== lastGrainTint[1]
+    || cfg.grainTint[2] !== lastGrainTint[2];
+}
+
+function drawGrain() {
+  if (grainNeedsRebuild()) buildGrain();
+  grainCanvas.style.opacity = cfg.grainOpacity;
+  grainIdx = (grainIdx + 1) % GRAIN_FRAMES;
+  if (grainCache[grainIdx]) grainCtx.putImageData(grainCache[grainIdx], 0, 0);
+}
+
+// ── DRAW LOOP ──
+function draw(ts) {
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = '#F4EFE6';
+  ctx.fillRect(0, 0, W, H);
+
+  ctx.globalCompositeOperation = 'multiply';
+  const maxR = Math.max(W, H);
+  const t = ts * cfg.speed;
+
+  for (const o of ORB_BASE) {
+    const x = (o.px + Math.sin(t * o.fx + o.p) * o.ax * cfg.amplitude) * W;
+    const y = (o.py + Math.cos(t * o.fy + o.p * 1.3) * o.ay * cfg.amplitude) * H;
+    const radius = o.r * maxR * cfg.radius;
+    const [r, g, b] = cfg.colors[o.ci];
+    const a = cfg.orbAlpha;
+
+    const grad = ctx.createRadialGradient(x, y, 0, x, y, radius);
+    grad.addColorStop(0,    `rgba(${r},${g},${b},${a})`);
+    grad.addColorStop(0.4,  `rgba(${r},${g},${b},${(a * 0.55).toFixed(2)})`);
+    grad.addColorStop(0.75, `rgba(${r},${g},${b},${(a * 0.14).toFixed(2)})`);
+    grad.addColorStop(1,    `rgba(${r},${g},${b},0)`);
+
+    ctx.beginPath();
+    ctx.arc(x, y, radius, 0, Math.PI * 2);
+    ctx.fillStyle = grad;
+    ctx.fill();
+  }
+
+  ctx.globalCompositeOperation = 'source-over';
+  ctx.fillStyle = `rgba(244,239,230,${cfg.veil})`;
+  ctx.fillRect(0, 0, W, H);
+
+  if (Math.round(ts / 16) % cfg.grainFreq === 0) drawGrain();
+
+  requestAnimationFrame(draw);
+}
+
+// ── UI — TOGGLE PANEL ──
+const panel = document.getElementById('panel');
+document.getElementById('toggle').addEventListener('click', () => {
+  panel.classList.toggle('open');
+});
+
+// ── UI — COLOR PICKERS ──
+function rgbToHex([r, g, b]) {
+  return '#' + [r, g, b].map(v => v.toString(16).padStart(2, '0')).join('');
+}
+function hexToRgb(hex) {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return [r, g, b];
+}
+
+const orbNames = ['①', '②', '③', '④', '⑤', '⑥'];
+const grid = document.getElementById('color-grid');
+
+cfg.colors.forEach((col, i) => {
+  const wrap = document.createElement('div');
+  wrap.className = 'color-wrap';
+
+  const lbl = document.createElement('label');
+  lbl.textContent = orbNames[i];
+
+  const input = document.createElement('input');
+  input.type = 'color';
+  input.value = rgbToHex(col);
+  input.addEventListener('input', e => {
+    cfg.colors[i] = hexToRgb(e.target.value);
+  });
+
+  wrap.appendChild(input);
+  wrap.appendChild(lbl);
+  grid.appendChild(wrap);
+});
+
+// ── UI — SLIDERS ──
+function bindSlider(id, valId, cfgKey, format) {
+  const slider = document.getElementById(id);
+  const valEl  = document.getElementById(valId);
+  slider.addEventListener('input', () => {
+    cfg[cfgKey] = parseFloat(slider.value);
+    valEl.textContent = format(cfg[cfgKey]);
+  });
+}
+
+bindSlider('speed',        'speed-val',    'speed',        v => v.toFixed(1) + '×');
+bindSlider('amplitude',    'amplitude-val','amplitude',    v => v.toFixed(2) + '×');
+bindSlider('radius',       'radius-val',   'radius',       v => v.toFixed(2) + '×');
+bindSlider('grain-opacity','grain-val',    'grainOpacity', v => Math.round(v * 100) + '%');
+bindSlider('grain-scale',  'grain-scale-val','grainScale', v => v + '×');
+bindSlider('grain-freq',   'grain-freq-val','grainFreq',   v => v);
+bindSlider('grain-tint-mix','grain-tint-val','grainTintMix',v => Math.round(v * 100) + '%');
+
+document.getElementById('grain-tint').addEventListener('input', e => {
+  cfg.grainTint = hexToRgb(e.target.value);
+});
+
+bindSlider('orb-alpha',    'alpha-val',    'orbAlpha',     v => Math.round(v * 100) + '%');
+bindSlider('veil',         'veil-val',     'veil',         v => Math.round(v * 100) + '%');
+
+// ── UI — RESET ──
+document.getElementById('reset').addEventListener('click', () => {
+  cfg.colors = DEFAULTS.colors.map(c => [...c]);
+  cfg.speed        = DEFAULTS.speed;
+  cfg.amplitude    = DEFAULTS.amplitude;
+  cfg.radius       = DEFAULTS.radius;
+  cfg.grainOpacity = DEFAULTS.grainOpacity;
+  cfg.grainScale   = DEFAULTS.grainScale;
+  cfg.grainFreq    = DEFAULTS.grainFreq;
+  cfg.grainTint    = [...DEFAULTS.grainTint];
+  cfg.grainTintMix = DEFAULTS.grainTintMix;
+  cfg.orbAlpha     = DEFAULTS.orbAlpha;
+  cfg.veil         = DEFAULTS.veil;
+
+  document.getElementById('speed').value        = cfg.speed;
+  document.getElementById('speed-val').textContent = cfg.speed.toFixed(1) + '×';
+  document.getElementById('amplitude').value    = cfg.amplitude;
+  document.getElementById('amplitude-val').textContent = cfg.amplitude.toFixed(2) + '×';
+  document.getElementById('radius').value       = cfg.radius;
+  document.getElementById('radius-val').textContent = cfg.radius.toFixed(2) + '×';
+  document.getElementById('grain-opacity').value = cfg.grainOpacity;
+  document.getElementById('grain-val').textContent = Math.round(cfg.grainOpacity * 100) + '%';
+  document.getElementById('grain-scale').value = cfg.grainScale;
+  document.getElementById('grain-scale-val').textContent = cfg.grainScale + '×';
+  document.getElementById('grain-freq').value = cfg.grainFreq;
+  document.getElementById('grain-freq-val').textContent = cfg.grainFreq;
+  document.getElementById('grain-tint').value = rgbToHex(cfg.grainTint);
+  document.getElementById('grain-tint-mix').value = cfg.grainTintMix;
+  document.getElementById('grain-tint-val').textContent = Math.round(cfg.grainTintMix * 100) + '%';
+  document.getElementById('orb-alpha').value    = cfg.orbAlpha;
+  document.getElementById('alpha-val').textContent = Math.round(cfg.orbAlpha * 100) + '%';
+  document.getElementById('veil').value         = cfg.veil;
+  document.getElementById('veil-val').textContent = Math.round(cfg.veil * 100) + '%';
+
+  grid.querySelectorAll('input[type="color"]').forEach((input, i) => {
+    input.value = rgbToHex(cfg.colors[i]);
+  });
+});
+
+window.addEventListener('resize', resize);
+resize();
+requestAnimationFrame(draw);
+</script>
+</body>
+</html>
