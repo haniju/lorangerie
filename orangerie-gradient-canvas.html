@@ -153,8 +153,8 @@ input[type="range"]::-webkit-slider-thumb {
 }
 input[type="range"]::-webkit-slider-thumb:hover { background: rgba(100,75,55,0.8); }
 
-/* reset */
-#reset {
+/* buttons */
+.btn {
   width: 100%;
   padding: 8px;
   background: none;
@@ -168,7 +168,128 @@ input[type="range"]::-webkit-slider-thumb:hover { background: rgba(100,75,55,0.8
   transition: all 0.2s;
   font-family: inherit;
 }
-#reset:hover { background: rgba(160,130,110,0.08); color: rgba(80,55,35,0.8); }
+.btn:hover { background: rgba(160,130,110,0.08); color: rgba(80,55,35,0.8); }
+.btn + .btn { margin-top: 6px; }
+
+/* presets dropdown */
+#presets-wrap { margin-top: 8px; }
+#presets-select {
+  width: 100%;
+  padding: 7px 10px;
+  background: rgba(255,255,255,0.5);
+  border: 0.5px solid rgba(160,130,110,0.25);
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 11px;
+  color: rgba(70,50,35,0.7);
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='rgba(100,75,55,0.4)' stroke-width='1.2' fill='none'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 28px;
+}
+#presets-select:hover { border-color: rgba(160,130,110,0.45); }
+.preset-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 6px;
+}
+.preset-row select { flex: 1; }
+#delete-preset {
+  flex: 0 0 auto;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 0.5px solid rgba(160,130,110,0.25);
+  border-radius: 6px;
+  background: none;
+  color: rgba(160,90,80,0.5);
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+#delete-preset:hover { background: rgba(200,100,80,0.08); color: rgba(180,60,50,0.8); }
+
+/* modale */
+#modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(30,25,20,0.35);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+}
+#modal-overlay.open { display: flex; }
+#modal {
+  background: rgba(255,255,255,0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 0.5px solid rgba(160,130,110,0.2);
+  border-radius: 12px;
+  padding: 24px 28px;
+  width: 280px;
+  font-family: 'Helvetica Neue', Helvetica, sans-serif;
+}
+#modal h3 {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(70,50,35,0.6);
+  font-weight: 500;
+  margin-bottom: 14px;
+}
+#modal-input {
+  width: 100%;
+  padding: 8px 10px;
+  border: 0.5px solid rgba(160,130,110,0.3);
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 12px;
+  color: rgba(50,35,25,0.8);
+  background: rgba(255,255,255,0.6);
+  outline: none;
+  transition: border-color 0.2s;
+}
+#modal-input:focus { border-color: rgba(160,130,110,0.55); }
+#modal-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+}
+#modal-actions button {
+  flex: 1;
+  padding: 7px;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+#modal-cancel {
+  background: none;
+  border: 0.5px solid rgba(160,130,110,0.25);
+  color: rgba(90,65,45,0.5);
+}
+#modal-cancel:hover { background: rgba(160,130,110,0.08); }
+#modal-save {
+  background: rgba(90,65,45,0.08);
+  border: 0.5px solid rgba(160,130,110,0.3);
+  color: rgba(70,50,35,0.7);
+}
+#modal-save:hover { background: rgba(90,65,45,0.15); color: rgba(50,35,20,0.9); }
 </style>
 </head>
 <body>
@@ -248,9 +369,30 @@ input[type="range"]::-webkit-slider-thumb:hover { background: rgba(100,75,55,0.8
     </div>
 
     <div class="section">
-      <button id="reset">Réinitialiser</button>
+      <button class="btn" id="save-preset">Sauvegarder</button>
+      <button class="btn" id="reset">Réinitialiser</button>
+      <div id="presets-wrap">
+        <div class="preset-row">
+          <select id="presets-select">
+            <option value="" disabled selected>Charger un preset…</option>
+          </select>
+          <button id="delete-preset" title="Supprimer">×</button>
+        </div>
+      </div>
     </div>
 
+  </div>
+</div>
+
+<!-- ── MODALE ── -->
+<div id="modal-overlay">
+  <div id="modal">
+    <h3>Nom du preset</h3>
+    <input type="text" id="modal-input" placeholder="Ex : Coucher de soleil" autocomplete="off">
+    <div id="modal-actions">
+      <button id="modal-cancel">Annuler</button>
+      <button id="modal-save">Enregistrer</button>
+    </div>
   </div>
 </div>
 
@@ -486,20 +628,8 @@ document.getElementById('grain-tint').addEventListener('input', e => {
 bindSlider('orb-alpha',    'alpha-val',    'orbAlpha',     v => Math.round(v * 100) + '%');
 bindSlider('veil',         'veil-val',     'veil',         v => Math.round(v * 100) + '%');
 
-// ── UI — RESET ──
-document.getElementById('reset').addEventListener('click', () => {
-  cfg.colors = DEFAULTS.colors.map(c => [...c]);
-  cfg.speed        = DEFAULTS.speed;
-  cfg.amplitude    = DEFAULTS.amplitude;
-  cfg.radius       = DEFAULTS.radius;
-  cfg.grainOpacity = DEFAULTS.grainOpacity;
-  cfg.grainScale   = DEFAULTS.grainScale;
-  cfg.grainFreq    = DEFAULTS.grainFreq;
-  cfg.grainTint    = [...DEFAULTS.grainTint];
-  cfg.grainTintMix = DEFAULTS.grainTintMix;
-  cfg.orbAlpha     = DEFAULTS.orbAlpha;
-  cfg.veil         = DEFAULTS.veil;
-
+// ── SYNC UI FROM CFG ──
+function syncUI() {
   document.getElementById('speed').value        = cfg.speed;
   document.getElementById('speed-val').textContent = cfg.speed.toFixed(1) + '×';
   document.getElementById('amplitude').value    = cfg.amplitude;
@@ -519,11 +649,123 @@ document.getElementById('reset').addEventListener('click', () => {
   document.getElementById('alpha-val').textContent = Math.round(cfg.orbAlpha * 100) + '%';
   document.getElementById('veil').value         = cfg.veil;
   document.getElementById('veil-val').textContent = Math.round(cfg.veil * 100) + '%';
-
   grid.querySelectorAll('input[type="color"]').forEach((input, i) => {
     input.value = rgbToHex(cfg.colors[i]);
   });
+}
+
+function applyCfg(src) {
+  cfg.colors       = src.colors.map(c => [...c]);
+  cfg.speed        = src.speed;
+  cfg.amplitude    = src.amplitude;
+  cfg.radius       = src.radius;
+  cfg.grainOpacity = src.grainOpacity;
+  cfg.grainScale   = src.grainScale   ?? DEFAULTS.grainScale;
+  cfg.grainFreq    = src.grainFreq    ?? DEFAULTS.grainFreq;
+  cfg.grainTint    = src.grainTint    ? [...src.grainTint] : [...DEFAULTS.grainTint];
+  cfg.grainTintMix = src.grainTintMix ?? DEFAULTS.grainTintMix;
+  cfg.orbAlpha     = src.orbAlpha;
+  cfg.veil         = src.veil;
+  syncUI();
+}
+
+// ── UI — RESET ──
+document.getElementById('reset').addEventListener('click', () => {
+  applyCfg(DEFAULTS);
+  document.getElementById('presets-select').value = '';
 });
+
+// ── PRESETS (localStorage) ──
+const STORAGE_KEY = 'orangerie-gradient-presets';
+
+function loadPresets() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+  catch { return []; }
+}
+function savePresets(presets) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(presets));
+}
+
+function renderPresetOptions() {
+  const sel = document.getElementById('presets-select');
+  const presets = loadPresets();
+  sel.innerHTML = '<option value="" disabled selected>Charger un preset…</option>';
+  presets.forEach((p, i) => {
+    const opt = document.createElement('option');
+    opt.value = i;
+    opt.textContent = p.name;
+    sel.appendChild(opt);
+  });
+}
+
+// load preset on select
+document.getElementById('presets-select').addEventListener('change', e => {
+  const presets = loadPresets();
+  const preset = presets[e.target.value];
+  if (preset) applyCfg(preset.data);
+});
+
+// delete preset
+document.getElementById('delete-preset').addEventListener('click', () => {
+  const sel = document.getElementById('presets-select');
+  const idx = parseInt(sel.value);
+  if (isNaN(idx)) return;
+  const presets = loadPresets();
+  presets.splice(idx, 1);
+  savePresets(presets);
+  renderPresetOptions();
+});
+
+// save preset — open modal
+const overlay = document.getElementById('modal-overlay');
+const modalInput = document.getElementById('modal-input');
+
+document.getElementById('save-preset').addEventListener('click', () => {
+  modalInput.value = '';
+  overlay.classList.add('open');
+  setTimeout(() => modalInput.focus(), 50);
+});
+
+document.getElementById('modal-cancel').addEventListener('click', () => {
+  overlay.classList.remove('open');
+});
+
+overlay.addEventListener('click', e => {
+  if (e.target === overlay) overlay.classList.remove('open');
+});
+
+function confirmSave() {
+  const name = modalInput.value.trim();
+  if (!name) return;
+  const snapshot = {
+    colors: cfg.colors.map(c => [...c]),
+    speed: cfg.speed,
+    amplitude: cfg.amplitude,
+    radius: cfg.radius,
+    grainOpacity: cfg.grainOpacity,
+    grainScale: cfg.grainScale,
+    grainFreq: cfg.grainFreq,
+    grainTint: [...cfg.grainTint],
+    grainTintMix: cfg.grainTintMix,
+    orbAlpha: cfg.orbAlpha,
+    veil: cfg.veil,
+  };
+  const presets = loadPresets();
+  presets.push({ name, data: snapshot });
+  savePresets(presets);
+  renderPresetOptions();
+  // select the newly saved preset
+  document.getElementById('presets-select').value = presets.length - 1;
+  overlay.classList.remove('open');
+}
+
+document.getElementById('modal-save').addEventListener('click', confirmSave);
+modalInput.addEventListener('keydown', e => {
+  if (e.key === 'Enter') confirmSave();
+  if (e.key === 'Escape') overlay.classList.remove('open');
+});
+
+renderPresetOptions();
 
 window.addEventListener('resize', resize);
 resize();
