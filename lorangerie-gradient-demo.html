@@ -78,6 +78,13 @@ select.blend-sel:focus{border-color:rgba(255,255,255,.25)}
 .pp-del:hover{color:var(--danger)}
 .pp-del:disabled{opacity:.12;cursor:default}
 .hint{font-size:8px;font-family:var(--mono);color:rgba(232,228,220,.16)}
+/* tabs */
+.tabs{display:flex;gap:2px;padding:1.1rem 2rem 0;border-bottom:.5px solid var(--border)}
+.tab{position:relative;background:none;border:none;color:var(--muted);font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;padding:.65rem 1.1rem;cursor:pointer;transition:color .15s;border-bottom:1.5px solid transparent;margin-bottom:-.5px}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--text);border-bottom-color:var(--text)}
+.view{display:none}
+.view.active{display:block}
 </style>
 </head>
 <body>
@@ -85,6 +92,13 @@ select.blend-sel:focus{border-color:rgba(255,255,255,.25)}
   <h1>Freeform Gradient — SVG · WebGL</h1>
   <p>Mode de fusion par point · forme vectorielle libre · clic vide = ajouter point de forme</p>
 </header>
+<nav class="tabs">
+  <button class="tab active" data-tab="svg">01 — SVG natif</button>
+  <button class="tab" data-tab="gl">02 — WebGL</button>
+  <button class="tab" data-tab="px">03 — Pixel Grid</button>
+</nav>
+
+<section class="view active" data-view="svg">
 <div class="grid">
   <div class="cell"><div class="cell-header">
     <p class="cell-num">01 — Vectoriel</p>
@@ -94,7 +108,11 @@ select.blend-sel:focus{border-color:rgba(255,255,255,.25)}
   </div>
   <div class="preview-wrap"><div class="stage" id="s-stage"></div></div>
   <div class="controls" id="s-ctrl"></div></div>
+</div>
+</section>
 
+<section class="view" data-view="gl">
+<div class="grid">
   <div class="cell"><div class="cell-header">
     <p class="cell-num">02 — Raster GPU</p>
     <p class="cell-title">WebGL Shader</p>
@@ -104,6 +122,7 @@ select.blend-sel:focus{border-color:rgba(255,255,255,.25)}
   <div class="preview-wrap"><div class="stage" id="g-stage"></div></div>
   <div class="controls" id="g-ctrl"></div></div>
 </div>
+</section>
 
 <script>
 const CW=180,CH=240,MAX_GRAD=16,MIN_PATH=3;
@@ -518,6 +537,7 @@ window.addEventListener('touchend',()=>{panelS.onUp();panelG.onUp();});
 .px-info{font-size:9px;font-family:var(--mono);color:rgba(232,228,220,.25)}
 </style>
 
+<section class="view" data-view="px">
 <div class="grid-full">
 <div class="cell-wide">
   <div class="cell-header">
@@ -579,6 +599,7 @@ window.addEventListener('touchend',()=>{panelS.onUp();panelG.onUp();});
   </div>
 </div>
 </div>
+</section>
 
 <script>
 // ── PIXEL GRID ────────────────────────────────────────────────────────────────
@@ -776,4 +797,14 @@ const _origGRender = panelG.render.bind(panelG);
 panelG.render = function(){ _origGRender(); if(pxSource==='g') renderPixelGrid(); };
 
 renderPixelGrid();
+
+// ── TABS ────────────────────────────────────────────────────────────────────
+document.querySelectorAll('.tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const target = btn.dataset.tab;
+    document.querySelectorAll('.tab').forEach(b => b.classList.toggle('active', b === btn));
+    document.querySelectorAll('.view').forEach(v => v.classList.toggle('active', v.dataset.view === target));
+    if (target === 'px') renderPixelGrid();
+  });
+});
 </script>
