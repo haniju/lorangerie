@@ -13,10 +13,12 @@
   --accent-s:#5ecfce;--accent-g:#a88ae0;
   --mono:'DM Mono',monospace;--sans:'Syne',sans-serif;
 }
-html,body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh}
-header{padding:2rem 2rem 1.4rem;border-bottom:.5px solid var(--border)}
-header h1{font-size:clamp(1.2rem,2.5vw,1.8rem);font-weight:800;letter-spacing:-.02em}
-header p{font-size:.77rem;color:var(--muted);margin-top:.3rem}
+html,body{height:100%}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);height:100vh;display:flex;flex-direction:column;overflow:hidden}
+.topbar{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;gap:1.5rem;padding:0 1.1rem;height:46px;border-bottom:.5px solid var(--border)}
+.brand{display:flex;align-items:baseline;gap:.6rem;white-space:nowrap;overflow:hidden}
+.brand-title{font-size:.9rem;font-weight:800;letter-spacing:-.01em}
+.brand-sub{font-size:.66rem;color:var(--muted);font-family:var(--mono);letter-spacing:.04em}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:1.5px;background:var(--border);border-top:.5px solid var(--border)}
 .cell{background:var(--surface);display:flex;flex-direction:column}
 .cell-header{padding:1rem 1.4rem .85rem;border-bottom:.5px solid var(--border)}
@@ -27,8 +29,14 @@ header p{font-size:.77rem;color:var(--muted);margin-top:.3rem}
 .tag-svg{background:rgba(46,139,142,.15);color:var(--accent-s)}
 .tag-webgl{background:rgba(130,100,200,.15);color:var(--accent-g)}
 .badge{font-size:9px;font-family:var(--mono);padding:2px 6px;border-radius:3px;background:rgba(94,207,206,.12);color:var(--accent-s);margin-left:6px;vertical-align:middle}
-.preview-wrap{padding:1.5rem;display:flex;align-items:center;justify-content:center;flex:1;min-height:260px}
-.stage{position:relative;width:180px;height:240px;flex-shrink:0;cursor:crosshair}
+.view{position:fixed;left:0;right:0;top:46px;bottom:0;display:none}
+.view.active{display:block}
+.stage{position:absolute;inset:0;cursor:crosshair;background:#060810}
+.float-panel{position:absolute;left:1rem;bottom:1rem;z-index:5;width:max-content;max-width:30vw;max-height:calc(100% - 2rem);overflow-y:auto;background:rgba(20,20,24,.82);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:.5px solid var(--border);border-radius:10px;box-shadow:0 10px 34px rgba(0,0,0,.45)}
+.float-panel::-webkit-scrollbar{width:4px}
+.float-panel::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:2px}
+.float-panel .controls{border-top:none;padding:.9rem 1rem 1rem}
+.float-panel .px-controls{padding:.9rem 1rem 1rem;max-width:none}
 .controls{padding:.85rem 1.4rem 1.3rem;border-top:.5px solid var(--border);display:flex;flex-direction:column;gap:.5rem}
 .sep{font-size:9px;font-family:var(--mono);color:rgba(232,228,220,.2);text-transform:uppercase;letter-spacing:.12em;padding:.4rem 0 .1rem;border-top:.5px solid var(--border);margin-top:.1rem}
 .sep:first-child{border-top:none;padding-top:0}
@@ -79,53 +87,38 @@ select.blend-sel:focus{border-color:rgba(255,255,255,.25)}
 .pp-del:disabled{opacity:.12;cursor:default}
 .hint{font-size:8px;font-family:var(--mono);color:rgba(232,228,220,.16)}
 /* tabs */
-.tabs{display:flex;gap:2px;padding:1.1rem 2rem 0;border-bottom:.5px solid var(--border)}
-.tab{position:relative;background:none;border:none;color:var(--muted);font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;padding:.65rem 1.1rem;cursor:pointer;transition:color .15s;border-bottom:1.5px solid transparent;margin-bottom:-.5px}
+.tabs{display:flex;gap:2px;align-self:stretch}
+.tab{position:relative;background:none;border:none;color:var(--muted);font-family:var(--mono);font-size:.7rem;letter-spacing:.05em;padding:0 .85rem;cursor:pointer;transition:color .15s;border-bottom:1.5px solid transparent;margin-bottom:-.5px}
 .tab:hover{color:var(--text)}
 .tab.active{color:var(--text);border-bottom-color:var(--text)}
-.view{display:none}
-.view.active{display:block}
 </style>
 </head>
 <body>
-<header>
-  <h1>Freeform Gradient — SVG · WebGL</h1>
-  <p>Mode de fusion par point · forme vectorielle libre · clic vide = ajouter point de forme</p>
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-title">Freeform Gradient</span>
+    <span class="brand-sub">mapping de formes &amp; dégradés · clic vide = ajouter point de forme</span>
+  </div>
+  <nav class="tabs">
+    <button class="tab active" data-tab="svg">01 — SVG natif</button>
+    <button class="tab" data-tab="gl">02 — WebGL</button>
+    <button class="tab" data-tab="px">03 — Pixel Grid</button>
+  </nav>
 </header>
-<nav class="tabs">
-  <button class="tab active" data-tab="svg">01 — SVG natif</button>
-  <button class="tab" data-tab="gl">02 — WebGL</button>
-  <button class="tab" data-tab="px">03 — Pixel Grid</button>
-</nav>
 
 <section class="view active" data-view="svg">
-<div class="grid">
-  <div class="cell"><div class="cell-header">
-    <p class="cell-num">01 — Vectoriel</p>
-    <p class="cell-title">SVG radiaux empilés <span class="badge">scalable ∞</span></p>
-    <p class="cell-sub">mix-blend-mode individuel par couche · clipPath Catmull-Rom</p>
-    <span class="tag tag-svg">SVG NATIF</span>
-  </div>
-  <div class="preview-wrap"><div class="stage" id="s-stage"></div></div>
-  <div class="controls" id="s-ctrl"></div></div>
-</div>
+  <div class="stage" id="s-stage"></div>
+  <div class="float-panel"><div class="controls" id="s-ctrl"></div></div>
 </section>
 
 <section class="view" data-view="gl">
-<div class="grid">
-  <div class="cell"><div class="cell-header">
-    <p class="cell-num">02 — Raster GPU</p>
-    <p class="cell-title">WebGL Shader</p>
-    <p class="cell-sub">Blend mode par point calculé en GLSL · clip-path CSS</p>
-    <span class="tag tag-webgl">WEBGL</span>
-  </div>
-  <div class="preview-wrap"><div class="stage" id="g-stage"></div></div>
-  <div class="controls" id="g-ctrl"></div></div>
-</div>
+  <div class="stage" id="g-stage"></div>
+  <div class="float-panel"><div class="controls" id="g-ctrl"></div></div>
 </section>
 
 <script>
 const CW=180,CH=240,MAX_GRAD=16,MIN_PATH=3;
+const GL_RES=3; // supersampling du canvas WebGL (le rendu reste en UV 0-1, juste plus de pixels)
 const PALETTE=['#1ab8e0','#9060cc','#e06020','#20c060','#e0b020','#e03080','#20a0e0','#80e060','#c040a0','#40c0a0'];
 
 // SVG CSS blend modes
@@ -174,27 +167,28 @@ class Panel{
     const ns='http://www.w3.org/2000/svg';
     if(this.type==='svg'){
       const svg=document.createElementNS(ns,'svg');
-      svg.setAttribute('width',CW);svg.setAttribute('height',CH);svg.setAttribute('viewBox',`0 0 ${CW} ${CH}`);
-      svg.style.cssText='position:absolute;inset:0;overflow:hidden';
+      svg.setAttribute('width','100%');svg.setAttribute('height','100%');svg.setAttribute('viewBox',`0 0 ${CW} ${CH}`);svg.setAttribute('preserveAspectRatio','none');
+      svg.style.cssText='position:absolute;inset:0;width:100%;height:100%;overflow:hidden';
       svg.innerHTML=`<defs><clipPath id="clip-${this.id}"><path id="clip-path-${this.id}"/></clipPath></defs>
         <rect width="${CW}" height="${CH}" fill="#060810"/>
         <g id="layers-${this.id}" clip-path="url(#clip-${this.id})"></g>`;
       s.appendChild(svg);this.svgEl=svg;
     }else{
-      const c=document.createElement('canvas');c.width=CW;c.height=CH;
-      c.style.cssText='position:absolute;inset:0;width:180px;height:240px';
+      const c=document.createElement('canvas');c.width=CW*GL_RES;c.height=CH*GL_RES;
+      c.style.cssText='position:absolute;inset:0;width:100%;height:100%';
       c.id=`canvas-${this.id}`;s.appendChild(c);
       this.gl=c.getContext('webgl');this.glCanvas=c;
     }
     const ov=document.createElementNS(ns,'svg');
-    ov.setAttribute('width',CW);ov.setAttribute('height',CH);ov.setAttribute('viewBox',`0 0 ${CW} ${CH}`);
-    ov.style.cssText='position:absolute;inset:0;overflow:visible';
+    // overlay en espace pixels (pas de viewBox) -> poignees a taille fixe, non deformees
+    ov.setAttribute('width','100%');ov.setAttribute('height','100%');
+    ov.style.cssText='position:absolute;inset:0;width:100%;height:100%;overflow:visible';
     ov.innerHTML=`<path id="sb-${this.id}" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1" stroke-dasharray="4 3"/>
       <g id="mp-${this.id}"></g><g id="gh-${this.id}"></g><g id="ph-${this.id}"></g>`;
     s.appendChild(ov);this.ovEl=ov;
     if(this.type==='gl'){
       const ic=document.createElement('canvas');ic.width=CW;ic.height=CH;
-      ic.style.cssText='position:absolute;inset:0;width:180px;height:240px;cursor:crosshair';
+      ic.style.cssText='position:absolute;inset:0;width:100%;height:100%;cursor:crosshair';
       ic.id=`ic-${this.id}`;s.appendChild(ic);this.icCanvas=ic;
     }
     this._bindEvents();this._buildControls();
@@ -224,9 +218,17 @@ class Panel{
         grp.appendChild(rect);layers.appendChild(grp);
       });
     }else{
-      if(this.gl){this._glRender();this.glCanvas.style.clipPath=`path('${path}')`;}
+      if(this.gl){
+        this._glRender();
+        // clip-path CSS = coords en pixels CSS de l'element, pas en viewBox : on regenere a la taille rendue
+        const r=this.glCanvas.getBoundingClientRect();
+        const w=r.width||CW,h=r.height||CH;
+        this.glCanvas.style.clipPath=`path('${catmullPath(this.pathPts,w,h,this.tension)}')`;
+      }
     }
-    document.getElementById(`sb-${this.id}`).setAttribute('d',path);
+    // contour pointille dans l'overlay pixel-space
+    const ow=this.stage.clientWidth||CW,oh=this.stage.clientHeight||CH;
+    document.getElementById(`sb-${this.id}`).setAttribute('d',catmullPath(this.pathPts,ow,oh,this.tension));
     this._renderHandles();
     this._buildPathList();
   }
@@ -298,8 +300,8 @@ void main(){
 
   _glRender(){
     const gl=this.gl;this._ensureShader();
-    gl.viewport(0,0,CW,CH);
-    gl.uniform2f(this.locs.res,CW,CH);
+    gl.viewport(0,0,CW*GL_RES,CH*GL_RES);
+    gl.uniform2f(this.locs.res,CW*GL_RES,CH*GL_RES);
     gl.uniform2fv(this.locs.pts,this.gradPts.flatMap(p=>[p.x,p.y]));
     gl.uniform3fv(this.locs.cols,this.gradPts.flatMap(p=>hexToRgb01(p.color)));
     gl.uniform1fv(this.locs.radii,this.gradPts.map(p=>p.radius));
@@ -315,9 +317,11 @@ void main(){
     const ghg=document.getElementById(`gh-${this.id}`);
     const phg=document.getElementById(`ph-${this.id}`);
     mpg.innerHTML='';ghg.innerHTML='';phg.innerHTML='';
+    // l'overlay est en espace pixels : on dessine sur la taille reelle du stage
+    const W=this.stage.clientWidth||CW,H=this.stage.clientHeight||CH;
     this.pathPts.forEach((p,i)=>{
       const b=this.pathPts[(i+1)%this.pathPts.length];
-      const mx=(p.x+b.x)/2*CW,my=(p.y+b.y)/2*CH;
+      const mx=(p.x+b.x)/2*W,my=(p.y+b.y)/2*H;
       const c=document.createElementNS(ns,'circle');
       c.setAttribute('cx',mx);c.setAttribute('cy',my);c.setAttribute('r',4);
       c.setAttribute('fill','rgba(255,255,255,0.05)');c.setAttribute('stroke','rgba(255,255,255,0.22)');c.setAttribute('stroke-width','1');
@@ -327,14 +331,14 @@ void main(){
       t.setAttribute('pointer-events','none');t.textContent='+';mpg.appendChild(t);
     });
     this.gradPts.forEach((p,i)=>{
-      const cx=p.x*CW,cy=p.y*CH;
+      const cx=p.x*W,cy=p.y*H;
       const c=document.createElementNS(ns,'circle');
       c.setAttribute('cx',cx);c.setAttribute('cy',cy);c.setAttribute('r',7);
       c.setAttribute('fill',p.color);c.setAttribute('stroke','rgba(255,255,255,0.8)');c.setAttribute('stroke-width','1.5');
       c.style.cursor='grab';c.dataset.kind='grad';c.dataset.idx=i;ghg.appendChild(c);
     });
     this.pathPts.forEach((p,i)=>{
-      const cx=p.x*CW,cy=p.y*CH;
+      const cx=p.x*W,cy=p.y*H;
       const r=document.createElementNS(ns,'rect');
       r.setAttribute('x',cx-5);r.setAttribute('y',cy-5);r.setAttribute('width',10);r.setAttribute('height',10);r.setAttribute('rx',2);
       r.setAttribute('fill','rgba(255,255,255,0.72)');r.setAttribute('stroke','rgba(0,0,0,0.25)');r.setAttribute('stroke-width','.5');
@@ -462,7 +466,8 @@ void main(){
   _getPos(e){
     const r=this.stage.getBoundingClientRect();
     const cx=e.touches?e.touches[0].clientX:e.clientX,cy=e.touches?e.touches[0].clientY:e.clientY;
-    return{x:clamp(cx-r.left,0,CW),y:clamp(cy-r.top,0,CH)};
+    // l'ecran -> espace interne 0..CW / 0..CH (le stage est desormais redimensionne)
+    return{x:clamp((cx-r.left)/r.width*CW,0,CW),y:clamp((cy-r.top)/r.height*CH,0,CH)};
   }
 
   _onDown(e){
@@ -517,6 +522,8 @@ window.addEventListener('mousemove',e=>{if(panelS.drag)panelS.onMove(e);if(panel
 window.addEventListener('touchmove',e=>{if(panelS.drag||panelG.drag){e.preventDefault();if(panelS.drag)panelS.onMove(e);if(panelG.drag)panelG.onMove(e);}},{passive:false});
 window.addEventListener('mouseup',()=>{panelS.onUp();panelG.onUp();});
 window.addEventListener('touchend',()=>{panelS.onUp();panelG.onUp();});
+// le clip-path du canvas GL est en px CSS -> il faut le recalculer quand la taille du stage change
+let _rsz;window.addEventListener('resize',()=>{clearTimeout(_rsz);_rsz=setTimeout(()=>{panelS.render();panelG.render();},80);});
 </script>
 </body>
 </html>
@@ -524,10 +531,9 @@ window.addEventListener('touchend',()=>{panelS.onUp();panelG.onUp();});
 <style>
 .grid-full{display:grid;grid-template-columns:1fr;background:var(--border);border-top:1.5px solid var(--border)}
 .cell-wide{background:var(--surface);display:flex;flex-direction:column}
-.px-wrap{padding:1.5rem;display:flex;align-items:flex-start;justify-content:center;gap:2rem;flex-wrap:wrap}
-.px-stage{position:relative;width:180px;height:240px;flex-shrink:0}
-.px-stage canvas{position:absolute;inset:0;width:180px;height:240px;border-radius:14px}
-.px-controls{display:flex;flex-direction:column;gap:.6rem;min-width:220px;max-width:320px;padding-top:.2rem}
+.px-stage{position:absolute;inset:0;background:#060810}
+.px-stage canvas{position:absolute;inset:0;width:100%;height:100%;image-rendering:auto}
+.px-controls{display:flex;flex-direction:column;gap:.6rem;min-width:220px;max-width:320px}
 .btn-export{display:flex;align-items:center;gap:6px;background:rgba(94,207,206,.1);border:.5px solid rgba(94,207,206,.3);color:#5ecfce;font-size:9px;font-family:var(--mono);letter-spacing:.1em;text-transform:uppercase;padding:7px 12px;border-radius:5px;cursor:pointer;transition:all .2s;width:100%;margin-top:.25rem}
 .btn-export:hover{background:rgba(94,207,206,.2);border-color:rgba(94,207,206,.6)}
 .btn-export .icon{font-size:13px;line-height:1}
@@ -538,19 +544,8 @@ window.addEventListener('touchend',()=>{panelS.onUp();panelG.onUp();});
 </style>
 
 <section class="view" data-view="px">
-<div class="grid-full">
-<div class="cell-wide">
-  <div class="cell-header">
-    <p class="cell-num">03 — Pixel Grid</p>
-    <p class="cell-title">Mosaïque vectorielle <span class="badge" style="background:rgba(200,140,50,.12);color:#e0a84a">exportable SVG</span></p>
-    <p class="cell-sub">IDW par centre de cellule · carrés alignés sur grille · export SVG Illustrator-ready</p>
-    <span class="tag" style="background:rgba(200,140,50,.12);color:#e0a84a">PIXEL GRID</span>
-  </div>
-  <div class="px-wrap">
-    <div class="px-stage">
-      <canvas id="px-canvas" width="180" height="240"></canvas>
-    </div>
-    <div class="px-controls">
+  <div class="px-stage"><canvas id="px-canvas" width="180" height="240"></canvas></div>
+  <div class="float-panel"><div class="px-controls">
 
       <p class="sep" style="border-top:none;padding-top:0">Source</p>
       <div class="source-tabs">
@@ -595,10 +590,7 @@ window.addEventListener('touchend',()=>{panelS.onUp();panelG.onUp();});
         <span class="icon">↓</span> Exporter en SVG
       </button>
 
-    </div>
-  </div>
-</div>
-</div>
+  </div></div>
 </section>
 
 <script>
@@ -804,7 +796,10 @@ document.querySelectorAll('.tab').forEach(btn => {
     const target = btn.dataset.tab;
     document.querySelectorAll('.tab').forEach(b => b.classList.toggle('active', b === btn));
     document.querySelectorAll('.view').forEach(v => v.classList.toggle('active', v.dataset.view === target));
-    if (target === 'px') renderPixelGrid();
+    // la vue devient visible -> on re-render a sa taille reelle (un panneau cache a une taille nulle)
+    if (target === 'svg') panelS.render();
+    else if (target === 'gl') panelG.render();
+    else if (target === 'px') renderPixelGrid();
   });
 });
 </script>
