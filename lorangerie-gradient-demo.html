@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Freeform Gradient — SVG · WebGL</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;700;800&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0E0E10;--surface:#16161A;--border:rgba(255,255,255,0.07);
+  --text:#E8E4DC;--muted:rgba(232,228,220,0.38);--danger:#e05050;
+  --accent-s:#5ecfce;--accent-g:#a88ae0;
+  --mono:'DM Mono',monospace;--sans:'Syne',sans-serif;
+}
+html,body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh}
+header{padding:2rem 2rem 1.4rem;border-bottom:.5px solid var(--border)}
+header h1{font-size:clamp(1.2rem,2.5vw,1.8rem);font-weight:800;letter-spacing:-.02em}
+header p{font-size:.77rem;color:var(--muted);margin-top:.3rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:1.5px;background:var(--border);border-top:.5px solid var(--border)}
+.cell{background:var(--surface);display:flex;flex-direction:column}
+.cell-header{padding:1rem 1.4rem .85rem;border-bottom:.5px solid var(--border)}
+.cell-num{font-size:9px;font-weight:500;letter-spacing:.18em;color:var(--muted);text-transform:uppercase;margin-bottom:.25rem;font-family:var(--mono)}
+.cell-title{font-size:.9rem;font-weight:700}
+.cell-sub{font-size:.7rem;color:var(--muted);margin-top:.12rem}
+.tag{display:inline-block;font-size:9px;font-family:var(--mono);letter-spacing:.1em;padding:2px 7px;border-radius:3px;margin-top:.3rem}
+.tag-svg{background:rgba(46,139,142,.15);color:var(--accent-s)}
+.tag-webgl{background:rgba(130,100,200,.15);color:var(--accent-g)}
+.badge{font-size:9px;font-family:var(--mono);padding:2px 6px;border-radius:3px;background:rgba(94,207,206,.12);color:var(--accent-s);margin-left:6px;vertical-align:middle}
+.preview-wrap{padding:1.5rem;display:flex;align-items:center;justify-content:center;flex:1;min-height:260px}
+.stage{position:relative;width:180px;height:240px;flex-shrink:0;cursor:crosshair}
+.controls{padding:.85rem 1.4rem 1.3rem;border-top:.5px solid var(--border);display:flex;flex-direction:column;gap:.5rem}
+.sep{font-size:9px;font-family:var(--mono);color:rgba(232,228,220,.2);text-transform:uppercase;letter-spacing:.12em;padding:.4rem 0 .1rem;border-top:.5px solid var(--border);margin-top:.1rem}
+.sep:first-child{border-top:none;padding-top:0}
+.ctrl-row{display:flex;align-items:center;gap:10px}
+.ctrl-row label{font-size:9px;font-family:var(--mono);color:var(--muted);min-width:72px;text-transform:uppercase;letter-spacing:.08em}
+.ctrl-val{font-size:9px;font-family:var(--mono);color:var(--muted);min-width:28px;text-align:right}
+input[type=range]{flex:1;height:2px;-webkit-appearance:none;appearance:none;background:rgba(255,255,255,.12);border-radius:1px;outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:11px;height:11px;background:var(--text);border-radius:50%}
+.pts-list{display:flex;flex-direction:column;gap:3px;max-height:240px;overflow-y:auto;padding-right:2px}
+.pts-list::-webkit-scrollbar{width:3px}
+.pts-list::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:2px}
+.pt-card{background:rgba(255,255,255,.025);border:.5px solid var(--border);border-radius:5px;padding:5px 7px;display:flex;flex-direction:column;gap:3px}
+.pt-top{display:flex;align-items:center;gap:6px}
+.pt-swatch{width:16px;height:16px;border-radius:50%;flex-shrink:0;border:1.5px solid rgba(255,255,255,.2);position:relative;overflow:hidden;cursor:pointer}
+.pt-swatch input[type=color]{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer}
+.pt-label{font-size:9px;font-family:var(--mono);color:var(--muted);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pt-del{background:none;border:none;color:rgba(255,80,80,.4);cursor:pointer;font-size:13px;padding:0 2px;line-height:1;flex-shrink:0;transition:color .15s}
+.pt-del:hover{color:var(--danger)}
+.pt-del:disabled{opacity:.15;cursor:default}
+.pt-sliders{display:flex;flex-direction:column;gap:3px;padding-left:22px}
+.pt-srow{display:flex;align-items:center;gap:5px}
+.pt-srow .slbl{font-size:8px;font-family:var(--mono);color:rgba(232,228,220,.22);min-width:42px;text-transform:uppercase}
+.pt-srow .sval{font-size:8px;font-family:var(--mono);color:rgba(232,228,220,.22);min-width:24px;text-align:right}
+.pt-srow input[type=range]{flex:1;height:2px}
+/* blend mode select */
+.blend-row{display:flex;align-items:center;gap:5px;padding-left:22px}
+.blend-row .slbl{font-size:8px;font-family:var(--mono);color:rgba(232,228,220,.22);min-width:42px;text-transform:uppercase}
+select.blend-sel{
+  flex:1;background:rgba(255,255,255,.05);border:.5px solid rgba(255,255,255,.1);
+  color:var(--text);font-size:8px;font-family:var(--mono);
+  border-radius:3px;padding:2px 4px;outline:none;cursor:pointer;
+  appearance:none;-webkit-appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='rgba(255,255,255,0.3)'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 5px center;padding-right:16px;
+}
+select.blend-sel:focus{border-color:rgba(255,255,255,.25)}
+.btn-add{display:flex;align-items:center;gap:6px;background:none;border:.5px solid var(--border);color:var(--muted);font-size:9px;font-family:var(--mono);letter-spacing:.1em;text-transform:uppercase;padding:5px 10px;border-radius:5px;cursor:pointer;transition:all .15s;width:100%}
+.btn-add:hover{border-color:rgba(255,255,255,.2);color:var(--text);background:rgba(255,255,255,.04)}
+.btn-add .plus{font-size:13px;line-height:1}
+.path-list{display:flex;flex-direction:column;gap:2px;max-height:100px;overflow-y:auto}
+.path-list::-webkit-scrollbar{width:3px}
+.path-list::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:2px}
+.pp-row{display:flex;align-items:center;gap:6px;padding:3px 6px;border-radius:4px;background:rgba(255,255,255,.02)}
+.pp-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;border:1.5px solid rgba(255,255,255,.4)}
+.pp-coords{font-size:8px;font-family:var(--mono);color:rgba(232,228,220,.25);flex:1}
+.pp-del{background:none;border:none;color:rgba(255,80,80,.3);cursor:pointer;font-size:12px;padding:0;line-height:1;flex-shrink:0}
+.pp-del:hover{color:var(--danger)}
+.pp-del:disabled{opacity:.12;cursor:default}
+.hint{font-size:8px;font-family:var(--mono);color:rgba(232,228,220,.16)}
+</style>
+</head>
+<body>
+<header>
+  <h1>Freeform Gradient — SVG · WebGL</h1>
+  <p>Mode de fusion par point · forme vectorielle libre · clic vide = ajouter point de forme</p>
+</header>
+<div class="grid">
+  <div class="cell"><div class="cell-header">
+    <p class="cell-num">01 — Vectoriel</p>
+    <p class="cell-title">SVG radiaux empilés <span class="badge">scalable ∞</span></p>
+    <p class="cell-sub">mix-blend-mode individuel par couche · clipPath Catmull-Rom</p>
+    <span class="tag tag-svg">SVG NATIF</span>
+  </div>
+  <div class="preview-wrap"><div class="stage" id="s-stage"></div></div>
+  <div class="controls" id="s-ctrl"></div></div>
+
+  <div class="cell"><div class="cell-header">
+    <p class="cell-num">02 — Raster GPU</p>
+    <p class="cell-title">WebGL Shader</p>
+    <p class="cell-sub">Blend mode par point calculé en GLSL · clip-path CSS</p>
+    <span class="tag tag-webgl">WEBGL</span>
+  </div>
+  <div class="preview-wrap"><div class="stage" id="g-stage"></div></div>
+  <div class="controls" id="g-ctrl"></div></div>
+</div>
+
+<script>
+const CW=180,CH=240,MAX_GRAD=16,MIN_PATH=3;
+const PALETTE=['#1ab8e0','#9060cc','#e06020','#20c060','#e0b020','#e03080','#20a0e0','#80e060','#c040a0','#40c0a0'];
+
+// SVG CSS blend modes
+const SVG_BLENDS=['screen','normal','multiply','overlay','lighten','darken','soft-light','hard-light','difference','exclusion','color-dodge','color-burn'];
+// WebGL blend modes (shader int mapping)
+const GL_BLENDS=['screen','normal','multiply','add','overlay','lighten','darken','difference'];
+const GL_BLEND_IDX={screen:0,normal:1,multiply:2,add:3,overlay:4,lighten:5,darken:6,difference:7};
+
+function rndColor(pts){const u=PALETTE.find(c=>!pts.find(p=>p.color===c));return u||'#'+Math.floor(Math.random()*0xffffff).toString(16).padStart(6,'0');}
+function hexToRgb(h){return[parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)]}
+function hexToRgb01(h){return hexToRgb(h).map(v=>v/255)}
+function clamp(v,a,b){return Math.min(b,Math.max(a,v))}
+
+function catmullPath(pts,W,H,tension=0.5){
+  const n=pts.length;if(n<2)return'';if(n===2)return`M${pts[0].x*W},${pts[0].y*H} L${pts[1].x*W},${pts[1].y*H} Z`;
+  const px=p=>p.x*W,py=p=>p.y*H;
+  let d=`M${px(pts[0])},${py(pts[0])}`;
+  for(let i=0;i<n;i++){
+    const p0=pts[(i-1+n)%n],p1=pts[i],p2=pts[(i+1)%n],p3=pts[(i+2)%n];
+    const c1x=px(p1)+tension*(px(p2)-px(p0))/3,c1y=py(p1)+tension*(py(p2)-py(p0))/3;
+    const c2x=px(p2)-tension*(px(p3)-px(p1))/3,c2y=py(p2)-tension*(py(p3)-py(p1))/3;
+    d+=` C${c1x},${c1y} ${c2x},${c2y} ${px(p2)},${py(p2)}`;
+  }return d+' Z';
+}
+
+function nearestSegment(pts,nx,ny){
+  let best=0,bestD=Infinity;
+  for(let i=0;i<pts.length;i++){const a=pts[i],b=pts[(i+1)%pts.length];const mx=(a.x+b.x)/2,my=(a.y+b.y)/2;const d=Math.hypot(nx-mx,ny-my);if(d<bestD){bestD=d;best=i;}}return best;
+}
+function phoneShape(){return[{x:.22,y:.04},{x:.78,y:.04},{x:.96,y:.22},{x:.96,y:.78},{x:.78,y:.96},{x:.22,y:.96},{x:.04,y:.78},{x:.04,y:.22}];}
+
+class Panel{
+  constructor(id,type,accent,gradPts){
+    this.id=id;this.type=type;this.accent=accent;
+    this.pathPts=phoneShape();this.gradPts=gradPts;
+    this.tension=0.55;this.drag=null;
+    this.gl=null;this.prog=null;this.locs=null;this.compiledN=0;this.compiledBM='';
+    this.glExp=2;
+    this.stage=document.getElementById(`${id}-stage`);
+    this.ctrl=document.getElementById(`${id}-ctrl`);
+    this._build();
+  }
+
+  _build(){
+    const s=this.stage;s.innerHTML='';
+    const ns='http://www.w3.org/2000/svg';
+    if(this.type==='svg'){
+      const svg=document.createElementNS(ns,'svg');
+      svg.setAttribute('width',CW);svg.setAttribute('height',CH);svg.setAttribute('viewBox',`0 0 ${CW} ${CH}`);
+      svg.style.cssText='position:absolute;inset:0;overflow:hidden';
+      svg.innerHTML=`<defs><clipPath id="clip-${this.id}"><path id="clip-path-${this.id}"/></clipPath></defs>
+        <rect width="${CW}" height="${CH}" fill="#060810"/>
+        <g id="layers-${this.id}" clip-path="url(#clip-${this.id})"></g>`;
+      s.appendChild(svg);this.svgEl=svg;
+    }else{
+      const c=document.createElement('canvas');c.width=CW;c.height=CH;
+      c.style.cssText='position:absolute;inset:0;width:180px;height:240px';
+      c.id=`canvas-${this.id}`;s.appendChild(c);
+      this.gl=c.getContext('webgl');this.glCanvas=c;
+    }
+    const ov=document.createElementNS(ns,'svg');
+    ov.setAttribute('width',CW);ov.setAttribute('height',CH);ov.setAttribute('viewBox',`0 0 ${CW} ${CH}`);
+    ov.style.cssText='position:absolute;inset:0;overflow:visible';
+    ov.innerHTML=`<path id="sb-${this.id}" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1" stroke-dasharray="4 3"/>
+      <g id="mp-${this.id}"></g><g id="gh-${this.id}"></g><g id="ph-${this.id}"></g>`;
+    s.appendChild(ov);this.ovEl=ov;
+    if(this.type==='gl'){
+      const ic=document.createElement('canvas');ic.width=CW;ic.height=CH;
+      ic.style.cssText='position:absolute;inset:0;width:180px;height:240px;cursor:crosshair';
+      ic.id=`ic-${this.id}`;s.appendChild(ic);this.icCanvas=ic;
+    }
+    this._bindEvents();this._buildControls();
+  }
+
+  render(){
+    const path=catmullPath(this.pathPts,CW,CH,this.tension);
+    if(this.type==='svg'){
+      document.getElementById(`clip-path-${this.id}`).setAttribute('d',path);
+      const layers=document.getElementById(`layers-${this.id}`);
+      const defs=this.svgEl.querySelector('defs');
+      layers.innerHTML='';
+      const ns='http://www.w3.org/2000/svg';
+      this.gradPts.forEach((p,i)=>{
+        const[r,g,b]=hexToRgb(p.color);
+        const cx=p.x*CW,cy=p.y*CH,gid=`rg-${this.id}-${i}`;
+        let gr=defs.querySelector(`#${gid}`);
+        if(!gr){gr=document.createElementNS(ns,'radialGradient');gr.setAttribute('id',gid);defs.appendChild(gr);}
+        gr.setAttribute('cx',cx);gr.setAttribute('cy',cy);gr.setAttribute('r',p.radius);gr.setAttribute('gradientUnits','userSpaceOnUse');
+        gr.innerHTML=`<stop offset="0%" stop-color="rgb(${r},${g},${b})" stop-opacity="${p.alpha}"/>
+          <stop offset="100%" stop-color="rgb(${r},${g},${b})" stop-opacity="0"/>`;
+        // Each layer in its own group with individual blend mode
+        const grp=document.createElementNS(ns,'g');
+        grp.style.mixBlendMode=p.blendMode||'screen';
+        const rect=document.createElementNS(ns,'rect');
+        rect.setAttribute('width',CW);rect.setAttribute('height',CH);rect.setAttribute('fill',`url(#${gid})`);
+        grp.appendChild(rect);layers.appendChild(grp);
+      });
+    }else{
+      if(this.gl){this._glRender();this.glCanvas.style.clipPath=`path('${path}')`;}
+    }
+    document.getElementById(`sb-${this.id}`).setAttribute('d',path);
+    this._renderHandles();
+    this._buildPathList();
+  }
+
+  // ── WEBGL ──────────────────────────────────────────────────────────────────
+  _glKey(){return this.gradPts.length+'|'+this.gradPts.map(p=>GL_BLEND_IDX[p.blendMode]??0).join(',');}
+  _ensureShader(){
+    const key=this._glKey();if(this.compiledBM===key)return;
+    const gl=this.gl;if(this.prog)gl.deleteProgram(this.prog);
+    const n=Math.max(1,this.gradPts.length);
+    const bms=this.gradPts.map(p=>GL_BLEND_IDX[p.blendMode]??0);
+    const VS=`attribute vec2 a;void main(){gl_Position=vec4(a,0.,1.);}`;
+    // Build blend logic per point as unrolled if-chain
+    let blendCases='';
+    for(let i=0;i<n;i++){
+      const bm=bms[i];
+      blendCases+=`
+  {
+    float d=distance(uv,u_pts[${i}]);
+    float nd=d/max(u_radii[${i}],.001);
+    float w=u_alphas[${i}]/pow(nd+.001,u_exp);
+    vec3 sc=u_cols[${i}];
+    float a=clamp(w,0.,1.);
+    ${this._glBlendCode(bm,'sc','a')}
+  }`;
+    }
+    const FS=`precision mediump float;
+uniform vec2 u_res;
+uniform vec2 u_pts[${n}];
+uniform vec3 u_cols[${n}];
+uniform float u_radii[${n}];
+uniform float u_alphas[${n}];
+uniform float u_exp;
+void main(){
+  vec2 uv=gl_FragCoord.xy/u_res;uv.y=1.-uv.y;
+  vec3 result=vec3(0.06,0.03,0.06);
+  ${blendCases}
+  gl_FragColor=vec4(clamp(result,0.,1.),1.);
+}`;
+    const mkS=(t,s)=>{const sh=gl.createShader(t);gl.shaderSource(sh,s);gl.compileShader(sh);
+      if(!gl.getShaderParameter(sh,gl.COMPILE_STATUS))console.error(gl.getShaderInfoLog(sh));return sh;};
+    this.prog=gl.createProgram();
+    gl.attachShader(this.prog,mkS(gl.VERTEX_SHADER,VS));
+    gl.attachShader(this.prog,mkS(gl.FRAGMENT_SHADER,FS));
+    gl.linkProgram(this.prog);gl.useProgram(this.prog);
+    const buf=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buf);
+    gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
+    const al=gl.getAttribLocation(this.prog,'a');gl.enableVertexAttribArray(al);gl.vertexAttribPointer(al,2,gl.FLOAT,false,0,0);
+    this.locs={res:gl.getUniformLocation(this.prog,'u_res'),pts:gl.getUniformLocation(this.prog,'u_pts'),
+      cols:gl.getUniformLocation(this.prog,'u_cols'),radii:gl.getUniformLocation(this.prog,'u_radii'),
+      alphas:gl.getUniformLocation(this.prog,'u_alphas'),exp:gl.getUniformLocation(this.prog,'u_exp')};
+    this.compiledBM=key;
+  }
+
+  _glBlendCode(bm,sc,a){
+    // result = current accumulated color, sc = source color, a = weight/alpha
+    switch(bm){
+      case 0: return `result=result+${sc}*${a}-result*${sc}*${a};`; // screen
+      case 1: return `result=mix(result,${sc},${a});`; // normal
+      case 2: return `result=mix(result,result*${sc},${a});`; // multiply
+      case 3: return `result=clamp(result+${sc}*${a},0.,1.);`; // add
+      case 4: return `{vec3 _ov=mix(2.*result*${sc},1.-2.*(1.-result)*(1.-${sc}),step(0.5,result));result=mix(result,_ov,${a});}` // overlay
+      case 5: return `result=mix(result,max(result,${sc}),${a});`; // lighten
+      case 6: return `result=mix(result,min(result,${sc}),${a});`; // darken
+      case 7: return `result=mix(result,abs(result-${sc}),${a});`; // difference
+      default: return `result=result+${sc}*${a}-result*${sc}*${a};`;
+    }
+  }
+
+  _glRender(){
+    const gl=this.gl;this._ensureShader();
+    gl.viewport(0,0,CW,CH);
+    gl.uniform2f(this.locs.res,CW,CH);
+    gl.uniform2fv(this.locs.pts,this.gradPts.flatMap(p=>[p.x,p.y]));
+    gl.uniform3fv(this.locs.cols,this.gradPts.flatMap(p=>hexToRgb01(p.color)));
+    gl.uniform1fv(this.locs.radii,this.gradPts.map(p=>p.radius));
+    gl.uniform1fv(this.locs.alphas,this.gradPts.map(p=>p.alpha));
+    gl.uniform1f(this.locs.exp,this.glExp);
+    gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+  }
+
+  // ── HANDLES ──────────────────────────────────────────────────────────────
+  _renderHandles(){
+    const ns='http://www.w3.org/2000/svg';
+    const mpg=document.getElementById(`mp-${this.id}`);
+    const ghg=document.getElementById(`gh-${this.id}`);
+    const phg=document.getElementById(`ph-${this.id}`);
+    mpg.innerHTML='';ghg.innerHTML='';phg.innerHTML='';
+    this.pathPts.forEach((p,i)=>{
+      const b=this.pathPts[(i+1)%this.pathPts.length];
+      const mx=(p.x+b.x)/2*CW,my=(p.y+b.y)/2*CH;
+      const c=document.createElementNS(ns,'circle');
+      c.setAttribute('cx',mx);c.setAttribute('cy',my);c.setAttribute('r',4);
+      c.setAttribute('fill','rgba(255,255,255,0.05)');c.setAttribute('stroke','rgba(255,255,255,0.22)');c.setAttribute('stroke-width','1');
+      c.style.cursor='copy';c.dataset.kind='midpt';c.dataset.seg=i;mpg.appendChild(c);
+      const t=document.createElementNS(ns,'text');t.setAttribute('x',mx);t.setAttribute('y',my+3.5);
+      t.setAttribute('text-anchor','middle');t.setAttribute('font-size','7');t.setAttribute('fill','rgba(255,255,255,0.32)');
+      t.setAttribute('pointer-events','none');t.textContent='+';mpg.appendChild(t);
+    });
+    this.gradPts.forEach((p,i)=>{
+      const cx=p.x*CW,cy=p.y*CH;
+      const c=document.createElementNS(ns,'circle');
+      c.setAttribute('cx',cx);c.setAttribute('cy',cy);c.setAttribute('r',7);
+      c.setAttribute('fill',p.color);c.setAttribute('stroke','rgba(255,255,255,0.8)');c.setAttribute('stroke-width','1.5');
+      c.style.cursor='grab';c.dataset.kind='grad';c.dataset.idx=i;ghg.appendChild(c);
+    });
+    this.pathPts.forEach((p,i)=>{
+      const cx=p.x*CW,cy=p.y*CH;
+      const r=document.createElementNS(ns,'rect');
+      r.setAttribute('x',cx-5);r.setAttribute('y',cy-5);r.setAttribute('width',10);r.setAttribute('height',10);r.setAttribute('rx',2);
+      r.setAttribute('fill','rgba(255,255,255,0.72)');r.setAttribute('stroke','rgba(0,0,0,0.25)');r.setAttribute('stroke-width','.5');
+      r.style.cursor='grab';r.dataset.kind='path';r.dataset.idx=i;phg.appendChild(r);
+    });
+  }
+
+  // ── CONTROLS ─────────────────────────────────────────────────────────────
+  _buildControls(){
+    const c=this.ctrl;c.innerHTML='';
+    const isGL=this.type==='gl';
+    if(isGL){
+      c.appendChild(this._sep('Shader'));
+      c.appendChild(this._mkSlider('Exposant',0.5,8,0.1,this.glExp,v=>v.toFixed(1),v=>{this.glExp=v;this.render();}));
+    }
+    c.appendChild(this._sep('Forme'));
+    c.appendChild(this._mkSlider('Tension',0,1,.01,this.tension,v=>v.toFixed(2),v=>{this.tension=v;this.render();}));
+    const pll=document.createElement('div');pll.id=`pp-list-${this.id}`;pll.className='path-list';c.appendChild(pll);
+    const addPath=document.createElement('button');addPath.className='btn-add';
+    addPath.innerHTML='<span class="plus">+</span> Ajouter point de forme';
+    addPath.addEventListener('click',()=>{
+      const mid={x:.5+Math.random()*.1-.05,y:.5+Math.random()*.1-.05};
+      this.pathPts.splice(nearestSegment(this.pathPts,mid.x,mid.y)+1,0,mid);this.render();
+    });
+    c.appendChild(addPath);
+    c.appendChild(this._sep('Dégradé'));
+    const ptl=document.createElement('div');ptl.id=`gp-list-${this.id}`;ptl.className='pts-list';c.appendChild(ptl);
+    const addGrad=document.createElement('button');addGrad.className='btn-add';
+    addGrad.innerHTML='<span class="plus">+</span> Ajouter point dégradé';
+    addGrad.addEventListener('click',()=>{
+      if(this.gradPts.length>=MAX_GRAD)return;
+      this.gradPts.push({x:.4+Math.random()*.2,y:.4+Math.random()*.2,
+        color:rndColor(this.gradPts),radius:isGL?.55:110,alpha:isGL?1:.9,blendMode:'screen'});
+      this.render();
+    });
+    c.appendChild(addGrad);
+    const h=document.createElement('p');h.className='hint';h.textContent='clic vide = ajouter · "+" = insérer entre deux points';c.appendChild(h);
+  }
+
+  _sep(t){const p=document.createElement('p');p.className='sep';p.textContent=t;return p;}
+  _mkSlider(lb,min,max,step,val,fmt,cb){
+    const row=document.createElement('div');row.className='ctrl-row';
+    const l=document.createElement('label');l.textContent=lb;
+    const r=document.createElement('input');r.type='range';r.min=min;r.max=max;r.step=step;r.value=val;
+    const v=document.createElement('span');v.className='ctrl-val';v.textContent=fmt(val);
+    r.addEventListener('input',()=>{v.textContent=fmt(+r.value);cb(+r.value);});
+    row.appendChild(l);row.appendChild(r);row.appendChild(v);return row;
+  }
+
+  _buildPathList(){
+    const list=document.getElementById(`pp-list-${this.id}`);if(!list)return;list.innerHTML='';
+    this.pathPts.forEach((p,i)=>{
+      const row=document.createElement('div');row.className='pp-row';
+      const dot=document.createElement('div');dot.className='pp-dot';dot.style.borderColor=this.accent;
+      const coords=document.createElement('span');coords.className='pp-coords';
+      coords.id=`pp-coord-${this.id}-${i}`;
+      coords.textContent=`${i+1}  x:${(p.x*CW).toFixed(0)} y:${(p.y*CH).toFixed(0)}`;
+      const del=document.createElement('button');del.className='pp-del';del.textContent='×';
+      del.disabled=this.pathPts.length<=MIN_PATH;
+      del.addEventListener('click',()=>{this.pathPts.splice(i,1);this.render();});
+      row.appendChild(dot);row.appendChild(coords);row.appendChild(del);list.appendChild(row);
+    });
+    this._buildGradList();
+  }
+
+  _buildGradList(){
+    const list=document.getElementById(`gp-list-${this.id}`);if(!list)return;list.innerHTML='';
+    const isGL=this.type==='gl';
+    const blendOptions=isGL?GL_BLENDS:SVG_BLENDS;
+
+    this.gradPts.forEach((p,i)=>{
+      const card=document.createElement('div');card.className='pt-card';
+      const top=document.createElement('div');top.className='pt-top';
+      const sw=document.createElement('div');sw.className='pt-swatch';sw.style.background=p.color;
+      const ci=document.createElement('input');ci.type='color';ci.value=p.color;
+      ci.addEventListener('input',e=>{this.gradPts[i].color=e.target.value;sw.style.background=e.target.value;this.render();});
+      sw.appendChild(ci);
+      const lbl=document.createElement('span');lbl.className='pt-label';lbl.id=`gp-lbl-${this.id}-${i}`;
+      lbl.textContent=`pt ${i+1}  ${p.x.toFixed(2)} ${p.y.toFixed(2)}`;
+      const del=document.createElement('button');del.className='pt-del';del.textContent='×';
+      del.disabled=this.gradPts.length<=1;
+      del.addEventListener('click',()=>{this.gradPts.splice(i,1);this.render();});
+      top.appendChild(sw);top.appendChild(lbl);top.appendChild(del);
+
+      const sl=document.createElement('div');sl.className='pt-sliders';
+      const mkS=(lb,min,max,step,v,fmt,cb)=>{
+        const row=document.createElement('div');row.className='pt-srow';
+        const l=document.createElement('span');l.className='slbl';l.textContent=lb;
+        const r=document.createElement('input');r.type='range';r.min=min;r.max=max;r.step=step;r.value=v;
+        const val=document.createElement('span');val.className='sval';val.textContent=fmt(v);
+        r.addEventListener('input',()=>{val.textContent=fmt(+r.value);cb(+r.value);});
+        row.appendChild(l);row.appendChild(r);row.appendChild(val);return row;
+      };
+      sl.appendChild(mkS('Rayon',isGL?.1:.20,isGL?1.2:220,isGL?.01:1,p.radius,v=>isGL?v.toFixed(2):Math.round(v),v=>{this.gradPts[i].radius=v;this.render();}));
+      sl.appendChild(mkS('Opacité',.05,isGL?2:1,.01,p.alpha,v=>v.toFixed(2),v=>{this.gradPts[i].alpha=v;this.render();}));
+
+      // ── BLEND MODE SELECT ──
+      const brow=document.createElement('div');brow.className='blend-row';
+      const blbl=document.createElement('span');blbl.className='slbl';blbl.textContent='Fusion';
+      const sel=document.createElement('select');sel.className='blend-sel';
+      blendOptions.forEach(bm=>{
+        const opt=document.createElement('option');opt.value=bm;opt.textContent=bm;
+        if(bm===(p.blendMode||'screen'))opt.selected=true;
+        sel.appendChild(opt);
+      });
+      sel.addEventListener('change',()=>{this.gradPts[i].blendMode=sel.value;this.render();});
+      brow.appendChild(blbl);brow.appendChild(sel);sl.appendChild(brow);
+
+      card.appendChild(top);card.appendChild(sl);list.appendChild(card);
+    });
+  }
+
+  _updateGradLabel(i){const el=document.getElementById(`gp-lbl-${this.id}-${i}`);if(el&&this.gradPts[i])el.textContent=`pt ${i+1}  ${this.gradPts[i].x.toFixed(2)} ${this.gradPts[i].y.toFixed(2)}`;}
+  _updatePathLabel(i){const el=document.getElementById(`pp-coord-${this.id}-${i}`);if(el&&this.pathPts[i])el.textContent=`${i+1}  x:${(this.pathPts[i].x*CW).toFixed(0)} y:${(this.pathPts[i].y*CH).toFixed(0)}`;}
+
+  _bindEvents(){
+    const ov=this.ovEl;
+    const ie=this.type==='gl'?this.icCanvas:this.stage;
+    ov.addEventListener('mousedown',e=>this._onDown(e));
+    ov.addEventListener('touchstart',e=>this._onDown(e),{passive:false});
+    ie.addEventListener('click',e=>this._onClick(e));
+    if(this.type==='svg')this.stage.addEventListener('click',e=>this._onClick(e));
+  }
+
+  _getPos(e){
+    const r=this.stage.getBoundingClientRect();
+    const cx=e.touches?e.touches[0].clientX:e.clientX,cy=e.touches?e.touches[0].clientY:e.clientY;
+    return{x:clamp(cx-r.left,0,CW),y:clamp(cy-r.top,0,CH)};
+  }
+
+  _onDown(e){
+    const t=e.target,kind=t.dataset.kind,idx=parseInt(t.dataset.idx),seg=parseInt(t.dataset.seg);
+    if(kind==='path'&&!isNaN(idx)){this.drag={kind:'path',idx};e.preventDefault();e.stopPropagation();}
+    else if(kind==='grad'&&!isNaN(idx)){this.drag={kind:'grad',idx};e.preventDefault();e.stopPropagation();}
+    else if(kind==='midpt'&&!isNaN(seg)){
+      e.preventDefault();e.stopPropagation();
+      const a=this.pathPts[seg],b=this.pathPts[(seg+1)%this.pathPts.length];
+      this.pathPts.splice(seg+1,0,{x:(a.x+b.x)/2,y:(a.y+b.y)/2});
+      this.drag={kind:'path',idx:seg+1};this.render();
+    }
+  }
+
+  _onClick(e){
+    if(this.drag)return;
+    const t=e.target;
+    if(t.dataset.kind==='path'||t.dataset.kind==='grad'||t.dataset.kind==='midpt')return;
+    const pos=this._getPos(e);
+    const nx=pos.x/CW,ny=pos.y/CH;
+    const seg=nearestSegment(this.pathPts,nx,ny);
+    this.pathPts.splice(seg+1,0,{x:nx,y:ny});this.render();
+  }
+
+  onMove(e){
+    if(!this.drag)return;
+    const pos=this._getPos(e);const nx=pos.x/CW,ny=pos.y/CH;
+    if(this.drag.kind==='path'){this.pathPts[this.drag.idx]={x:nx,y:ny};this._updatePathLabel(this.drag.idx);this.render();}
+    else if(this.drag.kind==='grad'){this.gradPts[this.drag.idx].x=nx;this.gradPts[this.drag.idx].y=ny;this._updateGradLabel(this.drag.idx);this.render();}
+  }
+  onUp(){this.drag=null;}
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+const svgPts=[
+  {x:.25,y:.22,color:'#1ab8e0',radius:110,alpha:.9,blendMode:'screen'},
+  {x:.75,y:.30,color:'#9060cc',radius:110,alpha:.9,blendMode:'screen'},
+  {x:.30,y:.72,color:'#e06020',radius:110,alpha:.9,blendMode:'screen'},
+  {x:.72,y:.68,color:'#20c060',radius:110,alpha:.9,blendMode:'screen'},
+];
+const glPts=[
+  {x:.25,y:.22,color:'#1ab8e0',radius:.55,alpha:1,blendMode:'screen'},
+  {x:.75,y:.30,color:'#9060cc',radius:.55,alpha:1,blendMode:'screen'},
+  {x:.30,y:.72,color:'#e06020',radius:.55,alpha:1,blendMode:'screen'},
+  {x:.72,y:.68,color:'#20c060',radius:.55,alpha:1,blendMode:'screen'},
+];
+const panelS=new Panel('s','svg','#5ecfce',svgPts);
+const panelG=new Panel('g','gl','#a88ae0',glPts);
+panelS.render();panelG.render();
+
+window.addEventListener('mousemove',e=>{if(panelS.drag)panelS.onMove(e);if(panelG.drag)panelG.onMove(e);});
+window.addEventListener('touchmove',e=>{if(panelS.drag||panelG.drag){e.preventDefault();if(panelS.drag)panelS.onMove(e);if(panelG.drag)panelG.onMove(e);}},{passive:false});
+window.addEventListener('mouseup',()=>{panelS.onUp();panelG.onUp();});
+window.addEventListener('touchend',()=>{panelS.onUp();panelG.onUp();});
+</script>
+</body>
+</html>
+<!-- ═══════════════════════════════════════════════════════════ PIXEL GRID -->
+<style>
+.grid-full{display:grid;grid-template-columns:1fr;background:var(--border);border-top:1.5px solid var(--border)}
+.cell-wide{background:var(--surface);display:flex;flex-direction:column}
+.px-wrap{padding:1.5rem;display:flex;align-items:flex-start;justify-content:center;gap:2rem;flex-wrap:wrap}
+.px-stage{position:relative;width:180px;height:240px;flex-shrink:0}
+.px-stage canvas{position:absolute;inset:0;width:180px;height:240px;border-radius:14px}
+.px-controls{display:flex;flex-direction:column;gap:.6rem;min-width:220px;max-width:320px;padding-top:.2rem}
+.btn-export{display:flex;align-items:center;gap:6px;background:rgba(94,207,206,.1);border:.5px solid rgba(94,207,206,.3);color:#5ecfce;font-size:9px;font-family:var(--mono);letter-spacing:.1em;text-transform:uppercase;padding:7px 12px;border-radius:5px;cursor:pointer;transition:all .2s;width:100%;margin-top:.25rem}
+.btn-export:hover{background:rgba(94,207,206,.2);border-color:rgba(94,207,206,.6)}
+.btn-export .icon{font-size:13px;line-height:1}
+.source-tabs{display:flex;gap:4px}
+.source-tab{background:none;border:.5px solid var(--border);color:var(--muted);font-size:9px;font-family:var(--mono);letter-spacing:.08em;padding:4px 8px;border-radius:4px;cursor:pointer;transition:all .15s}
+.source-tab.active{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.2);color:var(--text)}
+.px-info{font-size:9px;font-family:var(--mono);color:rgba(232,228,220,.25)}
+</style>
+
+<div class="grid-full">
+<div class="cell-wide">
+  <div class="cell-header">
+    <p class="cell-num">03 — Pixel Grid</p>
+    <p class="cell-title">Mosaïque vectorielle <span class="badge" style="background:rgba(200,140,50,.12);color:#e0a84a">exportable SVG</span></p>
+    <p class="cell-sub">IDW par centre de cellule · carrés alignés sur grille · export SVG Illustrator-ready</p>
+    <span class="tag" style="background:rgba(200,140,50,.12);color:#e0a84a">PIXEL GRID</span>
+  </div>
+  <div class="px-wrap">
+    <div class="px-stage">
+      <canvas id="px-canvas" width="180" height="240"></canvas>
+    </div>
+    <div class="px-controls">
+
+      <p class="sep" style="border-top:none;padding-top:0">Source</p>
+      <div class="source-tabs">
+        <button class="source-tab active" id="src-svg-btn">SVG panel</button>
+        <button class="source-tab" id="src-gl-btn">WebGL panel</button>
+      </div>
+
+      <p class="sep">Grille</p>
+      <div class="ctrl-row">
+        <label>Cellule</label>
+        <input type="range" id="px-cell" min="4" max="36" step="1" value="12">
+        <span class="ctrl-val" id="px-cell-v">12px</span>
+      </div>
+      <div class="ctrl-row">
+        <label>Espacement</label>
+        <input type="range" id="px-gap" min="0" max="6" step="0.5" value="1">
+        <span class="ctrl-val" id="px-gap-v">1px</span>
+      </div>
+      <div class="ctrl-row">
+        <label>Exposant</label>
+        <input type="range" id="px-exp" min="0.5" max="8" step="0.1" value="2">
+        <span class="ctrl-val" id="px-exp-v">2.0</span>
+      </div>
+      <div class="ctrl-row">
+        <label>Rayon coins</label>
+        <input type="range" id="px-rx" min="0" max="8" step="0.5" value="2">
+        <span class="ctrl-val" id="px-rx-v">2px</span>
+      </div>
+
+      <p class="sep">Forme</p>
+      <div class="ctrl-row">
+        <label>Clip</label>
+        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;min-width:auto;flex:1">
+          <input type="checkbox" id="px-clip" checked style="width:12px;height:12px">
+          <span style="font-size:9px;font-family:var(--mono);color:var(--muted)">Appliquer la forme du panel source</span>
+        </label>
+      </div>
+
+      <span class="px-info" id="px-info">—</span>
+
+      <button class="btn-export" id="px-export">
+        <span class="icon">↓</span> Exporter en SVG
+      </button>
+
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+// ── PIXEL GRID ────────────────────────────────────────────────────────────────
+let pxSource = 's'; // 's' = svg panel, 'g' = gl panel
+
+document.getElementById('src-svg-btn').addEventListener('click', () => {
+  pxSource = 's';
+  document.getElementById('src-svg-btn').classList.add('active');
+  document.getElementById('src-gl-btn').classList.remove('active');
+  renderPixelGrid();
+});
+document.getElementById('src-gl-btn').addEventListener('click', () => {
+  pxSource = 'g';
+  document.getElementById('src-gl-btn').classList.add('active');
+  document.getElementById('src-svg-btn').classList.remove('active');
+  renderPixelGrid();
+});
+
+['px-cell','px-gap','px-exp','px-rx','px-clip'].forEach(id => {
+  const el = document.getElementById(id);
+  const vEl = document.getElementById(id + '-v');
+  el.addEventListener('input', () => {
+    if (vEl) {
+      const v = el.type === 'checkbox' ? '' : +el.value;
+      if (id === 'px-exp') vEl.textContent = v.toFixed(1);
+      else if (id !== 'px-clip') vEl.textContent = v + 'px';
+    }
+    renderPixelGrid();
+  });
+});
+
+// IDW computation (CPU, normalized coords 0-1)
+function idwColor(pts, nx, ny, exp) {
+  let r=0,g=0,b=0,tw=0;
+  for (const p of pts) {
+    const [pr,pg,pb] = hexToRgb(p.color);
+    const dx = nx - p.x, dy = ny - p.y;
+    const dist = Math.sqrt(dx*dx + dy*dy);
+    const nd = dist / Math.max(p.radius, 0.001);
+    const w = (p.alpha||1) / Math.pow(nd + 0.001, exp);
+    r += pr*w; g += pg*w; b += pb*w; tw += w;
+  }
+  if (tw === 0) return [20, 8, 20];
+  return [r/tw|0, g/tw|0, b/tw|0];
+}
+
+// Build offscreen test canvas for point-in-path
+function makePathTester(pathPts, tension, W, H) {
+  const oc = document.createElement('canvas');
+  oc.width = W; oc.height = H;
+  const ctx = oc.getContext('2d');
+  const pathStr = catmullPath(pathPts, W, H, tension);
+  const p2d = new Path2D(pathStr);
+  return (x, y) => ctx.isPointInPath(p2d, x, y);
+}
+
+function renderPixelGrid() {
+  const canvas = document.getElementById('px-canvas');
+  const ctx = canvas.getContext('2d');
+  const W = CW, H = CH;
+
+  const cell   = +document.getElementById('px-cell').value;
+  const gap    = +document.getElementById('px-gap').value;
+  const exp    = +document.getElementById('px-exp').value;
+  const rx     = +document.getElementById('px-rx').value;
+  const useClip = document.getElementById('px-clip').checked;
+
+  // Source panel
+  const panel = pxSource === 's' ? panelS : panelG;
+  const pts   = panel.gradPts;
+
+  // For GL panel, radii are normalized [0-1.2], for SVG they're px [20-220]
+  // Normalize SVG radii to 0-1 range for IDW (divide by max(W,H))
+  const normPts = pts.map(p => ({
+    ...p,
+    radius: pxSource === 's' ? p.radius / Math.max(W, H) : p.radius
+  }));
+
+  // Path tester
+  const isInside = useClip
+    ? makePathTester(panel.pathPts, panel.tension, W, H)
+    : () => true;
+
+  // Background
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = '#060810';
+  ctx.fillRect(0, 0, W, H);
+
+  // Apply shape clip on background too
+  if (useClip) {
+    const p2d = new Path2D(catmullPath(panel.pathPts, W, H, panel.tension));
+    ctx.save();
+    ctx.clip(p2d);
+    ctx.fillStyle = '#060810';
+    ctx.fillRect(0, 0, W, H);
+    ctx.restore();
+  }
+
+  const innerW = cell - gap;
+  let count = 0;
+
+  const cols = Math.ceil(W / cell);
+  const rows = Math.ceil(H / cell);
+
+  // Offset to center the grid
+  const offX = ((W - cols * cell) / 2);
+  const offY = ((H - rows * cell) / 2);
+
+  for (let row = 0; row < rows; row++) {
+    for (let col = 0; col < cols; col++) {
+      const cx = offX + col * cell + cell / 2;
+      const cy = offY + row * cell + cell / 2;
+      if (!isInside(cx, cy)) continue;
+
+      const [r, g, b] = idwColor(normPts, cx / W, cy / H, exp);
+      const x = offX + col * cell + gap / 2;
+      const y = offY + row * cell + gap / 2;
+
+      ctx.fillStyle = `rgb(${r},${g},${b})`;
+      if (rx > 0) {
+        ctx.beginPath();
+        ctx.roundRect(x, y, innerW, innerW, rx);
+        ctx.fill();
+      } else {
+        ctx.fillRect(x, y, innerW, innerW);
+      }
+      count++;
+    }
+  }
+
+  document.getElementById('px-info').textContent =
+    `${count} cellules · ${cols}×${rows} · ${cell}px / cellule`;
+}
+
+// ── SVG EXPORT ────────────────────────────────────────────────────────────────
+document.getElementById('px-export').addEventListener('click', () => {
+  const W = CW, H = CH;
+  const cell   = +document.getElementById('px-cell').value;
+  const gap    = +document.getElementById('px-gap').value;
+  const exp    = +document.getElementById('px-exp').value;
+  const rx     = +document.getElementById('px-rx').value;
+  const useClip = document.getElementById('px-clip').checked;
+
+  const panel  = pxSource === 's' ? panelS : panelG;
+  const pts    = panel.gradPts;
+  const normPts = pts.map(p => ({
+    ...p,
+    radius: pxSource === 's' ? p.radius / Math.max(W, H) : p.radius
+  }));
+  const isInside = useClip
+    ? makePathTester(panel.pathPts, panel.tension, W, H)
+    : () => true;
+
+  const cols = Math.ceil(W / cell);
+  const rows = Math.ceil(H / cell);
+  const offX = ((W - cols * cell) / 2);
+  const offY = ((H - rows * cell) / 2);
+  const innerW = cell - gap;
+
+  let rects = '';
+  for (let row = 0; row < rows; row++) {
+    for (let col = 0; col < cols; col++) {
+      const cx = offX + col * cell + cell / 2;
+      const cy = offY + row * cell + cell / 2;
+      if (!isInside(cx, cy)) continue;
+      const [r,g,b] = idwColor(normPts, cx/W, cy/H, exp);
+      const x = (offX + col * cell + gap / 2).toFixed(2);
+      const y = (offY + row * cell + gap / 2).toFixed(2);
+      const hex = '#' + [r,g,b].map(v => v.toString(16).padStart(2,'0')).join('');
+      const rxAttr = rx > 0 ? ` rx="${rx}"` : '';
+      rects += `  <rect x="${x}" y="${y}" width="${innerW}" height="${innerW}"${rxAttr} fill="${hex}"/>\n`;
+    }
+  }
+
+  const clipDef = useClip
+    ? `\n  <defs>\n    <clipPath id="grid-clip">\n      <path d="${catmullPath(panel.pathPts, W, H, panel.tension)}"/>\n    </clipPath>\n  </defs>`
+    : '';
+  const clipAttr = useClip ? ' clip-path="url(#grid-clip)"' : '';
+
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">${clipDef}
+  <rect width="${W}" height="${H}" fill="#060810"/>
+  <g${clipAttr}>\n${rects}  </g>\n</svg>`;
+
+  const blob = new Blob([svg], {type:'image/svg+xml'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `locsos-pixelgrid-${cell}px.svg`;
+  a.click(); URL.revokeObjectURL(url);
+});
+
+// Hook into panel renders to keep pixel grid in sync
+const _origSRender = panelS.render.bind(panelS);
+panelS.render = function(){ _origSRender(); if(pxSource==='s') renderPixelGrid(); };
+const _origGRender = panelG.render.bind(panelG);
+panelG.render = function(){ _origGRender(); if(pxSource==='g') renderPixelGrid(); };
+
+renderPixelGrid();
+</script>

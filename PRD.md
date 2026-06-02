@@ -1,6 +1,6 @@
 # PRD — L'Orangerie
 
-Ce projet contient deux produits distincts qui cohabitent dans le meme repository.
+Ce projet contient trois produits distincts qui cohabitent dans le meme repository.
 
 ---
 
@@ -113,11 +113,50 @@ Le panel s'ouvre en bas de page et contient :
 
 ---
 
+## Produit C — Outil de mapping SVG (formes & degrades)
+
+### Vision
+Un outil interactif pour **composer des formes vectorielles libres et des degrades complexes sur mesure**, puis les **exporter en SVG avec les effets choisis** (modes de fusion par point, mosaique de cellules, clip a la forme). L'objectif est de produire des assets graphiques riches — impossibles a obtenir avec un degrade CSS classique — tout en restant vectoriels et editables (Illustrator-ready).
+
+Comme le Produit B, ce n'est pas un livrable client : c'est un outil de travail pour le designer/developpeur, qui sert a mettre au point la technique et les controles avant une eventuelle integration.
+
+### Statut
+**Prototype / exploration.** Vit dans des fichiers HTML autonomes a la racine du repo (`lorangerie-gradient-demo.html`, `orangerie-gradient-canvas.html`, et autres `*-demo.html`), **hors du build Vite**. Aucune dependance au reste du site : fonts via Google Fonts, tout le JS inline. Format de travail fixe en portrait 180×240 (ratio telephone).
+
+### Ce qui est explore — 3 techniques de rendu comparees
+
+Le proto `lorangerie-gradient-demo.html` met cote a cote trois approches du **meme** degrade freeform, pour arbitrer entre qualite, scalabilite et exportabilite :
+
+| # | Technique | Principe | Force |
+|---|---|---|---|
+| 01 | **SVG natif** | Couches `<radialGradient>` empilees, chacune dans un `<g>` avec son propre `mix-blend-mode` CSS (12 modes). Forme = `<clipPath>` Catmull-Rom ferme. | Vectoriel, scalable a l'infini |
+| 02 | **WebGL** | Memes points rendus en shader GLSL (accumulation `alpha / pow(distance, exposant)`), blend mode par point code en GLSL (8 modes). Forme appliquee en `clip-path: path()` CSS. | Rendu GPU temps reel, fidele |
+| 03 | **Pixel Grid** | Mosaique de carres alignes sur grille, chaque cellule coloree par **IDW** (inverse distance weighting) sur les points du panneau source. | **Exportable en SVG** propre (rects + clipPath) |
+
+### Modele d'interaction (le coeur du proto)
+
+Une classe `Panel` reutilisee pour les panneaux SVG et WebGL. Sur chaque panneau, un overlay SVG expose **trois types de poignees** :
+- **carres blancs** — points de la forme (deplacables) ;
+- **ronds colores** — points du degrade (deplacables) ;
+- **petits ronds « + »** — milieux de segments, pour inserer un point de forme.
+
+Un **clic dans le vide** ajoute un point de forme sur le segment le plus proche. Le panneau de controle (genere dynamiquement) permet de regler : tension de la courbe, liste des points de forme, et par point de degrade — couleur, rayon, opacite et **mode de fusion**.
+
+### Export
+La Pixel Grid genere un SVG telechargeable (rectangles colores + `clipPath` optionnel pour la forme), pret a ouvrir dans Illustrator. Reglages : taille de cellule, espacement, exposant IDW, rayon des coins, application ou non de la forme du panneau source.
+
+### Pistes / a faire
+- Trancher la ou les technique(s) a retenir selon l'usage (decor de page vs asset exportable).
+- Nettoyer l'heritage de nommage (`locsos-*`, titre « Freeform Gradient ») vers la nomenclature Orangerie.
+- Decider si l'outil migre dans le build Vite (comme le Produit B) ou reste un atelier standalone.
+
+---
+
 ## Perimetres
 
-| Aspect | Produit A (site) | Produit B (outil DS) |
-|---|---|---|
-| Utilisateur cible | Visiteurs du site client | Designer/dev (moi) |
-| Deploiement | Production (S3) | Dev local uniquement (Vite dev server) |
-| Persistance | Statique (HTML/CSS/JS build) | JSON + SCSS via API Vite plugin |
-| Page | `index.html`, `contact.html` | `design-system.html` |
+| Aspect | Produit A (site) | Produit B (outil DS) | Produit C (mapping SVG) |
+|---|---|---|---|
+| Utilisateur cible | Visiteurs du site client | Designer/dev (moi) | Designer/dev (moi) |
+| Deploiement | Production (S3) | Dev local uniquement (Vite dev server) | Aucun — proto standalone |
+| Persistance | Statique (HTML/CSS/JS build) | JSON + SCSS via API Vite plugin | Export SVG telecharge |
+| Page | `index.html`, `contact.html` | `design-system.html` | `*-demo.html` (racine, hors build) |
