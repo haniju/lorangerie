@@ -155,6 +155,7 @@ class Panel{
     this.id=id;this.type=type;this.accent=accent;
     this.pathPts=phoneShape();this.gradPts=gradPts;
     this.tension=0.55;this.drag=null;
+    this.svgLayers=[];this.selLayer=null;
     this.gl=null;this.prog=null;this.locs=null;this.compiledN=0;this.compiledBM='';
     this.glExp=2;
     this.stage=document.getElementById(`${id}-stage`);
@@ -171,7 +172,9 @@ class Panel{
       svg.style.cssText='position:absolute;inset:0;width:100%;height:100%;overflow:hidden';
       svg.innerHTML=`<defs><clipPath id="clip-${this.id}"><path id="clip-path-${this.id}"/></clipPath></defs>
         <rect width="${CW}" height="${CH}" fill="#060810"/>
-        <g id="layers-${this.id}" clip-path="url(#clip-${this.id})"></g>`;
+        <g id="below-${this.id}"></g>
+        <g id="layers-${this.id}" clip-path="url(#clip-${this.id})"></g>
+        <g id="above-${this.id}"></g>`;
       s.appendChild(svg);this.svgEl=svg;
     }else{
       const c=document.createElement('canvas');c.width=CW*GL_RES;c.height=CH*GL_RES;
@@ -184,7 +187,7 @@ class Panel{
     ov.setAttribute('width','100%');ov.setAttribute('height','100%');
     ov.style.cssText='position:absolute;inset:0;width:100%;height:100%;overflow:visible';
     ov.innerHTML=`<path id="sb-${this.id}" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1" stroke-dasharray="4 3"/>
-      <g id="mp-${this.id}"></g><g id="gh-${this.id}"></g><g id="ph-${this.id}"></g>`;
+      <g id="il-${this.id}"></g><g id="mp-${this.id}"></g><g id="gh-${this.id}"></g><g id="ph-${this.id}"></g>`;
     s.appendChild(ov);this.ovEl=ov;
     if(this.type==='gl'){
       const ic=document.createElement('canvas');ic.width=CW;ic.height=CH;
@@ -217,6 +220,7 @@ class Panel{
         rect.setAttribute('width',CW);rect.setAttribute('height',CH);rect.setAttribute('fill',`url(#${gid})`);
         grp.appendChild(rect);layers.appendChild(grp);
       });
+      this._renderImports();
     }else{
       if(this.gl){
         this._glRender();
@@ -344,6 +348,106 @@ void main(){
       r.setAttribute('fill','rgba(255,255,255,0.72)');r.setAttribute('stroke','rgba(0,0,0,0.25)');r.setAttribute('stroke-width','.5');
       r.style.cursor='grab';r.dataset.kind='path';r.dataset.idx=i;phg.appendChild(r);
     });
+    if(this.type==='svg')this._renderLayerHandles();
+  }
+
+  // ── CALQUES SVG IMPORTÉS ──────────────────────────────────────────────────
+  _renderImports(){
+    const below=document.getElementById(`below-${this.id}`);
+    const above=document.getElementById(`above-${this.id}`);
+    if(!below||!above)return;
+    this.svgLayers.forEach(L=>{
+      if(!L._node){
+        const doc=new DOMParser().parseFromString(L.content,'image/svg+xml');
+        const node=doc.querySelector('svg');
+        if(!node)return;
+        node.setAttribute('viewBox',L.viewBox);
+        node.setAttribute('preserveAspectRatio','xMidYMid meet');
+        node.style.pointerEvents='none';
+        L._node=node;
+      }
+      const n=L._node;
+      n.setAttribute('x',L.x*CW);n.setAttribute('y',L.y*CH);
+      n.setAttribute('width',L.w*CW);n.setAttribute('height',L.h*CH);
+      const parent=L.layer==='below'?below:above;
+      if(n.parentNode!==parent)parent.appendChild(n);
+    });
+    // retirer les noeuds des calques supprimes
+    [below,above].forEach(g=>{[...g.children].forEach(ch=>{if(!this.svgLayers.some(L=>L._node===ch))ch.remove();});});
+  }
+
+  _renderLayerHandles(){
+    const il=document.getElementById(`il-${this.id}`);if(!il)return;il.innerHTML='';
+    const ns='http://www.w3.org/2000/svg';
+    const W=this.stage.clientWidth||CW,H=this.stage.clientHeight||CH;
+    this.svgLayers.forEach((L,i)=>{
+      const x=L.x*W,y=L.y*H,w=L.w*W,h=L.h*H;
+      // rectangle de deplacement (transparent mais saisissable)
+      const mv=document.createElementNS(ns,'rect');
+      mv.setAttribute('x',x);mv.setAttribute('y',y);mv.setAttribute('width',w);mv.setAttribute('height',h);
+      mv.setAttribute('fill','rgba(0,0,0,0)');mv.setAttribute('pointer-events','all');
+      mv.style.cursor='move';mv.dataset.kind='layer-move';mv.dataset.lidx=i;il.appendChild(mv);
+      if(i===this.selLayer){
+        const bb=document.createElementNS(ns,'rect');
+        bb.setAttribute('x',x);bb.setAttribute('y',y);bb.setAttribute('width',w);bb.setAttribute('height',h);
+        bb.setAttribute('fill','none');bb.setAttribute('stroke',this.accent);bb.setAttribute('stroke-width','1');
+        bb.setAttribute('stroke-dasharray','4 3');bb.setAttribute('pointer-events','none');il.appendChild(bb);
+        [[x,y,'nw'],[x+w,y,'ne'],[x,y+h,'sw'],[x+w,y+h,'se']].forEach(([cx,cy,cn])=>{
+          const r=document.createElementNS(ns,'rect');
+          r.setAttribute('x',cx-5);r.setAttribute('y',cy-5);r.setAttribute('width',10);r.setAttribute('height',10);r.setAttribute('rx',2);
+          r.setAttribute('fill',this.accent);r.setAttribute('stroke','rgba(0,0,0,0.3)');r.setAttribute('stroke-width','.5');
+          r.style.cursor=(cn==='nw'||cn==='se')?'nwse-resize':'nesw-resize';
+          r.dataset.kind='layer-resize';r.dataset.lidx=i;r.dataset.corner=cn;il.appendChild(r);
+        });
+      }
+    });
+  }
+
+  _importSVGFile(file){
+    const reader=new FileReader();
+    reader.onload=()=>{
+      const doc=new DOMParser().parseFromString(String(reader.result),'image/svg+xml');
+      const root=doc.querySelector('svg');
+      if(!root||doc.querySelector('parsererror')){alert('SVG invalide');return;}
+      root.querySelectorAll('script').forEach(s=>s.remove());
+      let vb=root.getAttribute('viewBox'),vbW,vbH;
+      if(vb){const a=vb.trim().split(/[\s,]+/).map(Number);vbW=a[2];vbH=a[3];}
+      if(!vbW||!vbH){vbW=parseFloat(root.getAttribute('width'))||100;vbH=parseFloat(root.getAttribute('height'))||100;vb=`0 0 ${vbW} ${vbH}`;}
+      // boite initiale : ~45% de largeur, hauteur selon le ratio de l'art, centree
+      let w=0.45,h=(w*CW)*(vbH/vbW)/CH;
+      if(h>0.9){h=0.9;w=(h*CH)*(vbW/vbH)/CW;}
+      this.svgLayers.push({
+        name:file.name.replace(/\.svg$/i,'').slice(0,18)||'svg',
+        content:root.outerHTML,viewBox:vb,ar:vbW/vbH,
+        x:(1-w)/2,y:(1-h)/2,w,h,layer:'above',_node:null
+      });
+      this.selLayer=this.svgLayers.length-1;
+      this.render();
+    };
+    reader.readAsText(file);
+  }
+
+  _buildLayerList(){
+    const list=document.getElementById(`sl-list-${this.id}`);if(!list)return;list.innerHTML='';
+    if(!this.svgLayers.length){const e=document.createElement('p');e.className='hint';e.textContent='aucun calque — importez un SVG';list.appendChild(e);return;}
+    this.svgLayers.forEach((L,i)=>{
+      const row=document.createElement('div');row.className='pp-row';
+      if(i===this.selLayer)row.style.boxShadow=`inset 0 0 0 1px ${this.accent}`;
+      const name=document.createElement('span');name.className='pp-coords';name.textContent=L.name;
+      name.style.cursor='pointer';name.style.color=i===this.selLayer?'var(--text)':'';
+      name.addEventListener('click',()=>{this.selLayer=i;this.render();});
+      const tog=document.createElement('button');tog.className='pp-del';
+      tog.style.cssText='color:var(--muted);font-size:8px;font-family:var(--mono);padding:0 4px;width:auto';
+      tog.textContent=L.layer==='above'?'▲ dessus':'▼ dessous';tog.title='basculer dessus / dessous le dégradé';
+      tog.addEventListener('click',()=>{L.layer=L.layer==='above'?'below':'above';this.render();});
+      const del=document.createElement('button');del.className='pp-del';del.textContent='×';
+      del.addEventListener('click',()=>{
+        this.svgLayers.splice(i,1);
+        if(this.selLayer===i)this.selLayer=null;else if(this.selLayer>i)this.selLayer--;
+        this.render();
+      });
+      row.appendChild(name);row.appendChild(tog);row.appendChild(del);list.appendChild(row);
+    });
   }
 
   // ── CONTROLS ─────────────────────────────────────────────────────────────
@@ -375,6 +479,16 @@ void main(){
       this.render();
     });
     c.appendChild(addGrad);
+    if(this.type==='svg'){
+      c.appendChild(this._sep('Calques SVG'));
+      const sll=document.createElement('div');sll.id=`sl-list-${this.id}`;sll.className='path-list';c.appendChild(sll);
+      const imp=document.createElement('button');imp.className='btn-add';
+      imp.innerHTML='<span class="plus">↥</span> Importer un SVG';
+      const inp=document.createElement('input');inp.type='file';inp.accept='.svg,image/svg+xml';inp.style.display='none';
+      inp.addEventListener('change',e=>{const f=e.target.files[0];if(f)this._importSVGFile(f);inp.value='';});
+      imp.addEventListener('click',()=>inp.click());
+      c.appendChild(imp);c.appendChild(inp);
+    }
     const h=document.createElement('p');h.className='hint';h.textContent='clic vide = ajouter · "+" = insérer entre deux points';c.appendChild(h);
   }
 
@@ -402,6 +516,7 @@ void main(){
       row.appendChild(dot);row.appendChild(coords);row.appendChild(del);list.appendChild(row);
     });
     this._buildGradList();
+    if(this.type==='svg')this._buildLayerList();
   }
 
   _buildGradList(){
@@ -471,8 +586,17 @@ void main(){
   }
 
   _onDown(e){
-    const t=e.target,kind=t.dataset.kind,idx=parseInt(t.dataset.idx),seg=parseInt(t.dataset.seg);
-    if(kind==='path'&&!isNaN(idx)){this.drag={kind:'path',idx};e.preventDefault();e.stopPropagation();}
+    const t=e.target,kind=t.dataset.kind,idx=parseInt(t.dataset.idx),seg=parseInt(t.dataset.seg),li=parseInt(t.dataset.lidx);
+    if(kind==='layer-move'&&!isNaN(li)){
+      e.preventDefault();e.stopPropagation();
+      this.selLayer=li;const pos=this._getPos(e);const L=this.svgLayers[li];
+      this.drag={kind:'layer-move',lidx:li,offx:pos.x/CW-L.x,offy:pos.y/CH-L.y};this.render();
+    }
+    else if(kind==='layer-resize'&&!isNaN(li)){
+      e.preventDefault();e.stopPropagation();
+      this.selLayer=li;this.drag={kind:'layer-resize',lidx:li,corner:t.dataset.corner};this.render();
+    }
+    else if(kind==='path'&&!isNaN(idx)){this.drag={kind:'path',idx};e.preventDefault();e.stopPropagation();}
     else if(kind==='grad'&&!isNaN(idx)){this.drag={kind:'grad',idx};e.preventDefault();e.stopPropagation();}
     else if(kind==='midpt'&&!isNaN(seg)){
       e.preventDefault();e.stopPropagation();
@@ -484,8 +608,10 @@ void main(){
 
   _onClick(e){
     if(this.drag)return;
-    const t=e.target;
-    if(t.dataset.kind==='path'||t.dataset.kind==='grad'||t.dataset.kind==='midpt')return;
+    const t=e.target,k=t.dataset.kind;
+    if(k==='path'||k==='grad'||k==='midpt'||k==='layer-move'||k==='layer-resize')return;
+    // clic dans le vide : deselectionner un calque actif plutot qu'ajouter un point
+    if(this.selLayer!==null){this.selLayer=null;this.render();return;}
     const pos=this._getPos(e);
     const nx=pos.x/CW,ny=pos.y/CH;
     const seg=nearestSegment(this.pathPts,nx,ny);
@@ -497,6 +623,28 @@ void main(){
     const pos=this._getPos(e);const nx=pos.x/CW,ny=pos.y/CH;
     if(this.drag.kind==='path'){this.pathPts[this.drag.idx]={x:nx,y:ny};this._updatePathLabel(this.drag.idx);this.render();}
     else if(this.drag.kind==='grad'){this.gradPts[this.drag.idx].x=nx;this.gradPts[this.drag.idx].y=ny;this._updateGradLabel(this.drag.idx);this.render();}
+    else if(this.drag.kind==='layer-move'){
+      const L=this.svgLayers[this.drag.lidx];
+      L.x=clamp(nx-this.drag.offx,-L.w+0.05,1-0.05);L.y=clamp(ny-this.drag.offy,-L.h+0.05,1-0.05);
+      this.render();
+    }
+    else if(this.drag.kind==='layer-resize'){
+      const L=this.svgLayers[this.drag.lidx],cn=this.drag.corner,MIN=0.04;
+      const right=L.x+L.w,bottom=L.y+L.h;
+      // ratio verrouille : la boite suit les proportions de l'image source.
+      // k = largeur_norm / hauteur_norm pour que (w*CW)/(h*CH) == ar
+      const k=L.ar*CH/CW;
+      const tW=cn==='se'||cn==='ne'?Math.abs(nx-L.x):Math.abs(right-nx);
+      const tH=cn==='se'||cn==='sw'?Math.abs(ny-L.y):Math.abs(bottom-ny);
+      let w=Math.max(tW,tH*k);          // l'axe le plus tire impose la taille
+      if(w<MIN)w=MIN; if(w/k<MIN)w=MIN*k;
+      const h=w/k;
+      if(cn==='se'){L.w=w;L.h=h;}
+      else if(cn==='ne'){L.w=w;L.y=bottom-h;L.h=h;}
+      else if(cn==='sw'){L.x=right-w;L.w=w;L.h=h;}
+      else if(cn==='nw'){L.x=right-w;L.y=bottom-h;L.w=w;L.h=h;}
+      this.render();
+    }
   }
   onUp(){this.drag=null;}
 }
