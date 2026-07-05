@@ -10,16 +10,18 @@ Ce projet contient trois produits distincts qui cohabitent dans le meme reposito
 Site statique pour un client, deploye en production. Approche design system first : le DS est la fondation, les pages s'appuient dessus.
 
 ### Stack
-- **Vite** (build, dev server, pas de framework JS)
+- **Astro** (build statique `dist/`, tourne sur Vite -> plugins Vite conserves via `astro.config`)
 - **SCSS** organise en `base/`, `components/`, `layout/`, `pages/`, `utilities/`
-- **Utopia** pour le fluid sizing (tokens `--step-*` et `--space-*`)
+- **Utopia** pour le fluid sizing (tokens `--step-*` et `--space-*`), contenu plafonne a 1550px + marges fluides
+- **Couleurs Figma-first** : `tokens.colors.json` -> `figma-to-colors.js` -> `colors.json` (genere) -> `_tokens.scss`
 - **GSAP + ScrollTrigger** pour les animations
-- **Fonts** : Ortica Linear (headings), DM Sans variable (body)
+- **Fonts** : iCiel Cadena (logotype display), Ortica Linear (headings), DM Sans variable (body)
 
 ### Pages
-- Accueil (`index.html`)
-- Contact (`contact.html`)
-- Design System (`design-system.html`) — page partagee avec le Produit B
+- Home one-page (`index` — sections hero / coworking / fonctionnement / tarifs / pulpe / partenaires / footer)
+- Pages annexes : contact, faq, mentions-legales, cgv, 404
+- `design-system.html` = page du Produit B (**gele**, cf. ci-dessous)
+- Reference structurelle detaillee (node-IDs) : voir `SITE-PLAN.md` ; execution : `PLAN-ACTION.md`
 
 ### Deploiement
 - S3-compatible (IndieHosters, endpoint `hot-objects.liiib.re`)
@@ -28,6 +30,8 @@ Site statique pour un client, deploye en production. Approche design system firs
 ---
 
 ## Produit B — Outil de parametrage du Design System
+
+> **Statut : GELE / non maintenu sur ce projet.** Ne pas l'utiliser. Depuis le passage aux couleurs **Figma-first**, `colors.json` est un fichier **genere** : le Produit B ne doit plus etre presente comme editeur live de `colors.json`. S'il est reactive un jour, il devra operer sur une source intouchee et **generer des versions**, jamais editer le fichier genere. La description ci-dessous est conservee pour memoire.
 
 ### Vision
 Une page interactive (`design-system.html`) qui permet d'affiner les proprietes du design system directement dans l'environnement final (le navigateur). L'objectif est de pouvoir ajuster les tokens visuellement, voir le resultat en temps reel, et persister les modifications dans le code source.
@@ -157,6 +161,6 @@ La Pixel Grid genere un SVG telechargeable (rectangles colores + `clipPath` opti
 | Aspect | Produit A (site) | Produit B (outil DS) | Produit C (mapping SVG) |
 |---|---|---|---|
 | Utilisateur cible | Visiteurs du site client | Designer/dev (moi) | Designer/dev (moi) |
-| Deploiement | Production (S3) | Dev local uniquement (Vite dev server) | Aucun — proto standalone |
+| Deploiement | Production (S3) | Gele — non maintenu sur ce projet | Aucun — proto standalone |
 | Persistance | Statique (HTML/CSS/JS build) | JSON + SCSS via API Vite plugin | Export SVG telecharge |
 | Page | `index.html`, `contact.html` | `design-system.html` | `*-demo.html` (racine, hors build) |

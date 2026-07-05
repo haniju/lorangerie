@@ -1,0 +1,61 @@
+.
+├── .DS_Store
+├── .env
+├── .env.example
+├── .gitignore
+├── .vscode
+│   ├── launch.json
+│   └── settings.json
+├── arbo.txt
+├── CLAUDE.md
+├── contact.html
+├── design-system.html
+├── index.html
+├── lorangerie-freeform-shape.html
+├── lorangerie-taches-proto.html
+├── lorangerie-taches-proto.md
+├── orangerie_toc_demo.html
+├── orangerie-gradient-canvas.html
+├── package-lock.json
+├── package.json
+├── PRD.md
+├── public
+├── README.md
+├── scripts
+│   ├── deploy.sh
+│   └── generate-tokens.js
+├── SITE-PLAN.md
+├── src
+│   ├── .DS_Store
+│   ├── assets
+│   │   ├── .DS_Store
+│   │   ├── font
+│   │   ├── images
+│   │   ├── logos
+│   │   ├── pictos
+│   │   └── svg
+│   ├── data
+│   │   ├── colors.json
+│   │   ├── contact.json
+│   │   ├── design-system.json
+│   │   ├── faq.json
+│   │   ├── home.json
+│   │   ├── nav.json
+│   │   ├── textes.json
+│   │   └── tokens.colors.json
+│   ├── js
+│   │   ├── animations.js
+│   │   ├── colors
+│   │   ├── main.js
+│   │   └── nav.js
+│   └── scss
+│       ├── base
+│       ├── components
+│       ├── layout
+│       ├── main.scss
+│       ├── pages
+│       └── utilities
+├── vite-plugin-colors.js
+└── vite.config.js
+
+20 directories, 39 files

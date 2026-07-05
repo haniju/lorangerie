@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<style>
+  :root { --bg:#fcf7f3; --ink:#1d291a; --sapin:#213d2c; --sapin-h:#2c5039; --muted:#8a8a8a; --line:#e7ded5; --chip:#f0e6d6; }
+  * { box-sizing:border-box; }
+  html, body { height:100%; }
+  body { font-family:Inter,-apple-system,sans-serif; margin:0; color:var(--ink); background:var(--bg); font-size:12px; overflow:hidden; }
+
+  /* Layout : deux panneaux + séparateur, sur toute la hauteur */
+  #app { display:flex; height:100vh; }
+  #left { display:flex; flex-direction:column; min-width:220px; overflow:hidden; }
+  #splitter { width:6px; flex:none; cursor:col-resize; background:var(--line); }
+  #splitter:hover { background:var(--sapin); }
+  #right { display:flex; flex-direction:column; overflow:hidden; background:var(--bg); border-left:1px solid var(--line); }
+  #right.collapsed { width:40px !important; min-width:40px; flex:none; }
+
+  /* Barre d'outils (panneau gauche) */
+  .bar { flex:none; background:var(--bg); padding:10px; border-bottom:1px solid var(--line); }
+  .bar-row { display:flex; gap:6px; align-items:center; }
+  input.filter { flex:1; padding:6px 8px; border:1px solid var(--line); border-radius:6px; font-size:12px; background:#fff; }
+  button { font-family:inherit; cursor:pointer; }
+  .mini { padding:6px 8px; border:1px solid var(--line); background:#fff; border-radius:6px; font-size:11px; color:var(--ink); }
+  .mini:hover { border-color:var(--sapin); }
+  .solid { background:var(--sapin); color:#f0e6d6; border:none; }
+  .solid:hover { background:var(--sapin-h); }
+  .selinfo { font-size:11px; color:var(--muted); margin-top:8px; }
+
+  .tree { flex:1; overflow:auto; padding:8px 10px; }
+  details { margin-left:4px; }
+  summary { list-style:none; cursor:pointer; display:flex; align-items:center; gap:6px; padding:2px 0; }
+  summary::-webkit-details-marker { display:none; }
+  .caret { color:var(--muted); font-size:10px; width:10px; flex:none; }
+  details[open] > summary .caret { transform:rotate(90deg); }
+  .cname { font-weight:600; }
+  .gname { color:var(--muted); }
+  .leaf { display:flex; align-items:center; gap:6px; padding:3px 0 3px 14px; }
+  .sw { width:14px; height:14px; border-radius:3px; border:1px solid rgba(0,0,0,.15); flex:none; }
+  .lname { cursor:pointer; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .lname:hover { text-decoration:underline; }
+  input[type=checkbox] { accent-color:var(--sapin); flex:none; margin:0; cursor:pointer; }
+
+  /* Panneau droit (explorer) */
+  .drawer-head { display:flex; align-items:center; gap:6px; padding:10px; border-bottom:1px solid var(--line); flex:none; }
+  .drawer-title { font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  #drawer-toggle { flex:none; width:22px; height:22px; padding:0; border:1px solid var(--line); border-radius:6px; background:#fff; color:var(--muted); font-size:13px; line-height:1; display:flex; align-items:center; justify-content:center; }
+  #drawer-toggle:hover { border-color:var(--sapin); color:var(--ink); }
+  .results { padding:10px; overflow:auto; flex:1; }
+
+  /* Version pliée du panneau droit : bande verticale */
+  #right.collapsed .drawer-head, #right.collapsed .results { display:none; }
+  #collapsed-strip { display:none; }
+  #right.collapsed #collapsed-strip {
+    display:flex; flex-direction:column; align-items:center; gap:8px;
+    height:100%; padding:10px 0; cursor:pointer; color:var(--muted);
+  }
+  #collapsed-strip .vlabel { writing-mode:vertical-rl; font-size:10px; letter-spacing:.08em; text-transform:uppercase; }
+  #collapsed-strip:hover { color:var(--sapin); }
+
+  .chips { display:flex; gap:4px; margin:6px 0; flex-wrap:wrap; }
+  .chip { padding:3px 8px; border:1px solid var(--line); border-radius:20px; cursor:pointer; font-size:11px; background:#fff; }
+  .chip.on { background:var(--sapin); color:#f0e6d6; border-color:var(--sapin); }
+  .head { display:flex; justify-content:space-between; align-items:center; margin:6px 0 4px; }
+  .count { color:var(--muted); }
+  .occ { display:flex; gap:6px; align-items:center; padding:4px 6px; border-bottom:1px solid var(--line); cursor:pointer; }
+  .occ:hover { background:var(--chip); }
+  .occ .pg { color:var(--muted); font-size:10px; }
+  .occ .role { color:var(--sapin); font-size:10px; margin-left:auto; }
+  .empty { color:var(--muted); padding:12px; text-align:center; }
+  .loading { display:flex; flex-direction:column; align-items:center; gap:10px; padding:24px 12px; color:var(--muted); }
+  .spinner { width:22px; height:22px; border-radius:50%; border:2px solid var(--line); border-top-color:var(--sapin); animation:spin .7s linear infinite; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+
+  /* Poignée de redimensionnement de la fenêtre du plugin */
+  #resizer { position:fixed; right:0; bottom:0; width:14px; height:14px; cursor:nwse-resize; z-index:50; }
+  #resizer:after { content:""; position:absolute; right:2px; bottom:2px; width:8px; height:8px;
+    border-right:2px solid var(--muted); border-bottom:2px solid var(--muted); opacity:.6; }
+</style>
+</head>
+<body>
+  <div id="app">
+    <!-- PANNEAU GAUCHE : arbre -->
+    <div id="left" style="width:60%;">
+      <div class="bar">
+        <div class="bar-row">
+          <input class="filter" id="filter" placeholder="Filtrer…" />
+          <button class="mini" id="fold" title="Tout replier / déplier">⇕</button>
+          <button class="mini" id="all">Tout</button>
+          <button class="mini" id="none">Rien</button>
+        </div>
+        <div class="bar-row" style="margin-top:6px;">
+          <button class="solid mini" id="export-sel" style="flex:1;">Exporter la sélection</button>
+          <button class="mini" id="export-all">Tout exporter</button>
+        </div>
+        <div class="selinfo" id="selinfo">0 sélectionnée</div>
+      </div>
+      <div class="tree" id="tree"><div class="empty">Chargement…</div></div>
+    </div>
+
+    <!-- SÉPARATEUR -->
+    <div id="splitter"></div>
+
+    <!-- PANNEAU DROIT : explorer (toujours présent) -->
+    <div id="right" class="collapsed" style="width:40px;">
+      <div id="collapsed-strip">
+        <span style="font-size:14px;">⤢</span>
+        <span class="vlabel">Explorer</span>
+      </div>
+      <div class="drawer-head">
+        <span class="drawer-title" id="drawer-title">Explorer</span>
+        <button id="drawer-toggle" title="Replier">›</button>
+      </div>
+      <div class="results" id="results"><div class="empty">Clique une variable pour voir ses usages.</div></div>
+    </div>
+  </div>
+
+  <div id="resizer"></div>
+
+<script>
+  const $ = s => document.getElementById(s);
+  const esc = s => (s||"").replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[m]));
+  const send = (type, extra) => parent.postMessage({ pluginMessage: Object.assign({ type }, extra||{}) }, "*");
+
+  let COLORS = [];
+  const selected = new Set();
+
+  // ---- arbre ----
+  function buildTree(list) {
+    const root = {};
+    for (const c of list) {
+      const parts = c.name.split("/");
+      const leaf = parts.pop();
+      let node = (root[c.collection] = root[c.collection] || { __g:{}, __v:{}, ids:[] });
+      node.ids.push(c.id);
+      for (const p of parts) {
+        node = (node.__g[p] = node.__g[p] || { __g:{}, __v:{}, ids:[] });
+        node.ids.push(c.id);
+      }
+      node.__v[leaf] = c;
+    }
+    return root;
+  }
+  function ids64(ids){ return esc(JSON.stringify(ids)); }
+  function renderGroup(node) {
+    let html = "";
+    Object.keys(node.__g).sort().forEach(k => {
+      const g = node.__g[k];
+      html += '<details open><summary><span class="caret">▶</span>'
+            + '<input type="checkbox" class="cb" data-ids=\''+ids64(g.ids)+'\'>'
+            + '<span class="gname">'+esc(k)+'</span></summary>'
+            + '<div style="margin-left:12px;">'+renderGroup(g)+'</div></details>';
+    });
+    Object.keys(node.__v).sort().forEach(k => {
+      const leaf = node.__v[k];
+      html += '<div class="leaf"><input type="checkbox" class="cb" data-ids=\'["'+esc(leaf.id)+'"]\'>'
+            + '<span class="sw" style="background:'+esc(leaf.hex)+'"></span>'
+            + '<span class="lname" data-id="'+esc(leaf.id)+'">'+esc(k)+'</span></div>';
+    });
+    return html;
+  }
+  function render() {
+    const f = ($("filter").value||"").toLowerCase();
+    const list = f ? COLORS.filter(c => c.name.toLowerCase().includes(f) || c.collection.toLowerCase().includes(f)) : COLORS;
+    if (!list.length) { $("tree").innerHTML = '<div class="empty">Aucune couleur'+(f?' pour ce filtre':'')+'.</div>'; return; }
+    const tree = buildTree(list);
+    let html = "";
+    Object.keys(tree).sort().forEach(cname => {
+      const col = tree[cname];
+      html += '<details open><summary><span class="caret">▶</span>'
+            + '<input type="checkbox" class="cb" data-ids=\''+ids64(col.ids)+'\'>'
+            + '<span class="cname">'+esc(cname)+'</span></summary>'
+            + '<div style="margin-left:12px;">'+renderGroup(col)+'</div></details>';
+    });
+    $("tree").innerHTML = html;
+
+    $("tree").querySelectorAll(".cb").forEach(cb => {
+      cb.onclick = e => e.stopPropagation();
+      cb.onchange = () => {
+        const ids = JSON.parse(cb.getAttribute("data-ids"));
+        ids.forEach(id => cb.checked ? selected.add(id) : selected.delete(id));
+        refreshChecks();
+      };
+    });
+    $("tree").querySelectorAll(".lname").forEach(el => el.onclick = () => {
+      openDrawer(el.textContent);
+      scanFresh = true;
+      $("results").innerHTML = '<div class="loading"><div class="spinner"></div><span>Recherche des nœuds…</span></div>';
+      send("scan", { id: el.getAttribute("data-id") });
+    });
+    refreshChecks();
+  }
+  function refreshChecks() {
+    $("tree").querySelectorAll(".cb").forEach(cb => {
+      const ids = JSON.parse(cb.getAttribute("data-ids"));
+      const inSel = ids.filter(id => selected.has(id)).length;
+      cb.checked = inSel === ids.length && ids.length > 0;
+      cb.indeterminate = inSel > 0 && inSel < ids.length;
+    });
+    $("selinfo").textContent = selected.size + " sélectionnée" + (selected.size > 1 ? "s" : "");
+  }
+
+  // ---- explorer (panneau droit) ----
+  const right = () => $("right");
+  function openDrawer(title) {
+    $("drawer-title").textContent = title || "Explorer";
+    right().classList.remove("collapsed");
+    if (parseFloat(right().style.width) < 220) right().style.width = "40%";
+    $("drawer-toggle").textContent = "›";
+  }
+  function collapseDrawer() {
+    right().classList.add("collapsed");
+    right().style.width = "40px";
+  }
+  $("drawer-toggle").onclick = collapseDrawer;
+  $("collapsed-strip").onclick = () => openDrawer($("drawer-title").textContent);
+
+  // ---- résultats d'usage (scan progressif) ----
+  let USAGES = [], ROLE_COUNTS = {}, activeRoles = new Set(), scanFresh = false;
+  function renderUsages(progress) {
+    const roles = Object.keys(ROLE_COUNTS);
+    if (!USAGES.length && !progress) {
+      $("results").innerHTML = '<div class="empty">Aucun nœud n\'utilise cette variable en remplissage ou bordure.</div>';
+      return;
+    }
+    const shown = USAGES.filter(r => activeRoles.has(r.role));
+    const ids = shown.map(r => r.id);
+    const banner = progress
+      ? '<div class="loading" style="padding:8px 0;flex-direction:row;gap:8px;"><div class="spinner" style="width:14px;height:14px;"></div><span>Analyse page '+progress.page+'/'+progress.pages+'…</span></div>'
+      : '';
+    $("results").innerHTML =
+      banner
+      + '<div class="chips">'+roles.map(r=>'<span class="chip'+(activeRoles.has(r)?' on':'')+'" data-r="'+esc(r)+'">'+esc(r)+' ('+ROLE_COUNTS[r]+')</span>').join("")+'</div>'
+      + '<div class="head"><span class="count">'+shown.length+' occurrence(s)</span>'+(shown.length?'<button class="mini" id="occ-all">Tout sélectionner</button>':'')+'</div>'
+      + shown.map(r=>'<div class="occ" data-id="'+esc(r.id)+'"><span class="pg">'+esc(r.page)+'</span><span>'+esc(r.name)+'</span><span class="role">'+esc(r.role)+'</span></div>').join("");
+    $("results").querySelectorAll(".chip").forEach(el => el.onclick = () => {
+      const r = el.getAttribute("data-r"); activeRoles.has(r)?activeRoles.delete(r):activeRoles.add(r); renderUsages();
+    });
+    $("results").querySelectorAll(".occ").forEach(el => el.onclick = () => send("focus",{ id: el.getAttribute("data-id") }));
+    if ($("occ-all")) $("occ-all").onclick = () => send("select-all",{ ids });
+  }
+
+  // ---- toolbar ----
+  $("filter").oninput = render;
+  let allFolded = false;
+  $("fold").onclick = () => {
+    allFolded = !allFolded;
+    $("tree").querySelectorAll("details").forEach(d => d.open = !allFolded);
+    $("fold").textContent = allFolded ? "⇱" : "⇕";
+  };
+  $("all").onclick = () => { COLORS.forEach(c=>selected.add(c.id)); refreshChecks(); };
+  $("none").onclick = () => { selected.clear(); refreshChecks(); };
+  $("export-sel").onclick = () => {
+    if (!selected.size) { $("selinfo").textContent = "Sélection vide — coche des couleurs ou « Tout exporter »."; return; }
+    send("export", { ids: [...selected] });
+  };
+  $("export-all").onclick = () => send("export", { ids: null });
+
+  // ---- séparateur draggable (répartition gauche/droite) ----
+  (function(){
+    const sp = $("splitter");
+    let dragging = false;
+    sp.addEventListener("mousedown", e => { dragging = true; e.preventDefault(); document.body.style.userSelect="none"; });
+    window.addEventListener("mousemove", e => {
+      if (!dragging) return;
+      const total = $("app").clientWidth;
+      let leftW = e.clientX;
+      leftW = Math.max(220, Math.min(total - 60, leftW));   // bornes : gauche>=220, droite>=60
+      $("left").style.width = leftW + "px";
+      $("left").style.flex = "none";
+      // le panneau droit prend le reste
+      right().style.flex = "1";
+      right().style.width = "auto";
+      if (right().classList.contains("collapsed") && (total - leftW) > 60) {
+        // si on élargit à droite, on déplie
+        right().classList.remove("collapsed");
+      }
+    });
+    window.addEventListener("mouseup", () => { dragging = false; document.body.style.userSelect=""; });
+  })();
+
+  // ---- poignée de redimensionnement de la fenêtre ----
+  (function(){
+    const rz = $("resizer");
+    let dragging = false, sx=0, sy=0, sw=0, sh=0;
+    rz.addEventListener("mousedown", e => {
+      dragging = true; sx=e.clientX; sy=e.clientY;
+      sw=window.innerWidth; sh=window.innerHeight; e.preventDefault();
+    });
+    window.addEventListener("mousemove", e => {
+      if (!dragging) return;
+      send("resize", { w: sw + (e.clientX - sx), h: sh + (e.clientY - sy) });
+    });
+    window.addEventListener("mouseup", () => { dragging = false; });
+  })();
+
+  // ---- réception ----
+  window.onmessage = e => {
+    const m = e.data.pluginMessage; if (!m) return;
+    if (m.type === "list") { COLORS = m.colors || []; render(); }
+    if (m.type === "usages-chunk") {
+      if (scanFresh) { USAGES = []; ROLE_COUNTS = {}; scanFresh = false; }
+      USAGES = USAGES.concat(m.rows || []);
+      ROLE_COUNTS = m.roleCounts || ROLE_COUNTS;
+      activeRoles = new Set(Object.keys(ROLE_COUNTS));
+      renderUsages(m.done ? null : m.progress);
+    }
+    if (m.type === "exported") {
+      const scope = m.data.meta.scope === "selection" ? "selection" : "all";
+      const fname = scope === "selection" ? "tokens.colors.selection.json" : "tokens.colors.json";
+      const blob = new Blob([JSON.stringify(m.data, null, 2)], { type:"application/json" });
+      const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = fname; a.click();
+    }
+  };
+
+  send("init");
+</script>
+</body>
+</html>

@@ -1,0 +1,516 @@
+[
+  {
+    "textes": {
+      "modes": {
+        "Mode 1": {
+          "nav_": {
+            "navprimary1": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "string",
+              "$value": "Découvrir l'Orangerie"
+            },
+            "navprimary2": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "string",
+              "$value": "F.A.Q."
+            },
+            "navprimary3": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "string",
+              "$value": "Nous contacter"
+            },
+            "navsecondary": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "string",
+              "$value": "Réserver ma place"
+            }
+          },
+          "index_": {
+            "lecoworking": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "string",
+              "$value": "Le coworking"
+            },
+            "fonctionnement": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "string",
+              "$value": "Notre fonctionnement"
+            },
+            "tarif": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "string",
+              "$value": "Nos tarifs"
+            },
+            "apropos": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "string",
+              "$value": "À propos de                    "
+            },
+            "partenaire": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "string",
+              "$value": "Nos partenaires"
+            },
+            "faq": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "string",
+              "$value": "Foire Aux Questions"
+            }
+          },
+          "hero_": {
+            "soustitre": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "string",
+              "$value": "L’espace de coworking de Malestroit, Morbihan.                     Équipés et chaleureux, découvrez nos espaces de travail partagés, dédiés aux métiers d’aujourd’hui"
+            },
+            "precisions": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "string",
+              "$value": "Situé dans le centre bourg, l’Orangerie vous ouvre ses portes dans le tiers-lieu de l’association Pulpe (Pour Un Lieu Partagé Essentiel)."
+            }
+          },
+          "coworking_": {
+            "intro": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "string",
+              "$value": "L’Orangerie, le coworking par PULPE, rassemble tous les ingrédients pour travailler dans les meilleures conditions."
+            },
+            "bento": {
+              "plan": {
+                "open-space": {
+                  "$scopes": [
+                    "ALL_SCOPES"
+                  ],
+                  "$type": "string",
+                  "$value": "Deux open spaces (Framboise et Kiwi) de 9 postes de travail individuels connectés à Internet par fibre optique (wifi + filaire)"
+                },
+                "copieur": {
+                  "$scopes": [
+                    "ALL_SCOPES"
+                  ],
+                  "$type": "string",
+                  "$value": "Un copieur multifonction, une cuisine partagée et une cour arborée complète l'ensemble."
+                },
+                "reunion": {
+                  "$scopes": [
+                    "ALL_SCOPES"
+                  ],
+                  "$type": "string",
+                  "$value": "Une salle de réunion de 8 places équipée d’un vidéoprojecteur."
+                }
+              },
+              "coordinatrice": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "string",
+                "$value": "Coordinatrice salariée du lieu partagé, Ludivine vous accueille  à l’Orangerie"
+              }
+            },
+            "btnsecondary": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "string",
+              "$value": "Réserve ton poste de travail"
+            }
+          },
+          "fonctionement_": {
+            "accessible": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "string",
+              "$value": "Nos espaces sont accessibles 7/7J et 24/24h en autonomie"
+            },
+            "liste_": {
+              "reunion": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "string",
+                "$value": "La salle de réunion est accessible sur réservation pour les adhérent·e·s."
+              },
+              "reunion_2": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "string",
+                "$value": "La location de la salle de réunion est accessible aux individus et organisations extérieures à partir de 50€ la journée."
+              },
+              "parking": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "string",
+                "$value": "Parkings, restaurants et petite restauration accessibles à quelques minutes à pied. Le stationnement n’est pas autorisé dans la cour du lieu partagé."
+              },
+              "casier": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "string",
+                "$value": "Casier verrouillable accessible sur demande."
+              },
+              "impression": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "string",
+                "$value": "Packs d’impressions réservables en ligne."
+              },
+              "the": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "string",
+                "$value": "Thé et café moulu à volonté."
+              },
+              "cuisine": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "string",
+                "$value": "Cuisine et salle à manger partagées."
+              }
+            },
+            "orangerie": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "string",
+              "$value": "L’Orangerie est occupée par des humain-es qui s’en partagent la responsabilité. Ainsi, tous nos coworkers participent à l’entretien ménager des locaux."
+            },
+            "btnprimarylabel": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "string",
+              "$value": "Besoin de clarification ?"
+            },
+            "btnprimary": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "string",
+              "$value": "Visite notre F.A.Q"
+            },
+            "btnsecondary": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "string",
+              "$value": "Sinon contacte-nous !"
+            }
+          },
+          "tarifs_": {
+            "coworker_": {
+              "titre": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "string",
+                "$value": "Coworker"
+              },
+              "tarif": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "string",
+                "$value": "150 €/mois"
+              },
+              "infos": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "string",
+                "$value": "Accès aux locaux 7j/7 et 24h/24 - Thé et café à volonté"
+              }
+            },
+            "infos": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "string",
+              "$value": "L’offre de l’Orangerie est basée sur une tarification différenciée. En concertation avec notre équipe, chacun peut choisir de s’impliquer dans l’entretien, la gestion et le développement du coworking et du lieu partagé.  En découle un prix d’abonnement allégé proportionnellement au niveau d’implication."
+            },
+            "btnprimarylabel": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "string",
+              "$value": "Tu veux nous rejoindre ?"
+            },
+            "btnprimary": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "string",
+              "$value": "Réserve ton poste de travail"
+            },
+            "suisje": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "string",
+              "$value": "Que tu sois travailleur indépendant, salarié télétravailleur, ou jeune entrepreneur, tu te demandes : « Suis-je vraiment fait.e pour cet endroit ? »"
+            },
+            "question": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "string",
+              "$value": "La question, elle est vite répondue : \"Viens essayer l’Orangerie gratuitement pendant quelques jours !\""
+            },
+            "btnsecondary": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "string",
+              "$value": "Réserve ton essai gratuit"
+            },
+            "investi_": {
+              "titre": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "string",
+                "$value": "Coworker Investi"
+              },
+              "tarif": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "string",
+                "$value": "90 €/mois"
+              },
+              "info": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "string",
+                "$value": "Accès aux locaux 7j/7 et 24h/24 - Thé et café à volonté | Contribution active* au conseil des usagers de L’Orangerie (2h/mois)"
+              },
+              "contribution": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "string",
+                "$value": "*Concrètement, ça veut dire quoi ? Les usagers et usagères de l’Orangerie se réunissent une fois par mois dans l’intention d’améliorer l’environnement de travail partagé et les liens que nous y tissons. En découle une multitude de contributions ou d’actions possibles : rédaction d’un tutoriel pour l’imprimante, achat de thé, nettoyage de la machine à café, organiser un temps d’entraide entre coworkers, etc."
+              }
+            },
+            "copulpeur_": {
+              "copulpeur": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "string",
+                "$value": "Copulpeur.euse"
+              },
+              "tarif": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "string",
+                "$value": "60 €/mois"
+              },
+              "info": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "string",
+                "$value": "Accès aux locaux 7j/7 et 24h/24 - Thé et café à volonté. | Contribution active* au conseil des usagers de L’Orangerie (2h/mois). Participation bénévole aux activités de PULPE (2h/mois)"
+              },
+              "contribution": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "string",
+                "$value": "* Concrètement, ça veut dire quoi ? Fais briller tes compétences dans une commission qui t’inspire : découvre le plaisir que ressent tout barman de l’autre côté du comptoir en buvette, ·\tbook des artistes de renommée intercommunale ou internationale pour la programmation, ou encore si tu prèfères, la rédaction de publications vitaminées."
+              },
+              "btnprimary": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "string",
+                "$value": "Essaye l'Orangerie pendant quelques jours"
+              }
+            }
+          },
+          "pulpe_": {
+            "intro": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "string",
+              "$value": "L’Orangerie s’inscrit dans un projet plus grand. Le projet de Pulpe et son bâtiment sont pensés comme des outils au service de tous ses usagers.ères, dont les coworkers (possibilité d’y organiser ateliers, événements réseaux, etc...)."
+            },
+            "histotitre": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "string",
+              "$value": "Historique de Pulpe"
+            },
+            "historique": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "string",
+              "$value": "Partant d’un constat de manque de locaux professionnels accessibles, d’une envie de travailler à plusieurs, de mutualiser des outils et des espaces et de proposer une offre socioculturelle de proximité aux habitant.e.s, un collectif composé d’entrepreneur.e.s, d’associations et d’habitant.e.s du territoire se forme en 2021. En juin 2022, l’association PULPE est créée avec le projet d’ouvrir un lieu partagé (ou tiers-lieu) à Malestroit (56)."
+            },
+            "aujtitre": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "string",
+              "$value": "Pulpe aujourd’hui"
+            },
+            "aujourdhui": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "string",
+              "$value": "C’est en novembre 2024 que la ville de Malestroit (56) met à disposition le bâtiment Faubourg Sainte-Anne et permet au projet de poser ses valises. Ce dernier accueille aujourd’hui l’espace valorisation de la ressourcerie de Malestroit (Rouages) et un espace de convivialité où se déroulent régulièrement concerts, ateliers, goûters, temps de rencontres et de vie associative. En 2025, 67 événements ont été organisés au sein du lieu partagé."
+            },
+            "btnprimarylabel": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "string",
+              "$value": "Envie de nous rejoindre ?"
+            },
+            "btnprimary": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "string",
+              "$value": "Contacte PULPE !"
+            },
+            "inprogress": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "string",
+              "$value": "\"Coworking progress \" comme on aime à dire à l'Orangerie"
+            }
+          },
+          "partenaire_": {
+            "label1": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "string",
+              "$value": "Un lieu créé par :"
+            },
+            "label2": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "string",
+              "$value": "L’Orangerie est soutenue par :"
+            },
+            "btnprimarylabel": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "string",
+              "$value": "Notre action t'a convaicue ?"
+            },
+            "btnprimary": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "string",
+              "$value": "Deviens partenaire"
+            }
+          },
+          "footer": {
+            "description": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "string",
+              "$value": "Récap rapide sur l'Orangerie en deux lignes grand max"
+            },
+            "droits": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "string",
+              "$value": "2026 L'Orangerie - Tous droits réservés"
+            },
+            "cgv": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "string",
+              "$value": "Conditions générales de vente"
+            },
+            "mentions": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "string",
+              "$value": "Mentions légales"
+            },
+            "titreplan1": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "string",
+              "$value": "PAGE D'ACCEUIL"
+            },
+            "titreplan2": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "string",
+              "$value": "AUTRES PAGES"
+            },
+            "bouton6": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "string",
+              "$value": "Contactez-nous"
+            },
+            "bouton7": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "string",
+              "$value": "Foire Aux Questions (F.A.Q.)"
+            }
+          }
+        }
+      }
+    }
+  }
+]

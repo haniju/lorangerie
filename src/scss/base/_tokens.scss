@@ -52,30 +52,109 @@
 /* COLORS:START */
 
 :root {
-  // Fonds
-  --color-bg-light: #e7f1e5;
-  --color-bg-mid: #e2eeed;
-  --color-bg-dark: #1a1a1a;
+  /* ── Primitives (_base) ── */
 
-  // Texte
-  --color-text-primary: #300908;
-  --color-text-secondary: #18170c;
-  --color-text-inverse: #f5f5f0;
+  // sable
+  --sable-14: #F5EEE4;
+  --sable-20: #F0E6D6;
+  --sable-30: #EAE0D1;
+  --sable-05: #FCF7F3;
+  --sable-09: #FBF3EC;
 
-  // Bordures
-  --color-border: #d4d4cf;
-  --color-border-strong: #1a1a1a;
+  // citron
+  --citron-100: #F3EA4D;
+  --citron-115: #ECE354;
+  --citron-125: #E7DF5F;
+  --citron-soft: #FAE865;
 
-  // Brand
-  --color-orange: #FF692F;
-  --color-yellow: #DDD12C;
-  --color-green: #5EA74F;
-  --color-teal: #0D5D56;
-  --color-red: #A10702;
+  // peche
+  --peche-10: #F6E9D8;
+  --peche-50: #F9D5BD;
+  --peche-80: #FDBB91;
+  --peche-100: #FFA164;
+  --peche-115: #EA9056;
 
-  // Sans groupe
-  --color-accent: #1a1a1a;
+  // sapin
+  --sapin-50: #96A493;
+  --sapin-60: #758671;
+  --sapin-70: #2C5039;
+  --sapin-80: #213D2C;
+  --sapin-90: #18301F;
+  --sapin-100: #1D291A;
 
+  // citrouille
+  --citrouille-190: #2B1208;
+  --citrouille-200: #1F0B03;
+
+  /* ── Tokens (références symboliques) ── */
+
+  // action
+  // action / button-primary
+  --action-button-primary-initial: var(--sapin-80);
+  --action-button-primary-hover: var(--sapin-70);
+  --action-button-primary-pressed: var(--sapin-90);
+  --action-button-primary-disabled: var(--sable-20);
+  // action / button-primary / texte
+  --action-button-primary-texte-hover: var(--sable-14);
+  --action-button-primary-texte-label: var(--sable-20);
+  --action-button-primary-texte-pressed: var(--sable-30);
+  --action-button-primary-texte-disabled: var(--sapin-60);
+  // action / NAV / nav-primary
+  --action-nav-nav-primary-initial: var(--sable-20);
+  --action-nav-nav-primary-hover: var(--sable-14);
+  --action-nav-nav-primary-pressed: var(--sable-30);
+  // action / NAV / nav-primary / texte
+  --action-nav-nav-primary-texte-primary: var(--sapin-90);
+  --action-nav-nav-primary-texte-hover: var(--sapin-80);
+  --action-nav-nav-primary-texte-pressed: var(--sapin-100);
+  // action / NAV / nav-secondary
+  --action-nav-nav-secondary-initial: var(--sapin-90);
+  --action-nav-nav-secondary-hover: var(--sapin-80);
+  --action-nav-nav-secondary-pressed: var(--sapin-100);
+  // action / NAV / nav-secondary / texte
+  --action-nav-nav-secondary-texte-initial: var(--sable-20);
+  --action-nav-nav-secondary-texte-hover: var(--sable-14);
+  --action-nav-nav-secondary-texte-pressed: var(--sable-30);
+  // action / index / texte
+  --action-index-texte-initial: var(--text-cold-dark);
+  --action-index-texte-hover: var(--sapin-80);
+  --action-index-texte-pressed: var(--sapin-100);
+  --action-index-texte-focus: var(--text-cold-dark);
+  // action / index
+  --action-index-initial: var(--sable-09);
+  --action-index-hover: var(--sable-05);
+  --action-index-pressed: var(--sable-14);
+  // action / button-secondary
+  --action-button-secondary-initial: var(--citron-115);
+  --action-button-secondary-hover: var(--citron-100);
+  --action-button-secondary-pressed: var(--citron-125);
+  --action-button-secondary-disabled: var(--sable-20);
+  // action / button-secondary / texte
+  --action-button-secondary-texte-initial: var(--sapin-80);
+  --action-button-secondary-texte-hover: var(--sapin-70);
+  --action-button-secondary-texte-pressed: var(--sapin-90);
+  --action-button-secondary-texte-disabled: var(--sapin-60);
+  // action / button-secondary
+  --action-button-secondary-label: var(--sapin-100);
+
+  // text
+  // text
+  --text-warm-dark: var(--citrouille-200);
+  // text / bloc
+  --text-bloc-background-1: var(--sable-14);
+  --text-bloc-background-2: var(--citron-100);
+  --text-bloc-text-1: var(--citrouille-190);
+  --text-bloc-text-2: var(--sapin-90);
+  // text
+  --text-cold-dark: var(--sapin-90);
+
+  // light
+  // light
+  --light-neutral: var(--sable-05);
+
+  // background
+  // background
+  --background-nav: var(--sable-14);
 }
 
 /* COLORS:END */

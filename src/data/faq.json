@@ -1,0 +1,139 @@
+{
+  "meta": {
+    "title": "FAQ — L'Orangerie, coworking par PULPE",
+    "categoriesOrder": [
+      "lieu-projet",
+      "acces-horaires",
+      "espaces-services",
+      "tarifs-abonnements",
+      "communaute"
+    ]
+  },
+  "categories": [
+    {
+      "id": "lieu-projet",
+      "label": "Le lieu & le projet",
+      "questions": [
+        {
+          "id": "tiers-lieu-contenu",
+          "question": "À part le coworking, qu'est-ce qui se trouve dans le tiers-lieu ?",
+          "answer": "Un espace de convivialité avec buvette associative et programmation socio-culturelle, une cuisine partagée, une cour arborée avec mobilier extérieur, des espaces de stockage/rangement, des WC avec table à langer.\n\nToute la programmation du lieu partagé est accessible en ligne, si certaines activités menées dans le lieu partagé pouvaient vous impacter.\n\nSelon les jours, l'espace est assez vivant : des bénévoles de la ressourcerie au rez-de-chaussée s'affairent pour reconditionner des objets délaissés, des habitants du quartier passent parfois dire bonjour, une jam session et un concert ont lieu chaque mois. Notre programmation accueille des activités diverses et variées, qui vont de la formation aux gestes de premiers secours à la soirée de battle de théâtre d'improvisation, en passant par une session jeu de société lors de la buvette hebdomadaire du jeudi soir.\n\nEn venant visiter, vous vous rendrez compte de l'authenticité du cadre de travail que nous vous proposons."
+        },
+        {
+          "id": "pourquoi-ici",
+          "question": "Pourquoi créer un espace de coworking à cet endroit ?",
+          "answer": "Le besoin a été facilement identifié par la carence d'offre dans un rayon de 20 à 30 km. La vocation de l'association PULPE est de mutualiser des espaces et des outils pour les rendre plus accessibles aux acteurs du territoire. La création d'un coworking est un moyen d'y parvenir."
+        },
+        {
+          "id": "proprietaire-batiment",
+          "question": "Qui est propriétaire du bâtiment ?",
+          "answer": "La commune de Malestroit et l'association PULPE sont liées par une convention d'occupation temporaire. La commune est propriétaire des murs et PULPE occupe et exploite une partie du site de Sainte-Anne."
+        }
+      ]
+    },
+    {
+      "id": "acces-horaires",
+      "label": "Accès & horaires",
+      "questions": [
+        {
+          "id": "parking",
+          "question": "Où puis-je me garer ?",
+          "answer": "À moins de 5 minutes à pied : parking public gratuit de 120 places Place du Docteur Queinnec, plus 80 places à la maison de santé."
+        },
+        {
+          "id": "horaires-acces",
+          "question": "Quels sont les horaires d'accès au coworking ?",
+          "answer": "Une fois votre inscription effectuée, l'accès est possible en autonomie via un code, 7j/7 et 24h/24."
+        },
+        {
+          "id": "accessibilite-pmr",
+          "question": "Le coworking est-il accessible aux personnes à mobilité réduite ?",
+          "answer": "Non, car il est situé au premier étage d'un bâtiment historique."
+        }
+      ]
+    },
+    {
+      "id": "espaces-services",
+      "label": "Espaces, équipements & services",
+      "questions": [
+        {
+          "id": "recevoir-invites",
+          "question": "Est-il possible de recevoir des collaborateurs ou partenaires à L'Orangerie avec mon abonnement ?",
+          "answer": "Ponctuellement, en réservant la salle de réunion (8 personnes assises). Une demande préliminaire est nécessaire pour une présence de plusieurs jours.\n\nIl est aussi possible de réserver l'espace de convivialité pour des ateliers collectifs (20-25 personnes assises, 50 debout)."
+        },
+        {
+          "id": "laisser-affaires",
+          "question": "Peut-on laisser ses affaires d'un jour à l'autre ?",
+          "answer": "Normalement non, sauf si Ludivine confirme la disponibilité du poste occupé pour le lendemain."
+        },
+        {
+          "id": "espaces-calmes",
+          "question": "Y a-t-il des espaces calmes ou des cabines téléphoniques pour les appels ?",
+          "answer": "Le tiers-lieu dans son ensemble est assez vaste pour trouver un coin tranquille et s'isoler facilement. Peut-être dans la cour, sous le tilleul ? Ou plutôt côté jardin nourricier ? Ou dans le canapé vert de l'espace de convivialité ? Une cabine téléphonique est en cours d'installation dans L'Orangerie."
+        },
+        {
+          "id": "domiciliation",
+          "question": "Puis-je domicilier mon entreprise à L'Orangerie ?",
+          "answer": "Non, pas pour le moment. Si des demandes sont exprimées en ce sens, le Conseil des usagers l'envisagera."
+        }
+      ]
+    },
+    {
+      "id": "tarifs-abonnements",
+      "label": "Tarifs, abonnements & paiement",
+      "questions": [
+        {
+          "id": "duree-engagement",
+          "question": "Y a-t-il une durée d'engagement pour les abonnements ?",
+          "answer": "Non, mais un mois payé est un mois engagé, non remboursable (cf. CGV)."
+        },
+        {
+          "id": "reconduction-tacite",
+          "question": "Le contrat est-il reconduit tacitement ?",
+          "answer": "Non, vous exprimez explicitement votre souhait de reconduire d'un mois sur l'autre."
+        },
+        {
+          "id": "paiement-avance",
+          "question": "Est-il possible de payer plusieurs mois à l'avance ?",
+          "answer": "Oui."
+        },
+        {
+          "id": "offre-journee",
+          "question": "J'aurais besoin d'accéder au coworking pour une ou deux journées, sans prendre d'abonnement, est-ce possible ?",
+          "answer": "Oui, nous proposons une offre « journée » à 25 € TTC."
+        },
+        {
+          "id": "tarifs-reduits",
+          "question": "Existe-t-il des tarifs réduits (association, étudiant, demandeur d'emploi) ?",
+          "answer": "Notre tarification différenciée a été conçue dans cet objectif d'accessibilité économique. Nous attendons également d'avoir des demandes en ce sens et de les étudier pour être le plus juste dans notre proposition de « tarif solidaire ». Le conseil des usagers est en concertation sur ce sujet."
+        },
+        {
+          "id": "moyens-paiement",
+          "question": "Quels sont les moyens de paiement acceptés ?",
+          "answer": "Le règlement des services de L'Orangerie s'effectue en ligne, par CB ou virement, via notre site dédié."
+        }
+      ]
+    },
+    {
+      "id": "communaute",
+      "label": "Communauté & vie du lieu",
+      "questions": [
+        {
+          "id": "qui-croiser",
+          "question": "Qui vais-je croiser à L'Orangerie ?",
+          "answer": "Notre salariée Ludivine sera certainement votre première rencontre.\n\nPuis vous croiserez certainement les audacieux créatifs de la Commission Communication de PULPE : Talmo, artiste & médiateur numérique ; Romain, organisateur de microfestival électro & consultant en développement d'activités ; Pierro, collectionneur de vinyles & coordinateur de la communauté bénévole pour GreenPeace. On attend le retour de la capitale de Camille, la plus croustillante Pleucadeusienne du canton.\n\nBrendan et Julia, membres de la Commission Finance de l'association, sont régulièrement présents. Les membres des Commissions Buvette et Programmation qui font vivre le lieu partagé se retrouvent ponctuellement pour travailler leurs sujets à L'Orangerie : Laura, Sam, Cloé, Sathya, Julie, Simon, Rozen, Maïki, pour n'en nommer que quelques-un·es.\n\nSans oublier Yves, notre voisin-gardien-doyen."
+        },
+        {
+          "id": "evenements-coworkers",
+          "question": "Y a-t-il des événements dédiés aux coworkers ?",
+          "answer": "Hormis l'afterwork-buvette chaque jeudi, pas encore. En organiser est l'une des missions du Conseil des usagers."
+        },
+        {
+          "id": "programmation-info",
+          "question": "Comment être informé de la programmation du tiers-lieu ?",
+          "answer": "Via notre page Facebook, ou notre newsletter mensuelle, « le Zeste » (lien d'inscription à insérer)."
+        }
+      ]
+    }
+  ]
+}
