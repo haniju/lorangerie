@@ -125,7 +125,7 @@ Le texte vit dans des **variables *string*** Figma (récupérables via `get_vari
 | `entrepreneur.e.s` | 32:2801 / 44:4461 | point `.` |
 | `usagers.ères` | (prose pulpe) | point `.` |
 
-→ Le contenu mélange **point médian** et **point** : matière directe du futur skill `inclusive-writing` (détection → liste avant/après → unification point médian `·` U+00B7 + forme aria).
+→ Le contenu mélange **point médian**, **point** et **tiret** (3 modalités) : matière du skill `inclusive-writing`. **Spec de référence : [INCLUSIVE-WRITING.md](INCLUSIVE-WRITING.md)** (détection → liste avant/après → unification point médian `·` U+00B7 + forme aria/`sr-only`).
 
 ---
 

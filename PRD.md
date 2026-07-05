@@ -1,6 +1,6 @@
 # PRD — L'Orangerie
 
-Ce projet contient trois produits distincts qui cohabitent dans le meme repository.
+Ce projet contient trois produits distincts qui cohabitent dans le meme repository. Sur ce projet, seul le **Produit A** est actif / livrable : le **Produit B est gele** (cf. sa section) et le **Produit C reste un proto standalone** hors build.
 
 ---
 
@@ -17,9 +17,10 @@ Site statique pour un client, deploye en production. Approche design system firs
 - **GSAP + ScrollTrigger** pour les animations
 - **Fonts** : iCiel Cadena (logotype display), Ortica Linear (headings), DM Sans variable (body)
 
-### Pages
+Anciennement des `.html` multi-entrees Vite ; en Astro elles deviennent `src/pages/*.astro` (routing par fichiers).
+
 - Home one-page (`index` — sections hero / coworking / fonctionnement / tarifs / pulpe / partenaires / footer)
-- Pages annexes : contact, faq, mentions-legales, cgv, 404
+- Pages annexes (cf. PLAN-ACTION Phase 5) : contact, faq, mentions-legales, cgv, 404
 - `design-system.html` = page du Produit B (**gele**, cf. ci-dessous)
 - Reference structurelle detaillee (node-IDs) : voir `SITE-PLAN.md` ; execution : `PLAN-ACTION.md`
 
@@ -126,6 +127,8 @@ Comme le Produit B, ce n'est pas un livrable client : c'est un outil de travail 
 
 ### Statut
 **Prototype / exploration.** Vit dans des fichiers HTML autonomes a la racine du repo (`lorangerie-gradient-demo.html`, `orangerie-gradient-canvas.html`, et autres `*-demo.html`), **hors du build Vite**. Aucune dependance au reste du site : fonts via Google Fonts, tout le JS inline. Format de travail fixe en portrait 180×240 (ratio telephone).
+
+> Cross-reference : alimente les **Phases 7 (light field / fond anime) et 8 (serpentins)** du PLAN-ACTION ; reste proto standalone hors build tant que non integre.
 
 ### Ce qui est explore — 3 techniques de rendu comparees
 

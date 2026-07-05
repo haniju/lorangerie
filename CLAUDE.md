@@ -9,17 +9,18 @@ Site statique vitrine "L'Orangerie". Approche design system first — le DS est 
 - **Astro** pour le build (site statique → `dist/`) — tourne sur Vite, donc les plugins Vite restent branchés via `astro.config` → `vite.plugins`. Composants `.astro`, routing par fichiers (`src/pages/`), layouts partagés (navbar + footer uniques).
 - **SCSS** organisé en `base/`, `components/`, `layout/`, `pages/`, `utilities/`
 - **Utopia** pour le fluid sizing — ne jamais hardcoder des tailles de typo ou d'espacement en px/rem fixes. Utiliser les tokens `--step-*` et `--space-*`. Contenu plafonné à 1550px + marges fluides (bornes 440 / 1280).
-- **Couleurs Figma-first** : Figma = seule source → `src/data/tokens.colors.json` (arbre profond) → `scripts/figma-to-colors.js` → `src/data/colors.json` (**généré, ne pas éditer**) → `scripts/generate-tokens.js` → `_tokens.scss`. Voir `README-tokens-couleur.md`.
+- **Couleurs Figma-first** : Figma = seule source → `src/data/tokens.colors.json` (arbre profond) → `scripts/figma-to-colors.js` → `src/data/colors.json` (**généré, ne pas éditer**) → `scripts/generate-tokens.js` → `_tokens.scss`. Primitives `_base` en valeur (`--sapin-80: #213D2C`), tokens sémantiques en référence (`--action-button-primary-initial: var(--sapin-80)`). Voir `README-tokens-couleur.md`.
 - **GSAP + ScrollTrigger** pour les animations. Attributs data : `data-fade-in`, `data-parallax="0.2"`. `prefers-reduced-motion` respecté partout.
 - **Contenu texte** : source Figma → `src/data/textes.json` (transform `scripts/figma-to-content.js`, à créer), consommé par les composants — jamais en dur dans le HTML.
-- **Fonts** (dans `src/assets/font/`) : **iCiel Cadena** (logotype `display`, fichier `iciel Cadena.ttf`), **Ortica Linear** (headings), **DM Sans** variable (body).
+- **Fonts** (dans `src/assets/font/`) : **iCiel Cadena** (logotype `display`, fichier `iciel-cadena.ttf`), **Ortica Linear** (headings), **DM Sans** variable (body).
 
 ## Design
 
 - Direction : léché, discret mais solide. Niveau design engineer
-- Palette : neutre `sable` + familles brand `citron`, `sapin`/`sapin_bis`, `pêche` — définie **Figma-first**, générée dans `_tokens.scss` (ne jamais y écrire de hex en dur)
+- Palette : primitives `_base` (familles `sable`, `citron`, `peche`, `sapin`, `citrouille`) + tokens sémantiques `tokens` (familles `action`, `text`, `light`, `background`). Définie **Figma-first**, générée dans `_tokens.scss` (ne jamais y écrire de hex en dur)
 - 2 fonts, 3 niveaux de titres (h1/h2/h3), 2 blocs texte (body/highlight), 3 boutons (filled/outlined/link)
-- Responsive mobile-first, 4 breakpoints : mobile / tablet / small desktop / large desktop
+- Logotype `display` (« L'ORANGERIE ») = **texte pur** en iCiel Cadena, PAS d'asset SVG
+- Responsive **fluide** (Utopia, `clamp()`) entre 440px (mobile) et 1280px (desktop) ; contenu plafonné à 1550px, marges fluides absorbant l'espace au-delà. Pas de cascade de breakpoints fixes. *(NB : des `@media (max-width: 40rem)` subsistent dans du SCSS legacy/Produit B — à réconcilier lors du passage Astro.)*
 
 ## Déploiement
 

@@ -16,7 +16,7 @@ Figma (variables couleur)
 
 Deux fichiers, deux rôles :
 
-- **`tokens.colors.json`** — l'export Figma brut. Chaque variable porte son `name`, son `id` Figma (stable), sa `collection`, sa valeur résolue (`value`) et, si c'est un token aliasé, le nom de la primitive `_base` (`alias`).
+- **`tokens.colors.json`** — l'export Figma brut. **Format canonique = l'arbre profond `collections.<c>.tree`** (c'est ce que lit `figma-to-colors.js`). Chaque feuille porte son `name`, son `id` Figma (stable), sa `collection`, sa valeur résolue (`value`) et, si aliasé, la primitive `_base` (`alias`). Le miroir plat `variables[]` présent dans le même fichier est **obsolète** — ne pas s'en servir.
 - **`colors.json`** — **fichier généré**, au schéma `{groups, tints}` attendu par le reste de l'outillage. Il est écrasé à chaque transform ; l'en-tête `"_source": "figma"` le signale. Ne pas l'éditer à la main.
 
 ## Mettre à jour les couleurs

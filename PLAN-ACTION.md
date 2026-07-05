@@ -19,7 +19,7 @@
 | **Formulaire contact** | 4 champs : **nom, email, objet, message** |
 | **Index / dot-nav** | Règles R1–R15 (ci-dessous) ; 5 puces, hero + footer exclus |
 | **Fruits décoratifs** | **Purgés** (kiwi, tasse, laptop, plante, framboise, orange) ; remplacés par serpentins |
-| **Écriture inclusive** | Spec détaillée à intégrer (fournie séparément) — voir §Écriture inclusive |
+| **Écriture inclusive** | Spec de référence : [INCLUSIVE-WRITING.md](INCLUSIVE-WRITING.md) |
 | **Logotype `display`** | **Texte pur** (police iCiel Cadena), PAS d'asset SVG |
 | **Logo Pulpe (index)** | Affiché dans l'étiquette d'index de `pulpe` (nodes `181:3025` mobile / `513:8772` desktop détaché) ; label résiduel « Nos tarifs » à ignorer/nettoyer |
 | **Produit B (color-manager)** | **Gelé** sur ce projet — ne pas utiliser, n'édite plus `colors.json` |
@@ -69,7 +69,7 @@ Prérequis : le plugin doit aussi exporter les variables **FLOAT** (espacements,
 ### Contenu (variables string) — À FAIRE
 Le fichier réel `src/data/textes.json` est aujourd'hui un **export brut Figma** (format DTCG `modes/$type/$value`). Il lui manque son transform twin **`scripts/figma-to-content.js`** (jumeau de `figma-to-colors.js`) qui produira un `textes.json` **consommable** par les composants, la FAQ et le futur skill `inclusive-writing`.
 
-> Spec du transform `figma-to-content.js` **+ écriture inclusive : fournies séparément — placeholder, ne pas inventer.**
+> Écriture inclusive : voir **[INCLUSIVE-WRITING.md](INCLUSIVE-WRITING.md)**. Spec du transform `figma-to-content.js` : **fournie séparément — placeholder, ne pas inventer.**
 
 ---
 
@@ -113,11 +113,13 @@ Composants (atomic design, classes calquées sur Figma) : `.bento`, `.principes`
 
 ---
 
-## Écriture inclusive (spec à venir)
+## Écriture inclusive
+
+> **Spec de référence : [INCLUSIVE-WRITING.md](INCLUSIVE-WRITING.md)** — ce document fait foi.
 
 Le contenu réel (`textes.json`) mélange **au moins 3 modalités** d'écriture inclusive : point médian (`adhérent·e·s`), point (`entrepreneur.e.s`, `habitant.e.s`, `Copulpeur.euse`, `fait.e`) et tiret (`humain-es`) — attention aux **faux positifs** du tiret (`tiers-lieu`, `open-space`, `Suis-je`).
 
-Spec détaillée **fournie séparément — placeholder, ne pas inventer**. Périmètre acté à intégrer ici :
+Résumé du périmètre (détail dans INCLUSIVE-WRITING.md) :
 - **liste avant/après** stockée de toutes les occurrences ;
 - **unification** au point médian **`·` U+00B7** ;
 - **formes orales accessibles** validées, exposées via `aria` / `sr-only` ;
