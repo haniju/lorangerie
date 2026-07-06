@@ -53,7 +53,7 @@ $nav-switch: 56rem;
 // Liens inline — desktop uniquement
 .navbar__links {
   display: none;
-  padding: var(--space-170) 0px;
+  padding: var(--space-152) 0px;
 
   @media (min-width: $nav-switch) {
     display: flex;

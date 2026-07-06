@@ -46,6 +46,7 @@ export function generateFluidTokens() {
   const { min: minW, max: maxW, cap, root } = data.bornes
   const { space, corner, stroke } = data.fixed
   const fluid = data.fluid
+  const grid = data.grid
 
   let css = ''
   css += `// ─── FLUIDE — GÉNÉRÉ depuis src/data/tokens.fluid.json ───────\n`
@@ -82,6 +83,20 @@ export function generateFluidTokens() {
     css += `  --${name}: ${clampFrom(pair, minW, maxW, root)}; // ${pair.min}→${pair.max}px\n`
   }
 
+  // --- Grilles (colonnes fluides sur --grid-useful) ---
+  if (grid) {
+    css += `\n  /* ── Grilles (largeur utile découpée en colonnes) ── */\n`
+    css += `  --grid-useful: ${grid.useful};\n`
+    for (const [device, cols] of Object.entries(grid.columns)) {
+      css += `  // ${device} : ${cols} colonnes\n`
+      for (let i = 1; i <= cols; i++) {
+        const val =
+          i === cols ? `var(--grid-useful)` : `calc(var(--grid-useful) * ${i} / ${cols})`
+        css += `  --grid-col-${device}-${i}: ${val};\n`
+      }
+    }
+  }
+
   css += `}\n`
 
   writeFileSync(FLUID_SCSS, css, 'utf-8')
@@ -90,12 +105,13 @@ export function generateFluidTokens() {
     corner: Object.keys(corner).length,
     stroke: Object.keys(stroke).length,
     fluid: Object.keys(fluid).length,
+    grid: grid ? Object.keys(grid.columns).length : 0,
   }
 }
 
 if (process.argv[1] && process.argv[1].includes('generate-fluid')) {
   const r = generateFluidTokens()
   console.log(
-    `_fluid.scss généré : ${r.space} espacements, ${r.corner} rayons, ${r.stroke} traits, ${r.fluid} tokens fluides.`
+    `_fluid.scss généré : ${r.space} espacements, ${r.corner} rayons, ${r.stroke} traits, ${r.fluid} tokens fluides, ${r.grid} grilles.`
   )
 }

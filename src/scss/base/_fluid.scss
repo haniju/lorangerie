@@ -3,18 +3,7 @@
 // Option C (hybride) : espacements/corners/strokes fixes + clamp() 440→1280. Cf. CHANGELOG.md
 
 :root {
-  /* ── Grille 7 colonnes ── */
-  --grid-useful: calc(min(100vw, var(--content-cap)) - 2 * var(--pad-grid));
-  --grid-col-1: calc(var(--grid-useful) / 7);
-  --grid-col-2: calc(var(--grid-useful) * 2 / 7);
-  --grid-col-3: calc(var(--grid-useful) * 3 / 7);
-  --grid-col-4: calc(var(--grid-useful) * 4 / 7);
-  --grid-col-5: calc(var(--grid-useful) * 5 / 7);
-  --grid-col-6: calc(var(--grid-useful) * 6 / 7);
-  --grid-col-7: var(--grid-useful);
-
   /* ── Espacements (barème Figma, rem fixes) ── */
-  --space-2: 0.1rem; // 7px
   --space-7: 0.4375rem; // 7px
   --space-8: 0.5rem; // 8px
   --space-10: 0.625rem; // 10px
@@ -24,8 +13,8 @@
   --space-40: 2.5rem; // 40px
   --space-50: 3.125rem; // 50px
   --space-70: 4.375rem; // 70px
-  --space-170: 9.5rem; // 70px
-  --space-270: 13rem; // 70px
+  --space-152: 9.5rem; // 152px
+  --space-208: 13rem; // 208px
 
   /* ── Rayons (corners) ── */
   --corner-small: 0.5rem; // 8px
@@ -45,4 +34,21 @@
   --pad-grid: clamp(1.25rem, -0.0595rem + 4.7619vw, 3.75rem); // 20→60px
   --step-display: clamp(2.5rem, 1.8452rem + 2.381vw, 3.75rem); // 40→60px
   --step-h1: clamp(1.625rem, 1.2976rem + 1.1905vw, 2.25rem); // 26→36px
+
+  /* ── Grilles (largeur utile découpée en colonnes) ── */
+  --grid-useful: calc(min(100vw, var(--content-cap)) - 2 * var(--pad-grid));
+  // desktop : 7 colonnes
+  --grid-col-desktop-1: calc(var(--grid-useful) * 1 / 7);
+  --grid-col-desktop-2: calc(var(--grid-useful) * 2 / 7);
+  --grid-col-desktop-3: calc(var(--grid-useful) * 3 / 7);
+  --grid-col-desktop-4: calc(var(--grid-useful) * 4 / 7);
+  --grid-col-desktop-5: calc(var(--grid-useful) * 5 / 7);
+  --grid-col-desktop-6: calc(var(--grid-useful) * 6 / 7);
+  --grid-col-desktop-7: var(--grid-useful);
+  // mobile : 5 colonnes
+  --grid-col-mobile-1: calc(var(--grid-useful) * 1 / 5);
+  --grid-col-mobile-2: calc(var(--grid-useful) * 2 / 5);
+  --grid-col-mobile-3: calc(var(--grid-useful) * 3 / 5);
+  --grid-col-mobile-4: calc(var(--grid-useful) * 4 / 5);
+  --grid-col-mobile-5: var(--grid-useful);
 }
