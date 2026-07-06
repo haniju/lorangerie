@@ -1,0 +1,11 @@
+// composant/titre — styles de titre. Base Figma : title/h2/paragraphe
+// (DM Sans Bold 20/26, text/warm-dark). Ex. « Pulpe aujourd'hui ».
+
+.titre-paragraphe {
+  margin: 0;
+  font-family: var(--font-body); // DM Sans
+  font-weight: 700; // Bold
+  font-size: 1.25rem; // 20px — title/h2/paragraphe
+  line-height: 1.3; // 26px
+  color: var(--text-warm-dark); // #1F0B03
+}

@@ -7,14 +7,14 @@ $hero-switch: 56rem;
   display: grid;
   gap: var(--space-40);
   padding-block: var(--space-40) var(--space-70);
-  padding-top: var(--space-270);
+  padding-top: var(--space-208);
   align-items: start;
 
   @media (min-width: $hero-switch) {
     grid-template-columns: 5fr 7fr;
     align-items: center;
     gap: var(--pad-grid);
-    padding-top: var(--space-170);
+    padding-top: var(--space-152);
   }
 }
 

@@ -13,7 +13,9 @@
       "34": 34,
       "40": 40,
       "50": 50,
-      "70": 70
+      "70": 70,
+      "152": 152,
+      "208": 208
     },
     "corner": {
       "small": 8,
@@ -32,5 +34,11 @@
     "pad-grid":     { "min": 20, "max": 60, "figma": "grid-layout/Padding_mobile -> SIZES/paddings/grid" },
     "step-display": { "min": 40, "max": 60, "figma": "display/d_mobile -> display/d_desktop" },
     "step-h1":      { "min": 26, "max": 36, "figma": "title/h1/section_focus_mobile -> _desktop" }
+  },
+
+  "grid": {
+    "_note": "Largeur utile commune, découpée en colonnes fluides. desktop=7, mobile=5.",
+    "useful": "calc(min(100vw, var(--content-cap)) - 2 * var(--pad-grid))",
+    "columns": { "desktop": 7, "mobile": 5 }
   }
 }
