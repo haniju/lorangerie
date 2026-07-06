@@ -1,0 +1,101 @@
+// composant/bento — grille coworking. PREMIÈRE PASSE desktop (flex).
+// Les groupes Figma sont rendus en divs flex. Fonds simples (pas de glassmorphism).
+// Mobile (carousel Embla) : passe suivante.
+
+.bento {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-20);
+}
+
+.bento__row {
+  display: flex;
+  gap: var(--space-20);
+  align-items: stretch;
+}
+
+.bento__photo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  border-radius: var(--corner-small);
+}
+
+// ── première ligne : photo (1) + plan (2) ──
+.bento__row--une > .bento__photo {
+  flex: 1;
+}
+
+.bento__plan {
+  display: flex;
+  flex: 2;
+  flex-direction: column;
+  gap: var(--space-20);
+}
+
+.bento__plan-row {
+  display: flex;
+  gap: var(--space-20);
+  align-items: center;
+}
+
+.bento__plan-img {
+  flex: none;
+  width: clamp(12rem, 28vw, 24rem);
+  height: auto;
+}
+
+.bento__text {
+  flex: 1;
+  font-family: var(--font-body);
+  font-size: 0.9375rem; // 15px — font/text/regular
+  line-height: 1.47;    // font/line-height/compact
+  color: var(--text-warm-dark);
+}
+
+// ── milieu : 2 open spaces ──
+.bento__row--milieu > .bento__photo {
+  flex: 1;
+}
+
+// ── bas : 2 colonnes ──
+.bento__col {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-20);
+}
+
+// bloc coordinatrice : dégradé pêche + forme arrondie + texte
+.bento__coordinatrice {
+  position: relative;
+  display: flex;
+  gap: var(--space-30);
+  align-items: center;
+  padding: var(--space-50) var(--space-30);
+  border-radius: var(--corner-small);
+  background: linear-gradient(
+    to bottom,
+    rgba(252, 238, 229, 0) 0%,
+    var(--sable-05) 27%,
+    #fed7be 100%
+  );
+}
+
+.bento__coordinatrice-shape {
+  flex: none;
+  width: 5.75rem;  // ~93px
+  height: 6.5rem;  // ~104px
+  background: var(--sable-09);
+  border-radius: 4.375rem 4.375rem 0 0; // arrondi haut (forme Figma)
+}
+
+.bento__coordinatrice-text {
+  font-family: var(--font-body);
+  font-size: 1.3125rem; // 21px — text/d_highlight
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--text-warm-dark);
+}

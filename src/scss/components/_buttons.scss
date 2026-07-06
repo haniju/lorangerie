@@ -15,6 +15,25 @@
   cursor: pointer;
 }
 
+// ─── bouton/primary ─────────────────────────────────────────
+.btn--primary {
+  @extend %btn-base;
+  padding: var(--space-10) var(--space-70);
+  background: var(--action-button-primary-initial);
+  color: var(--action-button-primary-texte-label);
+  border-radius: var(--corner-small);
+  letter-spacing: 1px; // font/label/letter-spacing
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.08); // button-shadow
+
+  &:hover  { background: var(--action-button-primary-hover); }
+  &:active { background: var(--action-button-primary-pressed); }
+  &:disabled {
+    background: var(--action-button-primary-disabled);
+    color: var(--action-button-primary-texte-disabled);
+    cursor: not-allowed;
+  }
+}
+
 // ─── bouton/nav-primary ─────────────────────────────────────
 .btn--nav-primary {
   @extend %btn-base;

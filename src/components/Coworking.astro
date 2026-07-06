@@ -1,0 +1,70 @@
+---
+// Section coworking (Figma 32:2613) — composant/bento.
+// PREMIÈRE PASSE desktop (flex, groupes Figma = divs). Assets LOCAUX (jamais Figma).
+// Mobile (carousel Embla) : passe suivante. Contenu → à terme textes.json.
+import { Image } from 'astro:assets'
+import framboise2 from '../assets/images/framboise_2.jpg'
+import framboise1 from '../assets/images/framboise_1.jpg'
+import kiwi1 from '../assets/images/kiwi_1.jpg'
+import reunion from '../assets/images/reunion.jpg'
+import kiwi2 from '../assets/images/kiwi_2.jpg'
+import photocopies from '../assets/images/photocopies.jpg'
+import planUrl from '../assets/svg/plan.svg?url'
+
+const intro =
+  "L'Orangerie, le coworking par PULPE, rassemble tous les ingrédients pour travailler dans les meilleures conditions."
+const openSpace =
+  'Deux open spaces (Framboise et Kiwi) de 9 postes de travail individuels connectés à Internet par fibre optique (wifi + filaire)'
+const copieur =
+  "Un copieur multifonction, une cuisine partagée et une cour arborée complète l'ensemble."
+const salleReunion = 'Une salle de réunion de 8 places équipée d’un vidéoprojecteur.'
+const coordinatrice =
+  'Coordinatrice salariée du lieu partagé, Ludivine vous accueille à l’Orangerie'
+
+const sizes = '(min-width: 56rem) 40vw, 90vw'
+const widths = [400, 700, 1000]
+---
+
+<section class="coworking u-container u-section" id="coworking" aria-label="Le coworking">
+  <p class="coworking__intro">{intro}</p>
+
+  <div class="bento">
+    <!-- première ligne : photo + plan légendé -->
+    <div class="bento__row bento__row--une">
+      <Image class="bento__photo" src={framboise2} alt="Un poste de travail dans la salle Framboise" widths={widths} sizes={sizes} />
+      <div class="bento__plan">
+        <div class="bento__plan-row">
+          <p class="bento__text">{openSpace}</p>
+          <img class="bento__plan-img" src={planUrl} alt="Plan des espaces de l’Orangerie : salles Framboise et Kiwi, salle de réunion, café, WC" loading="lazy" />
+        </div>
+        <div class="bento__plan-row">
+          <p class="bento__text">{copieur}</p>
+          <p class="bento__text">{salleReunion}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- milieu : deux open spaces -->
+    <div class="bento__row bento__row--milieu">
+      <Image class="bento__photo" src={framboise1} alt="L’open space Framboise" widths={widths} sizes={sizes} />
+      <Image class="bento__photo" src={kiwi1} alt="L’open space Kiwi" widths={widths} sizes={sizes} />
+    </div>
+
+    <!-- bas : réunion + coordinatrice, et colonne kiwi/copieur -->
+    <div class="bento__row bento__row--bas">
+      <div class="bento__col">
+        <Image class="bento__photo" src={reunion} alt="La salle de réunion" widths={widths} sizes={sizes} />
+        <div class="bento__coordinatrice">
+          <span class="bento__coordinatrice-shape" aria-hidden="true"></span>
+          <p class="bento__coordinatrice-text">{coordinatrice}</p>
+        </div>
+      </div>
+      <div class="bento__col">
+        <Image class="bento__photo" src={kiwi2} alt="L’open space Kiwi, seconde vue" widths={widths} sizes={sizes} />
+        <Image class="bento__photo" src={photocopies} alt="L’espace copieur multifonction" widths={widths} sizes={sizes} />
+      </div>
+    </div>
+  </div>
+
+  <a href="#" class="btn--primary coworking__cta">Réserve ton poste de travail</a>
+</section>
