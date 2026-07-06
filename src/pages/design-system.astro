@@ -5,6 +5,7 @@ import Layout from '../layouts/Layout.astro'
 import Add from '../assets/pictos/add.svg'
 import Pulpe from '../assets/pictos/Vector.svg'
 import orangerieUrl from '../assets/pictos/orangerie.svg?url'
+import arrowUrl from '../assets/pictos/simple.svg?url'
 
 const loremRegular =
   'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Espace de travail partagé géré par l’association Pulpe.'
@@ -202,6 +203,35 @@ const loremHighlight =
           <p class="forfait__details">Accès mutualisé aux open spaces et services.</p>
         </div>
       </article>
+    </div>
+
+    <h2 class="ds__section-title">Text box liste</h2>
+    <p class="ds__note">
+      Encart liste (<code>composant/text-box-liste</code>) : boîte sable, gros arrondi
+      haut-gauche, lignes picto flèche + texte.
+    </p>
+    <div class="ds__group ds__group--stack">
+      <div class="ds__item">
+        <div class="text-box-liste">
+          <p class="text-box-liste__item">
+            <img class="text-box-liste__arrow" src={arrowUrl} alt="" aria-hidden="true" />
+            <span class="text-box-liste__text">La salle de réunion est accessible sur réservation pour les adhérent·e·s.</span>
+          </p>
+          <p class="text-box-liste__item">
+            <img class="text-box-liste__arrow" src={arrowUrl} alt="" aria-hidden="true" />
+            <span class="text-box-liste__text">Parkings, restaurants et petite restauration accessibles à quelques minutes à pied. Le stationnement n’est pas autorisé dans la cour du lieu partagé.</span>
+          </p>
+          <p class="text-box-liste__item">
+            <img class="text-box-liste__arrow" src={arrowUrl} alt="" aria-hidden="true" />
+            <span class="text-box-liste__text">Thé et café moulu à volonté.</span>
+          </p>
+          <p class="text-box-liste__item">
+            <img class="text-box-liste__arrow" src={arrowUrl} alt="" aria-hidden="true" />
+            <span class="text-box-liste__text">Cuisine et salle à manger partagées.</span>
+          </p>
+        </div>
+        <code>.text-box-liste</code>
+      </div>
     </div>
   </section>
 </Layout>
