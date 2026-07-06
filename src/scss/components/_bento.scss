@@ -1,11 +1,24 @@
-// composant/bento — grille coworking. PREMIÈRE PASSE desktop (flex).
+// composant/bento — grille coworking.
 // Les groupes Figma sont rendus en divs flex. Fonds simples (pas de glassmorphism).
-// Mobile (carousel Embla) : passe suivante.
+// Deux layouts structurellement distincts, bascule sur UN seul breakpoint :
+//   • Desktop (≥ 56rem, node 38:3293) : grille bento — .bento--desktop
+//   • Mobile  (< 56rem, node 44:3547) : empilement de rangées à défilement
+//     horizontal (scroll-snap natif, pas d'Embla) — .bento-mobile
+
+$bento-switch: 56rem;
 
 .bento {
   display: flex;
   flex-direction: column;
   gap: var(--space-20);
+}
+
+// ── bascule desktop ⇄ mobile ──
+.bento--desktop { display: none; }
+
+@media (min-width: $bento-switch) {
+  .bento--desktop { display: flex; }
+  .bento-mobile { display: none; }
 }
 
 .bento__row {
@@ -97,4 +110,85 @@
   font-weight: 500;
   line-height: 1.3;
   color: var(--text-warm-dark);
+}
+
+// ════════════════════════════════════════════════════════════════════
+// MOBILE (< 56rem) — node 44:3547
+// Empilement vertical de rangées ; les rangées photos + encarts texte
+// défilent horizontalement (scroll-snap natif). Coordinatrice partagée
+// avec le desktop (.bento__coordinatrice).
+// ════════════════════════════════════════════════════════════════════
+
+.bento-mobile {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-10);
+}
+
+// hauteur commune des rangées photos (Figma : 300px @ 440) — plafonnée
+$bento-mobile-row-h: clamp(15rem, 62vw, 20rem);
+
+// rangée à défilement horizontal : scroll-snap doux, scrollbar masquée
+.bento-mobile__scroller {
+  display: flex;
+  gap: var(--space-20);
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; // Firefox
+  &::-webkit-scrollbar { display: none; } // Chromium/Safari
+
+  // débord fluide de la marge du conteneur (padding gauche 20px Figma)
+  padding-inline: var(--space-20) var(--space-10);
+
+  > * { scroll-snap-align: start; }
+}
+
+// ── bloc plan : illustration centrée + encarts texte scrollables ──
+.bento-mobile__plan {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-10);
+}
+
+.bento-mobile__plan-img {
+  width: min(90%, 25rem);
+  height: auto;
+}
+
+.bento-mobile__textes {
+  align-self: stretch;
+  align-items: stretch;
+}
+
+.bento-mobile__text-card {
+  flex: none;
+  display: flex;
+  align-items: center;
+  width: min(80vw, 20rem);
+  padding: var(--space-10);
+  border-radius: var(--corner-small);
+  background: var(--text-bloc-background-1); // fond simple (pas de blur Figma)
+  font-family: var(--font-body);
+  font-size: 0.9375rem; // 15px — font/text/regular
+  line-height: 1.47; // font/line-height/compact
+  color: var(--text-warm-dark);
+}
+
+// ── rangées photos : filmstrip horizontal ──
+.bento-mobile__photos {
+  height: $bento-mobile-row-h;
+}
+
+.bento-mobile__photos--bottom { align-items: flex-end; } // salles (Figma items-end)
+.bento-mobile__photos--top { align-items: flex-start; } // réunion (Figma items-start)
+
+.bento-mobile__photo {
+  flex: none;
+  height: 100%;
+  width: auto;
+  max-width: 85vw;
+  object-fit: cover;
+  border-radius: var(--corner-small);
 }

@@ -1,7 +1,9 @@
 ---
-// Section coworking (Figma 32:2613) — composant/bento.
-// PREMIÈRE PASSE desktop (flex, groupes Figma = divs). Assets LOCAUX (jamais Figma).
-// Mobile (carousel Embla) : passe suivante. Contenu → à terme textes.json.
+// Section coworking — composant/bento. Assets LOCAUX (jamais Figma).
+// Deux layouts (groupes Figma = divs flex), bascule sur 1 breakpoint (56rem) :
+//   • Desktop 38:3293 → .bento--desktop (grille)
+//   • Mobile  44:3547 → .bento-mobile (rangées à défilement horizontal, scroll-snap)
+// Contenu inline pour l'instant → à terme textes.json.
 import { Image } from 'astro:assets'
 import framboise2 from '../assets/images/framboise_2.jpg'
 import framboise1 from '../assets/images/framboise_1.jpg'
@@ -28,7 +30,8 @@ const widths = [400, 700, 1000]
 <section class="coworking u-container u-section" id="coworking" aria-label="Le coworking">
   <p class="coworking__intro">{intro}</p>
 
-  <div class="bento">
+  <!-- ── DESKTOP : grille bento (≥ 56rem) ── -->
+  <div class="bento bento--desktop">
     <!-- première ligne : photo + plan légendé -->
     <div class="bento__row bento__row--une">
       <Image class="bento__photo bento__tiers" src={framboise2} alt="Un poste de travail dans la salle Framboise" widths={widths} sizes={sizes} />
@@ -63,6 +66,40 @@ const widths = [400, 700, 1000]
         <Image class="bento__photo" src={kiwi2} alt="L’open space Kiwi, seconde vue" widths={widths} sizes={sizes} />
         <Image class="bento__photo" src={photocopies} alt="L’espace copieur multifonction" widths={widths} sizes={sizes} />
       </div>
+    </div>
+  </div>
+
+  <!-- ── MOBILE : empilement de rangées à défilement horizontal (< 56rem) ── -->
+  <!-- Groupes Figma (44:3547) = divs. Scroll natif (scroll-snap), pas d'Embla. -->
+  <div class="bento-mobile">
+    <!-- bloc plan : illustration + rangée d'encarts texte scrollable -->
+    <div class="bento-mobile__plan">
+      <img class="bento-mobile__plan-img" src={planUrl} alt="Plan des espaces de l’Orangerie : salles Framboise et Kiwi, salle de réunion, café, WC" loading="lazy" />
+      <div class="bento-mobile__scroller bento-mobile__textes">
+        <p class="bento-mobile__text-card">{openSpace}</p>
+        <p class="bento-mobile__text-card">{salleReunion}</p>
+        <p class="bento-mobile__text-card">{copieur}</p>
+      </div>
+    </div>
+
+    <!-- rangée photos « salles » (alignées en bas) -->
+    <div class="bento-mobile__scroller bento-mobile__photos bento-mobile__photos--bottom">
+      <Image class="bento-mobile__photo" src={framboise1} alt="L’open space Framboise" widths={widths} sizes={sizes} />
+      <Image class="bento-mobile__photo" src={framboise2} alt="Un poste de travail dans la salle Framboise" widths={widths} sizes={sizes} />
+      <Image class="bento-mobile__photo" src={kiwi1} alt="L’open space Kiwi" widths={widths} sizes={sizes} />
+    </div>
+
+    <!-- rangée photos « réunion » (alignées en haut) -->
+    <div class="bento-mobile__scroller bento-mobile__photos bento-mobile__photos--top">
+      <Image class="bento-mobile__photo" src={reunion} alt="La salle de réunion" widths={widths} sizes={sizes} />
+      <Image class="bento-mobile__photo" src={kiwi2} alt="L’open space Kiwi, seconde vue" widths={widths} sizes={sizes} />
+      <Image class="bento-mobile__photo" src={photocopies} alt="L’espace copieur multifonction" widths={widths} sizes={sizes} />
+    </div>
+
+    <!-- carte coordinatrice (pleine largeur, comme desktop) -->
+    <div class="bento__coordinatrice">
+      <span class="bento__coordinatrice-shape" aria-hidden="true"></span>
+      <p class="bento__coordinatrice-text">{coordinatrice}</p>
     </div>
   </div>
 
