@@ -1,8 +1,9 @@
 ---
 // Section hero (Figma 32:2503). Logotype = texte pur iCiel Cadena sur bloc.
 // Halo jaune + serpentins décoratifs : Phase 8.
-import { Image } from 'astro:assets'
-import batiment from '../assets/images/hero-batiment.png'
+// Illustration bâtiment = asset LOCAL (src/assets/svg/batiment.svg), servi tel
+// quel (SVG scalable) — jamais téléchargé depuis Figma.
+import batimentUrl from '../assets/svg/batiment.svg?url'
 
 // Contenu — interim, à terme depuis le pipeline contenu Figma (textes.json).
 const subtitle =
@@ -18,12 +19,12 @@ const proposition =
   </div>
 
   <div class="hero__media">
-    <Image
+    <img
       class="hero__illustration"
-      src={batiment}
+      src={batimentUrl}
       alt="Illustration au trait du bâtiment de l'Orangerie"
-      widths={[440, 640, 915]}
-      sizes="(min-width: 56rem) 58vw, 100vw"
+      width="565"
+      height="299"
       loading="eager"
     />
     <p class="proposition hero__proposition">{proposition}</p>
