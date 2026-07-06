@@ -16,7 +16,9 @@ Section hero (32:2503) construite → dé-risque le pipeline de bout en bout (to
 - **Illustration bâtiment** (131:1109) téléchargée en PNG → `src/assets/images/hero-batiment.png`, servie via `astro:assets` `<Image>` (WebP responsive 440/640/915, `sizes`).
 - **`index.astro`** rend `<Hero />`.
 
-**Déféré (Phase 8)** : halo jaune du bâtiment + serpentins orange (décorations) — non fabriqués. **Reste** : hero **mobile** (219:1931) à affiner ; contenu à basculer sur `textes.json`.
+**Hero mobile** (219:1931) : vérifié contre la maquette — ordre/inclinaison/illustration/chevauchement déjà conformes. Ajustement : le **logotype occupe ~60vw** sur mobile (bloc à `60vw`, texte ajusté via `container-type: inline-size` + `cqi` → proportionnel, indépendant des métriques de la police). Structure : `<h1><span class="display">` (pas de changement d'ordre DOM).
+
+**Déféré (Phase 8)** : halo jaune du bâtiment + serpentins orange (décorations) — non fabriqués. **Reste** : contenu à basculer sur `textes.json`.
 
 ### Phase 3 (amorce) — Navbar : premier composant Figma
 
