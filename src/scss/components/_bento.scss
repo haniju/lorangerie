@@ -14,7 +14,10 @@ $bento-switch: 56rem;
 }
 
 // ── bascule desktop ⇄ mobile ──
+// Le `display` est piloté ici uniquement (la règle .bento-mobile plus bas ne
+// redéfinit PAS display, sinon elle l'emporterait par ordre source à ≥56rem).
 .bento--desktop { display: none; }
+.bento-mobile { display: flex; }
 
 @media (min-width: $bento-switch) {
   .bento--desktop { display: flex; }
@@ -120,7 +123,7 @@ $bento-switch: 56rem;
 // ════════════════════════════════════════════════════════════════════
 
 .bento-mobile {
-  display: flex;
+  // display piloté par le bloc bascule en haut (ne pas le redéfinir ici)
   flex-direction: column;
   gap: var(--space-10);
 }

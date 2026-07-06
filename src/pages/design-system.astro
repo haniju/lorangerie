@@ -39,6 +39,83 @@ import Add from '../assets/pictos/add.svg'
         <code>.btn--nav-secondary</code>
       </div>
     </div>
+
+    <h2 class="ds__section-title">Boutons d’index</h2>
+    <p class="ds__note">
+      Marqueur de la dot-nav (<code>nav/index_boutons</code>). Affichage statique de
+      référence — la dot-nav vivante (rail sticky + scrollspy) viendra plus tard.
+    </p>
+
+    <h3 class="ds__subsection-title">Desktop</h3>
+    <div class="ds__group ds__group--index">
+      <div class="ds__item">
+        <span class="index-nav__item index-nav__item--start">
+          <span class="index-nav__dot" aria-hidden="true"></span>
+          <span class="index-nav__label">Notre fonctionnement</span>
+        </span>
+        <code>--start</code>
+      </div>
+      <div class="ds__item">
+        <span class="index-nav__item index-nav__item--bellow">
+          <span class="index-nav__dot" aria-hidden="true"></span>
+          <span class="index-nav__label">Notre fonctionnement</span>
+        </span>
+        <code>--bellow · initial</code>
+      </div>
+      <div class="ds__item">
+        <span class="index-nav__item index-nav__item--bellow index-nav__item--hover">
+          <span class="index-nav__dot" aria-hidden="true"></span>
+          <span class="index-nav__label">Notre fonctionnement</span>
+        </span>
+        <code>--bellow · hover</code>
+      </div>
+      <div class="ds__item">
+        <span class="index-nav__item index-nav__item--bellow index-nav__item--pressed">
+          <span class="index-nav__dot" aria-hidden="true"></span>
+          <span class="index-nav__label">Notre fonctionnement</span>
+        </span>
+        <code>--bellow · pressed</code>
+      </div>
+      <div class="ds__item">
+        <span class="index-nav__item index-nav__item--collapsed" tabindex="0">
+          <span class="index-nav__dot" aria-hidden="true"></span>
+          <span class="index-nav__label">Notre fonctionnement</span>
+        </span>
+        <code>--collapsed · survol → étiquette</code>
+      </div>
+    </div>
+
+    <h3 class="ds__subsection-title">Mobile</h3>
+    <div class="ds__group ds__group--index">
+      <div class="ds__item">
+        <span class="index-nav__item index-nav__item--mobile index-nav__item--start">
+          <span class="index-nav__dot" aria-hidden="true"></span>
+          <span class="index-nav__label">Notre fonctionnement</span>
+        </span>
+        <code>--mobile --start</code>
+      </div>
+      <div class="ds__item">
+        <span class="index-nav__item index-nav__item--mobile index-nav__item--bellow">
+          <span class="index-nav__dot" aria-hidden="true"></span>
+          <span class="index-nav__label">Notre fonctionnement</span>
+        </span>
+        <code>--mobile --bellow · initial</code>
+      </div>
+      <div class="ds__item">
+        <span class="index-nav__item index-nav__item--mobile index-nav__item--bellow index-nav__item--touch-drag">
+          <span class="index-nav__dot" aria-hidden="true"></span>
+          <span class="index-nav__label">Notre fonctionnement</span>
+        </span>
+        <code>--mobile --bellow · touch-and-drag</code>
+      </div>
+      <div class="ds__item">
+        <span class="index-nav__item index-nav__item--mobile index-nav__item--collapsed" tabindex="0">
+          <span class="index-nav__dot" aria-hidden="true"></span>
+          <span class="index-nav__label">Notre fonctionnement</span>
+        </span>
+        <code>--collapsed · touch &amp; hold → étiquette</code>
+      </div>
+    </div>
   </section>
 </Layout>
 
@@ -52,7 +129,22 @@ import Add from '../assets/pictos/add.svg'
   .ds__section-title {
     font-family: var(--font-heading);
     font-size: var(--step-1);
+    margin-top: var(--space-2xl);
     margin-bottom: var(--space-20);
+  }
+
+  .ds__subsection-title {
+    font-family: var(--font-heading);
+    font-size: var(--step-0);
+    margin-bottom: var(--space-20);
+    color: var(--sapin-80);
+  }
+
+  .ds__note {
+    max-width: 60ch;
+    margin-bottom: var(--space-30);
+    font-size: var(--step--1);
+    color: var(--sapin-60);
   }
 
   .ds__group {
@@ -60,6 +152,13 @@ import Add from '../assets/pictos/add.svg'
     flex-wrap: wrap;
     gap: var(--space-40);
     align-items: flex-start;
+  }
+
+  // Boutons d'index : plus d'air vertical, alignement bas commun (tailles variées).
+  .ds__group--index {
+    align-items: flex-end;
+    gap: var(--space-30) var(--space-40);
+    margin-bottom: var(--space-l);
   }
 
   .ds__item {
