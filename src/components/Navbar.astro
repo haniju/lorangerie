@@ -1,0 +1,58 @@
+---
+// nav/NAVBAR — Figma desktop 32:2502 / mobile 44:3492.
+// Logotype = texte pur en iCiel Cadena. Bascule inline ↔ hamburger à 56rem.
+import DemiOrange from '../assets/pictos/demi-orange.svg'
+
+// Contenu nav — interim, à terme depuis le pipeline contenu Figma (textes.json).
+const links = [
+  { label: "Découvrir l'Orangerie", href: '/' },
+  { label: 'F.A.Q.', href: '/faq' },
+  { label: 'Nous contacter', href: '/contact' },
+]
+const path = Astro.url.pathname
+---
+
+<header class="navbar">
+  <a href="/" class="navbar__logo">L'Orangerie</a>
+
+  <div class="navbar__actions">
+    <nav class="navbar__links" id="navbar-links" aria-label="Navigation principale">
+      {links.map(({ label, href }) => (
+        <a
+          href={href}
+          class="btn--nav-primary"
+          aria-current={path === href ? 'page' : undefined}
+        >{label}</a>
+      ))}
+    </nav>
+
+    <a href="#" class="btn--nav-secondary navbar__cta">
+      Réserver ma place
+      <DemiOrange class="btn--nav-secondary__picto" width={24} height={24} aria-hidden="true" />
+    </a>
+
+    <button
+      type="button"
+      class="navbar__toggle"
+      aria-expanded="false"
+      aria-controls="navbar-links"
+      aria-label="Ouvrir le menu"
+    >
+      <svg class="navbar__toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+        <line x1="3" y1="6" x2="21" y2="6" />
+        <line x1="3" y1="12" x2="21" y2="12" />
+        <line x1="3" y1="18" x2="21" y2="18" />
+      </svg>
+    </button>
+  </div>
+</header>
+
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>('.navbar__toggle')
+  const menu = document.getElementById('navbar-links')
+  toggle?.addEventListener('click', () => {
+    const open = menu?.classList.toggle('is-open') ?? false
+    toggle.setAttribute('aria-expanded', String(open))
+    toggle.setAttribute('aria-label', open ? 'Fermer le menu' : 'Ouvrir le menu')
+  })
+</script>

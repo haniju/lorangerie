@@ -1,0 +1,35 @@
+// ─── FLUIDE — GÉNÉRÉ depuis src/data/tokens.fluid.json ───────
+// NE PAS ÉDITER À LA MAIN. Régénérer : npm run tokens:fluid
+// Option C (hybride) : espacements/corners/strokes fixes + clamp() 440→1280. Cf. CHANGELOG.md
+
+:root {
+  /* ── Espacements (barème Figma, rem fixes) ── */
+  --space-7: 0.4375rem; // 7px
+  --space-8: 0.5rem; // 8px
+  --space-10: 0.625rem; // 10px
+  --space-20: 1.25rem; // 20px
+  --space-30: 1.875rem; // 30px
+  --space-34: 2.125rem; // 34px
+  --space-40: 2.5rem; // 40px
+  --space-50: 3.125rem; // 50px
+  --space-70: 4.375rem; // 70px
+
+  /* ── Rayons (corners) ── */
+  --corner-small: 0.5rem; // 8px
+  --corner-medium: 1.5625rem; // 25px
+  --corner-big: 5rem; // 80px
+  --corner-huge: 10.625rem; // 170px
+
+  /* ── Épaisseurs de trait (px) ── */
+  --stroke-fine: 1px;
+  --stroke-big: 4px;
+  --stroke-huge: 33px;
+
+  /* ── Cadre ── */
+  --content-cap: 96.875rem; // 1550px, contenu plafonné
+
+  /* ── Fluide : quantités à 2 bornes (clamp 440→1280) ── */
+  --pad-grid: clamp(1.25rem, -0.0595rem + 4.7619vw, 3.75rem); // 20→60px
+  --step-display: clamp(2.5rem, 1.8452rem + 2.381vw, 3.75rem); // 40→60px
+  --step-h1: clamp(1.625rem, 1.2976rem + 1.1905vw, 2.25rem); // 26→36px
+}

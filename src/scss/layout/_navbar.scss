@@ -1,0 +1,89 @@
+// nav/NAVBAR — construit depuis Figma. Desktop 32:2502 (h.50) / mobile 44:3492 (h.62).
+// Un seul point de bascule STRUCTUREL (liens inline ↔ menu hamburger) : justifié
+// pour une nav (ce n'est pas une cascade d'espacements).
+
+$nav-switch: 56rem;
+
+.navbar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 3.875rem; // 62px (mobile — sizing/button/mobile)
+  padding-left: var(--space-20);
+  background: var(--action-nav-nav-primary-initial); // sable/20 (mobile)
+  // NB: --action-nav-dark absent de l'export Figma → primitive interim (sapin/80).
+  border-bottom: 3px solid var(--sapin-80);
+
+  @media (min-width: $nav-switch) {
+    min-height: var(--space-50);        // 50px
+    background: var(--background-nav);   // sable/14 (desktop)
+  }
+}
+
+.navbar__logo {
+  display: inline-flex;
+  align-items: center;
+  padding-inline: var(--space-10);
+  font-family: var(--font-display);
+  font-size: 1.25rem; // 20px
+  text-transform: uppercase;
+  color: var(--sapin-80); // action/NAV/dark (interim)
+  text-decoration: none;
+}
+
+.navbar__actions {
+  display: flex;
+  align-self: stretch;
+
+  > * { align-self: stretch; }
+}
+
+// Liens inline — desktop uniquement
+.navbar__links {
+  display: none;
+
+  @media (min-width: $nav-switch) {
+    display: flex;
+  }
+}
+
+// Hamburger — mobile uniquement
+.navbar__toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding-inline: var(--space-20);
+  color: var(--action-nav-nav-secondary-texte-initial);
+  background: var(--action-nav-nav-secondary-initial);
+  border: 0;
+  cursor: pointer;
+
+  @media (min-width: $nav-switch) {
+    display: none;
+  }
+}
+
+.navbar__toggle-icon {
+  width: 1.5rem;  // 24px
+  height: 1.5rem;
+}
+
+// Panneau ouvert (mobile) : empile les mêmes composants liens sous la barre.
+// NB: l'état « menu ouvert » n'est pas fourni par le node Figma (44:3492) →
+// traitement minimal, à confirmer si un design d'ouverture existe.
+.navbar__links.is-open {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  inset: 100% 0 auto 0;
+  z-index: 10;
+  background: var(--action-nav-nav-primary-initial);
+  border-bottom: 3px solid var(--sapin-80);
+
+  .btn--nav-primary {
+    width: 100%;
+    justify-content: flex-start;
+    border-bottom: var(--stroke-fine) solid var(--sable-30);
+  }
+}

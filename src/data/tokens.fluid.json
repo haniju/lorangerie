@@ -1,0 +1,36 @@
+{
+  "_source": "figma (MCP get_variable_defs, frames 36:2815 desktop / 38:3195 mobile). Seed manuel en attendant l'export FLOAT du plugin.",
+  "_note": "Option C (hybride) : espacements/corners/strokes = fixes ; quantités à 2 bornes = clamp() 440->1280. Voir CHANGELOG.md.",
+  "bornes": { "min": 440, "max": 1280, "cap": 1550, "root": 16 },
+
+  "fixed": {
+    "space": {
+      "7": 7,
+      "8": 8,
+      "10": 10,
+      "20": 20,
+      "30": 30,
+      "34": 34,
+      "40": 40,
+      "50": 50,
+      "70": 70
+    },
+    "corner": {
+      "small": 8,
+      "medium": 25,
+      "big": 80,
+      "huge": 170
+    },
+    "stroke": {
+      "fine": 1,
+      "big": 4,
+      "huge": 33
+    }
+  },
+
+  "fluid": {
+    "pad-grid":     { "min": 20, "max": 60, "figma": "grid-layout/Padding_mobile -> SIZES/paddings/grid" },
+    "step-display": { "min": 40, "max": 60, "figma": "display/d_mobile -> display/d_desktop" },
+    "step-h1":      { "min": 26, "max": 36, "figma": "title/h1/section_focus_mobile -> _desktop" }
+  }
+}
