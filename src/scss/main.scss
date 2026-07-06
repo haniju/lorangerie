@@ -16,9 +16,11 @@
 @use 'components/buttons';
 @use 'components/display';
 @use 'components/proposition';
+@use 'components/bento';
 
 // ─── Layout ─────────────────────────────────────────────────
 @use 'layout/navbar';
 
 // ─── Pages ──────────────────────────────────────────────────
 @use 'pages/hero';
+@use 'pages/coworking';

@@ -24,6 +24,8 @@
 | **Logo Pulpe (index)** | Affiché dans l'étiquette d'index de `pulpe` (nodes `181:3025` mobile / `513:8772` desktop détaché) ; label résiduel « Nos tarifs » à ignorer/nettoyer |
 | **Produit B (color-manager)** | **Gelé** sur ce projet — ne pas utiliser, n'édite plus `colors.json` |
 | **Boutons morts** | `bouton/charte` et `bouton/primary_back` → ignorés |
+| **Assets** | **Jamais téléchargés depuis Figma.** Tous en local dans `src/assets/` (`images/` photos, `svg/` illustrations, `pictos/`, `logos/`), nommés **en miroir du naming Figma**. Workflow : récupérer le nom Figma → chercher le fichier local dans le bon dossier |
+| **Fonds de blocs** | **Pas de glassmorphism / backdrop-blur.** Les encarts texte sont sur **fond simple/absent** |
 
 ---
 
@@ -173,7 +175,7 @@ Skill dédié : `inclusive-writing` (alimenté par `figma-to-content.js` / `text
   - [ ] **Alternatives textuelles** : `alt` sur les photos ; `aria-hidden` sur les décorations (serpentins, doodles).
   - [ ] **Sémantique de l'index / dot-nav** : liste de **liens** navigable, pas seulement des points décoratifs.
   - [ ] **`prefers-reduced-motion` généralisé** (au-delà de R14 et du light field) : GSAP, carousels Embla (**pas d'autoplay**), toute transition.
-  - [ ] **Contraste** : checkpoint par section, zones à risque = texte sur **verre** (glassmorphism, `backdrop-filter: blur`) et sur **overlays photo** (voiles translucides).
+  - [ ] **Contraste** : checkpoint par section, zone à risque = texte sur **overlays photo** (voiles translucides). *(NB : pas de glassmorphism sur ce projet — décision verrouillée.)*
 - **Budget performance** — mesuré dès la tranche verticale.
 - **Fil rouge art direction** — « lumière et chaleur de l'orangerie », ancré par « le fer et le verre » (structure).
 

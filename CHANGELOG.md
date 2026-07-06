@@ -6,6 +6,21 @@
 
 ## 2026-07-06
 
+### Phase 4 (amorce) — Coworking / bento (première passe desktop)
+
+Première section home. `composant/bento` (32:2613) construit en **flex** (les groupes Figma = divs), **première passe desktop** (le layout mobile sera très différent → Embla, passe suivante).
+
+- **`Coworking.astro`** + **`_bento.scss`** + **`_coworking.scss`** : intro + bento (photo+plan légendé / 2 open-spaces / réunion+coordinatrice+colonne kiwi-copieur) + CTA `bouton/primary`.
+- **Rampe de boutons complète** dans `_buttons.scss` : `.btn--primary` (sapin), `.btn--secondary` (citron), `.btn--fab` (rond « + », picto local `add.svg` en `currentColor`, `rounded 30→20` au survol), `.btn--lien` (lien souligné) — en plus des `nav-primary/secondary`. Tous mappés sur les tokens `action/button-*`, avec transitions. `bouton/charte` & `primary_back` ignorés (morts).
+  - ⚠️ `secondary` / `fab` / `lien` construits mais **pas encore placés** dans une section → non vérifiés visuellement (le build compile).
+- **Assets 100% locaux** (`src/assets/images/*.jpg`, `src/assets/svg/plan.svg`) — **plus aucun téléchargement Figma** (règle verrouillée). Photos servies via `astro:assets` (WebP responsive).
+- **Fonds simples** : pas de glassmorphism (décision) — encarts texte sans fond.
+- Bloc coordinatrice : dégradé pêche + forme arrondie + texte.
+
+**Décisions actées** (aussi dans PLAN-ACTION) : (1) assets jamais téléchargés depuis Figma, tout en local nommé en miroir ; (2) pas de glassmorphism.
+
+**Reste** : passe 2 desktop (proportions/positions fidèles) ; **mobile Embla** ; contenu → `textes.json` ; réconcilier les assets navbar/hero téléchargés avant la règle.
+
 ### Phase 2 — Hero (tranche verticale)
 
 Section hero (32:2503) construite → dé-risque le pipeline de bout en bout (tokens + fluide + `--font-display` + illustration optimisée).

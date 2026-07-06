@@ -8,8 +8,11 @@ const links = [
   { label: "Découvrir l'Orangerie", href: '/' },
   { label: 'F.A.Q.', href: '/faq' },
   { label: 'Nous contacter', href: '/contact' },
+  { label: 'Design System', href: '/design-system' },
 ]
-const path = Astro.url.pathname
+// normalise le slash final (Astro sert /faq/, /design-system/…) pour l'état actif
+const stripSlash = (p: string) => (p !== '/' ? p.replace(/\/$/, '') : p)
+const current = stripSlash(Astro.url.pathname)
 ---
 
 <header class="navbar">
@@ -21,7 +24,7 @@ const path = Astro.url.pathname
         <a
           href={href}
           class="btn--nav-primary"
-          aria-current={path === href ? 'page' : undefined}
+          aria-current={stripSlash(href) === current ? 'page' : undefined}
         >{label}</a>
       ))}
     </nav>

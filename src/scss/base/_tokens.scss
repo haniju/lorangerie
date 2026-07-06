@@ -45,7 +45,7 @@
 
 :root {
   --grid-max-width: var(--content-cap); // 1550px (cf. _fluid.scss)
-  --grid-gutter: var(--pad-grid);        // marge fluide 20→60 (cf. _fluid.scss)
+  --grid-gutter: var(--pad-grid); // marge fluide 20→60 (cf. _fluid.scss)
   --grid-columns: 12;
 }
 

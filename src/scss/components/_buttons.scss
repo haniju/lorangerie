@@ -1,5 +1,6 @@
-// Boutons — construits depuis Figma (bouton/nav-*). Cf. SITE-PLAN.md.
-// Rampe complète (primary / secondary / fab / lien-cliquable) : Phase 3.
+// Boutons — rampe complète construite depuis Figma. Cf. SITE-PLAN.md.
+// primary / secondary / fab / lien-cliquable / nav-primary / nav-secondary.
+// (bouton/charte & bouton/primary_back = morts, ignorés.)
 
 %btn-base {
   display: inline-flex;
@@ -7,12 +8,97 @@
   justify-content: center;
   font-family: var(--font-body);
   font-weight: 700;
-  font-size: 0.875rem; // 14px — font/nav/navbar/font-size
+  font-size: 0.875rem; // 14px — font/label/font-size
   line-height: 1;
   white-space: nowrap;
   text-decoration: none;
   border: 0;
   cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out),
+    border-radius var(--duration-fast) var(--ease-out);
+}
+
+// ─── bouton/primary ─────────────────────────────────────────
+.btn--primary {
+  @extend %btn-base;
+  padding: var(--space-10) var(--space-70);
+  background: var(--action-button-primary-initial);
+  color: var(--action-button-primary-texte-label);
+  border-radius: var(--corner-small);
+  letter-spacing: 1px; // font/label/letter-spacing
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.08); // button-shadow
+
+  &:hover  { background: var(--action-button-primary-hover);  color: var(--action-button-primary-texte-hover); }
+  &:active { background: var(--action-button-primary-pressed); color: var(--action-button-primary-texte-pressed); }
+  &:disabled {
+    background: var(--action-button-primary-disabled);
+    color: var(--action-button-primary-texte-disabled);
+    cursor: not-allowed;
+  }
+}
+
+// ─── bouton/secondary ───────────────────────────────────────
+.btn--secondary {
+  @extend %btn-base;
+  padding: var(--space-10) var(--space-70);
+  background: var(--action-button-secondary-initial);
+  color: var(--action-button-secondary-texte-initial);
+  border-radius: var(--corner-small);
+  letter-spacing: 1px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.08);
+
+  &:hover  { background: var(--action-button-secondary-hover);  color: var(--action-button-secondary-texte-hover); }
+  &:active { background: var(--action-button-secondary-pressed); color: var(--action-button-secondary-texte-pressed); }
+  &:disabled {
+    background: var(--action-button-secondary-disabled);
+    color: var(--action-button-secondary-texte-disabled);
+    cursor: not-allowed;
+  }
+}
+
+// ─── bouton/fab (rond « + ») ────────────────────────────────
+// picto = src/assets/pictos/add.svg (local), recoloré en currentColor.
+.btn--fab {
+  @extend %btn-base;
+  padding: var(--space-10);
+  background: var(--action-button-primary-initial);
+  color: var(--action-button-primary-texte-label);
+  border-radius: 1.875rem; // 30px (initial) — plus rond
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.08);
+
+  &:hover  { background: var(--action-button-primary-hover);   border-radius: 1.25rem; } // 20px
+  &:active { background: var(--action-button-primary-pressed); border-radius: 1.25rem; }
+  &:disabled {
+    background: var(--action-button-primary-disabled);
+    color: var(--action-button-primary-texte-disabled);
+    border-radius: 1.25rem;
+    cursor: not-allowed;
+  }
+}
+
+.btn--fab__icon {
+  width: 2.5rem;  // 40px
+  height: 2.5rem;
+
+  path { fill: currentColor; } // override du #000 de l'asset
+}
+
+// ─── bouton/lien-cliquable ──────────────────────────────────
+.btn--lien {
+  font-family: var(--font-body);
+  font-weight: 500; // Medium
+  font-size: 0.875rem; // 14px
+  color: var(--action-index-texte-initial);
+  text-decoration: underline;
+  cursor: pointer;
+  background: none;
+  border: 0;
+  transition: color var(--duration-fast) var(--ease-out);
+
+  &:hover  { color: var(--action-index-texte-hover); }
+  &:active { color: var(--action-index-texte-pressed); }
 }
 
 // ─── bouton/nav-primary ─────────────────────────────────────
