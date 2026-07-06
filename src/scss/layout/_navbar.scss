@@ -39,6 +39,15 @@ $nav-switch: 56rem;
   > * { align-self: stretch; }
 }
 
+// Picto CTA (asset local demi-orange, tracé en #2B1208) recoloré au ton du
+// texte du CTA — sans toucher au masque du SVG (sélecteurs d'attribut précis).
+.btn--nav-secondary__picto {
+  color: var(--action-nav-nav-secondary-texte-initial);
+
+  path[fill='#2B1208']   { fill: currentColor; }
+  path[stroke='#2B1208'] { stroke: currentColor; }
+}
+
 // Liens inline — desktop uniquement
 .navbar__links {
   display: none;
