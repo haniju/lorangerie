@@ -1,0 +1,112 @@
+// Section fonctionnement (168:2266 / mobile 219:1845).
+// Enchaînement proposition · liste · proposition · boutons.
+// Mobile (< 56rem) : empilement vertical. Desktop (≥ 56rem) : collage 2 colonnes
+// (width_2 : width_3) où les propositions et la liste s'interlockent par leurs
+// coins arrondis 80px. Un seul markup, reflow par la grille.
+
+$fonct-switch: 56rem;
+
+.fonctionnement__grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-30);
+}
+
+// ── propositions : texte-seul italique (DM Sans Bold Italic), pas de picto ──
+// (adaptation locale du composant .proposition pour cette section)
+.fonctionnement__prop {
+  font-family: var(--font-body); // DM Sans (override Ortica du composant)
+  font-style: italic;
+  font-weight: 700;
+  font-size: 1rem; // 16px — text/d_italic
+  color: var(--text-warm-dark);
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.08); // proposition drop-shadow
+}
+
+.fonctionnement__prop--1 {
+  // coin big haut-droite (nid avec la liste)
+  border-radius: var(--corner-small) var(--corner-big) var(--corner-small) var(--corner-small);
+}
+
+.fonctionnement__prop--2 {
+  // coin big bas-droite
+  border-radius: var(--corner-small) var(--corner-small) var(--corner-big) var(--corner-small);
+}
+
+// ── bloc boutons ──
+.fonctionnement__boutons {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-20);
+}
+
+.fonctionnement__boutons-label {
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: 0.875rem; // 14px
+  color: var(--text-warm-dark);
+}
+
+.fonctionnement__btn {
+  width: 100%;
+}
+
+// ════════════════════════════════════════════════════════════════════
+// DESKTOP (≥ 56rem) — collage 2 colonnes interlock
+// col 1 (width_2 ≈ 330) : prop1 (haut) + prop2 (bas)
+// col 2 (width_3 ≈ 495) : liste (haut, haute) + boutons (dessous)
+// La liste est tirée vers la gauche/le bas pour nicher ses coins arrondis
+// contre ceux des propositions (z-index : propositions au-dessus).
+// ════════════════════════════════════════════════════════════════════
+@media (min-width: $fonct-switch) {
+  .fonctionnement__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 330fr) minmax(0, 495fr);
+    grid-template-rows: auto 1fr auto;
+    column-gap: 0;
+    row-gap: var(--space-30);
+    align-items: start;
+    // collage centré, ne s'étire pas sur toute la largeur plafond
+    max-width: 58rem;
+    margin-inline: auto;
+  }
+
+  .fonctionnement__prop--1 {
+    grid-column: 1;
+    grid-row: 1;
+    z-index: 2;
+    // flotte en haut-gauche et chevauche le coin haut-gauche de la liste
+    margin-right: calc(var(--space-50) * -1);
+  }
+
+  .fonctionnement__liste {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    z-index: 1;
+    // la liste démarre plus bas que prop1 (interlock diagonal Figma)
+    margin-top: var(--space-l);
+  }
+
+  .fonctionnement__prop--2 {
+    grid-column: 1;
+    grid-row: 2;
+    align-self: end;
+    z-index: 2;
+    // chevauche le coin bas-gauche de la liste
+    margin-right: calc(var(--space-50) * -1);
+    margin-bottom: var(--space-l);
+  }
+
+  .fonctionnement__boutons {
+    grid-column: 2;
+    grid-row: 3;
+    // boutons alignés à droite sous la liste, largeur naturelle
+    align-items: flex-start;
+    padding-left: var(--space-40);
+  }
+
+  .fonctionnement__btn {
+    width: auto;
+  }
+}
