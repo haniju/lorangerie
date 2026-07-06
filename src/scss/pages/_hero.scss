@@ -1,0 +1,60 @@
+// Section hero (32:2503 desktop / 219:1931 mobile).
+// Décorations (halo jaune du bâtiment, serpentins orange) = Phase 8, non incluses ici.
+
+$hero-switch: 56rem;
+
+.hero {
+  display: grid;
+  gap: var(--space-40);
+  padding-block: var(--space-40) var(--space-70);
+  align-items: start;
+
+  @media (min-width: $hero-switch) {
+    grid-template-columns: 5fr 7fr;
+    align-items: center;
+    gap: var(--pad-grid);
+  }
+}
+
+.hero__intro {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-30);
+}
+
+// logotype incliné (Figma : rotate -9.09° skewX 0.35°)
+.hero__logotype {
+  transform: rotate(-9.09deg) skewX(0.35deg);
+  transform-origin: left center;
+}
+
+.hero__subtitle {
+  max-width: 24ch;
+  font-family: var(--font-body);
+  font-size: 1.3125rem; // 21px — text/d_highlight
+  font-weight: 500;
+  line-height: 1.35;
+  color: var(--text-warm-dark);
+}
+
+.hero__media {
+  position: relative;
+}
+
+.hero__illustration {
+  width: 100%;
+  height: auto;
+}
+
+.hero__proposition {
+  margin-top: calc(var(--space-30) * -1); // léger chevauchement sous l'illustration
+
+  @media (min-width: $hero-switch) {
+    position: absolute;
+    right: 0;
+    bottom: var(--space-20);
+    max-width: 62%;
+    margin-top: 0;
+  }
+}
