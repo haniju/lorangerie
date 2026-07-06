@@ -132,8 +132,8 @@ const loremHighlight =
       Encart accroche (<code>composant/proposition</code>) : picto « pulpe » + texte
       Ortica Bold. 4 surfaces via modificateur.
     </p>
-    <div class="ds__group ds__group--stack">
-      <div class="ds__item">
+    <div class="ds__group group-proposition">
+      <div class="ds__item ">
         <div class="proposition">
           <Pulpe class="proposition__picto" aria-hidden="true" />
           <p class="proposition__text">Infos sur les photocopies</p>
@@ -165,6 +165,12 @@ const loremHighlight =
 
     <h3 class="ds__subsection-title">Bloc simple</h3>
     <div class="ds__group ds__group--stack">
+      <div class="ds__group">
+        <div class="ds__item">
+          <h2 class="titre-paragraphe">Pulpe aujourd’hui</h2>
+          <code>.titre-paragraphe (title/h2/paragraphe)</code>
+        </div>
+      </div>
       <div class="ds__item">
         <p class="bloc-simple">{loremRegular}</p>
         <code>.bloc-simple (regular)</code>
@@ -238,20 +244,20 @@ const loremHighlight =
 
 <style lang="scss">
   .ds__title {
-    font-family: var(--font-heading);
+    font-family: sans-serif;
     font-size: var(--step-3);
     margin-bottom: var(--space-40);
   }
 
   .ds__section-title {
-    font-family: var(--font-heading);
+    font-family: sans-serif;
     font-size: var(--step-1);
     margin-top: var(--space-2xl);
     margin-bottom: var(--space-20);
   }
 
   .ds__subsection-title {
-    font-family: var(--font-heading);
+    font-family: sans-serif;
     font-size: var(--step-0);
     margin-bottom: var(--space-20);
     color: var(--sapin-80);
@@ -306,5 +312,9 @@ const loremHighlight =
       font-size: var(--step--1);
       color: var(--sapin-60);
     }
+  }
+  .group-proposition {
+    padding-bottom: var(--space-50);
+    .ds__item {width:max-content;}
   }
 </style>
