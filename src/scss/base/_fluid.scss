@@ -3,7 +3,18 @@
 // Option C (hybride) : espacements/corners/strokes fixes + clamp() 440→1280. Cf. CHANGELOG.md
 
 :root {
+  /* ── Grille 7 colonnes ── */
+  --grid-useful: calc(min(100vw, var(--content-cap)) - 2 * var(--pad-grid));
+  --grid-col-1: calc(var(--grid-useful) / 7);
+  --grid-col-2: calc(var(--grid-useful) * 2 / 7);
+  --grid-col-3: calc(var(--grid-useful) * 3 / 7);
+  --grid-col-4: calc(var(--grid-useful) * 4 / 7);
+  --grid-col-5: calc(var(--grid-useful) * 5 / 7);
+  --grid-col-6: calc(var(--grid-useful) * 6 / 7);
+  --grid-col-7: var(--grid-useful);
+
   /* ── Espacements (barème Figma, rem fixes) ── */
+  --space-2: 0.1rem; // 7px
   --space-7: 0.4375rem; // 7px
   --space-8: 0.5rem; // 8px
   --space-10: 0.625rem; // 10px
@@ -13,6 +24,8 @@
   --space-40: 2.5rem; // 40px
   --space-50: 3.125rem; // 50px
   --space-70: 4.375rem; // 70px
+  --space-170: 9.5rem; // 70px
+  --space-270: 13rem; // 70px
 
   /* ── Rayons (corners) ── */
   --corner-small: 0.5rem; // 8px

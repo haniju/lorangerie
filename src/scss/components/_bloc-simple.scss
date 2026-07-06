@@ -1,0 +1,20 @@
+// composant/bloc-simple (Figma 32:2127) — bloc texte nu, 2 déclinaisons :
+// regular (corps, DM Sans 15/22) et highlight (DM Sans Medium 21). Cf. CLAUDE.md
+// « 2 blocs texte (body/highlight) ».
+
+.bloc-simple {
+  margin: 0;
+  font-family: var(--font-body); // DM Sans
+  font-weight: 400;
+  font-size: 0.9375rem; // 15px — font/text/regular
+  line-height: 1.47; // 22px — font/line-height/compact
+  color: var(--text-warm-dark);
+  font-variation-settings: 'opsz' 14;
+}
+
+// type = highlight
+.bloc-simple--highlight {
+  font-weight: 500; // Medium
+  font-size: 1.3125rem; // 21px — text/d_highlight
+  line-height: 1.2;
+}

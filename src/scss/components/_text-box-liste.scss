@@ -1,0 +1,39 @@
+// composant/text-box-liste (Figma 296:5318, « liste ») — encart liste : boîte
+// sable avec un gros arrondi haut-gauche (100px), le reste en small (8px).
+// Chaque ligne = picto flèche (assets/pictos/simple.svg, local) + texte DM Sans 15/22.
+
+.text-box-liste {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-20);
+  // pt/pl 50, pr/pb 30 (spacing/padding)
+  padding: var(--space-50) var(--space-30) var(--space-30) var(--space-50);
+  background: var(--sable-14);
+  // gros arrondi haut-gauche (100px, one-off hors échelle corners), reste small (8px)
+  border-radius: 6.25rem var(--corner-small) var(--corner-small) var(--corner-small);
+}
+
+.text-box-liste__item {
+  display: flex;
+  gap: var(--space-20);
+  align-items: flex-start;
+}
+
+.text-box-liste__arrow {
+  flex-shrink: 0;
+  width: 1.75rem; // 28px
+  height: auto;
+  margin-top: 0.125rem; // cale la flèche sur la 1re ligne de texte
+}
+
+.text-box-liste__text {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  font-family: var(--font-body); // DM Sans
+  font-weight: 400;
+  font-size: 0.9375rem; // 15px — font/text/regular
+  line-height: 1.47; // 22px — font/line-height/compact
+  color: var(--text-cold-dark);
+  font-variation-settings: 'opsz' 14;
+}

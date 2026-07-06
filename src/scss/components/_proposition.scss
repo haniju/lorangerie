@@ -1,18 +1,61 @@
-// composant/proposition — bloc accroche récurrent. Base = variante hero
-// (surface --plain, picto à gauche, emphase --regular). Les 3 axes de
-// modifieurs (emphase / position picto / surface) : à ajouter au fil des
-// sections. Cf. SITE-PLAN.md.
+// composant/proposition (Figma 176:2268) — encart accroche : picto « pulpe »
+// (atome, src/assets/pictos/Vector.svg, local) + texte Ortica Linear Bold 16px.
+// 4 surfaces via `color=` : 15 (défaut, plein + ombre) / gradient / none / outline.
+// Le picto est recoloré en currentColor (`--picto-color`) selon la surface.
 
 .proposition {
   display: flex;
-  gap: var(--space-20);
   align-items: center;
+  gap: var(--space-20);
   padding: var(--space-30);
-  background: var(--sable-14);
+  overflow: hidden;
+  background: var(--sable-14); // color=15
+  box-shadow: 0 0 7px 3px rgba(68, 7, 5, 0.05); // light_shadow_index
+  font-family: var(--font-heading); // Ortica Linear
+  font-weight: 700; // Bold
+  font-size: 1rem; // 16px
+  line-height: 1.2;
+  color: var(--text-cold-dark);
+  --picto-color: var(--sapin-80);
+}
+
+.proposition__picto {
+  flex-shrink: 0;
+  width: 2.375rem; // 38px
+  height: auto;
+  color: var(--picto-color);
+
+  path {
+    fill: currentColor;
+  }
+}
+
+.proposition__text {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+}
+
+// ─── color = gradient ───────────────────────────────────────────
+// #fed7be ≈ --peche-50 (token le plus proche du stop bas Figma).
+.proposition--gradient {
+  background: linear-gradient(to bottom, var(--sable-05) 21%, var(--peche-50));
+  box-shadow: none;
+  color: var(--text-warm-dark);
+  --picto-color: var(--text-warm-dark);
+}
+
+// ─── color = none (transparent) ─────────────────────────────────
+.proposition--none {
+  background: none;
+  box-shadow: none;
+  color: var(--text-warm-dark);
+  --picto-color: var(--text-warm-dark);
+}
+
+// ─── color = outline (bordure basse + coins arrondis) ───────────
+.proposition--outline {
+  box-shadow: none;
   border-bottom: var(--stroke-big) solid var(--text-cold-dark);
-  // haut arrondi medium (25px), bas arrondi small (8px)
-  border-radius: var(--corner-medium) var(--corner-medium) var(--corner-small) var(--corner-small);
-  color: var(--sapin-80);
-  font-size: 0.9375rem; // 15px — font/text/regular
-  line-height: 1.47;    // font/line-height/compact (22px)
+  border-radius: var(--corner-small); // 8px
 }

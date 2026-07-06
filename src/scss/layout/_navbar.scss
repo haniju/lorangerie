@@ -5,19 +5,21 @@
 $nav-switch: 56rem;
 
 .navbar {
-  position: relative;
+  position: fixed;
   display: flex;
+  width: 100%;
   align-items: center;
   justify-content: space-between;
   min-height: 3.875rem; // 62px (mobile — sizing/button/mobile)
-  padding-left: var(--space-20);
-  background: var(--action-nav-nav-primary-initial); // sable/20 (mobile)
+  padding-left: var(--space-2);
+  background: var(--background-nav);   // sable/14 (desktop)
   // NB: --action-nav-dark absent de l'export Figma → primitive interim (sapin/80).
   border-bottom: 3px solid var(--sapin-80);
+  z-index: 10;
 
   @media (min-width: $nav-switch) {
-    min-height: var(--space-50);        // 50px
-    background: var(--background-nav);   // sable/14 (desktop)
+    min-height: var(--space-50);
+    padding-left: var(--space-20);
   }
 }
 
@@ -51,9 +53,11 @@ $nav-switch: 56rem;
 // Liens inline — desktop uniquement
 .navbar__links {
   display: none;
+  padding: var(--space-170) 0px;
 
   @media (min-width: $nav-switch) {
     display: flex;
+    padding: 0px;
   }
 }
 
@@ -76,6 +80,15 @@ $nav-switch: 56rem;
 .navbar__toggle-icon {
   width: 1.5rem;  // 24px
   height: 1.5rem;
+}
+
+// Libellé CTA : version longue desktop, courte mobile
+.navbar__cta-short { display: inline; }
+.navbar__cta-long  { display: none; }
+
+@media (min-width: $nav-switch) {
+  .navbar__cta-short { display: none; }
+  .navbar__cta-long  { display: inline; }
 }
 
 // Panneau ouvert (mobile) : empile les mêmes composants liens sous la barre.

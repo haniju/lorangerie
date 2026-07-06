@@ -1,0 +1,103 @@
+// Marqueur d'index (dot-nav) — composant Figma `nav/index_boutons` (168:2334).
+// Ici : les 6 MODÈLES STATIQUES servant de référence dans le Design System.
+// La dot-nav vivante (rail sticky + scrollspy, règles R1–R15) est une passe
+// ultérieure — cf. PLAN-ACTION.md. Les états sont ici forcés par modificateur
+// (`--hover`, `--pressed`…) pour être montrés côte à côte ; le composant vivant
+// les branchera sur :hover / :active / scroll.
+//
+// 6 modèles = { desktop | mobile } × { start | bellow | collapsed }.
+// Pastille = tokens `--action-index-*` ; étiquette = Ortica Linear (serif).
+
+.index-nav__item {
+  --dot-size: 0.875rem; // 14px — défaut (bellow / collapsed desktop)
+  --dot-color: var(--text-cold-dark);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-10);
+}
+
+.index-nav__dot {
+  flex-shrink: 0;
+  width: var(--dot-size);
+  height: var(--dot-size);
+  border-radius: 50%;
+  background: var(--dot-color);
+}
+
+.index-nav__label {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-heading); // font/family/serif — Ortica Linear
+  font-weight: 400;
+  line-height: 1;
+  white-space: nowrap;
+  font-size: 1rem; // 16px — title/h1/section_below
+  padding: var(--space-7) var(--space-20); // défaut = bellow
+  border-radius: var(--corner-medium); // 25px
+  background: var(--action-index-initial);
+  color: var(--action-index-texte-initial);
+}
+
+// ─── statut = start (pastille pleine, non interactive) ──────────
+.index-nav__item--start {
+  gap: var(--space-30);
+  --dot-size: 1.25rem; // 20px
+
+  .index-nav__label {
+    padding: var(--space-7) var(--space-30) var(--space-10);
+    border-radius: var(--corner-big); // 80px
+    font-size: 2.25rem; // 36px — title/h1/section_focus_desktop
+  }
+}
+
+// ─── statut = bellow — états initial / hover / pressed ──────────
+// (initial = défaut du __label ci-dessus.)
+.index-nav__item--hover .index-nav__label {
+  background: var(--action-index-hover);
+  color: var(--action-index-texte-hover);
+}
+
+// pressed (desktop) et touch-and-drag (mobile) partagent l'apparence « pressed ».
+.index-nav__item--pressed .index-nav__label,
+.index-nav__item--touch-drag .index-nav__label {
+  background: var(--action-index-pressed);
+  color: var(--action-index-texte-pressed);
+  text-decoration: underline;
+}
+
+// ─── statut = collapsed — point seul, étiquette révélée au survol ──
+// Desktop : hover ; mobile : touch-and-hold (le survol sert de démo au DS).
+.index-nav__item--collapsed {
+  gap: var(--space-7);
+  cursor: pointer;
+
+  .index-nav__label {
+    display: none;
+  }
+
+  @media (hover: hover) {
+    &:hover .index-nav__label,
+    &:focus-visible .index-nav__label {
+      display: inline-flex;
+    }
+  }
+}
+
+// ─── display = mobile (échelle réduite) ─────────────────────────
+.index-nav__item--mobile {
+  --dot-size: 0.625rem; // 10px (bellow)
+
+  &.index-nav__item--start {
+    --dot-size: 0.875rem; // 14px
+    gap: var(--space-10);
+
+    .index-nav__label {
+      padding: var(--space-7) var(--space-30);
+      font-size: 1.625rem; // 26px — title/h1/section_focus_mobile
+    }
+  }
+
+  &.index-nav__item--collapsed {
+    --dot-size: 0.5rem; // 8px
+  }
+}
