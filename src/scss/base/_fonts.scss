@@ -1,8 +1,13 @@
+// Polices servies depuis public/fonts/ → URLs absolues `/fonts/...`.
+// public/ est copié verbatim dans dist/ (dev + build), sans passer par le
+// rebasing d'assets de Vite — robuste d'une version d'Astro/Vite à l'autre.
+// (src/assets/font/ reste l'archive source complète : otf, woff, statiques.)
+
 // ─── DM Sans (variable) ─────────────────────────────────────
 
 @font-face {
   font-family: 'DM Sans';
-  src: url('/src/assets/font/DM_Sans/DMSans-VariableFont_opsz,wght.ttf') format('truetype');
+  src: url('/fonts/dm-sans/DMSans-Variable.ttf') format('truetype');
   font-weight: 100 1000;
   font-style: normal;
   font-display: swap;
@@ -10,18 +15,18 @@
 
 @font-face {
   font-family: 'DM Sans';
-  src: url('/src/assets/font/DM_Sans/DMSans-Italic-VariableFont_opsz,wght.ttf') format('truetype');
+  src: url('/fonts/dm-sans/DMSans-Variable-Italic.ttf') format('truetype');
   font-weight: 100 1000;
   font-style: italic;
   font-display: swap;
 }
 
-// ─── Ortica Linear ──────────────────────────────────────────
+// ─── Ortica Linear (headings) ───────────────────────────────
+// woff2 seul (support quasi-universel).
 
 @font-face {
   font-family: 'Ortica Linear';
-  src: url('/src/assets/font/ortica-main/OrticaLinear-Light.woff2') format('woff2'),
-       url('/src/assets/font/ortica-main/OrticaLinear-Light.woff') format('woff');
+  src: url('/fonts/ortica/OrticaLinear-Light.woff2') format('woff2');
   font-weight: 300;
   font-style: normal;
   font-display: swap;
@@ -29,8 +34,7 @@
 
 @font-face {
   font-family: 'Ortica Linear';
-  src: url('/src/assets/font/ortica-main/OrticaLinear-Regular.woff2') format('woff2'),
-       url('/src/assets/font/ortica-main/OrticaLinear-Regular.woff') format('woff');
+  src: url('/fonts/ortica/OrticaLinear-Regular.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -38,9 +42,18 @@
 
 @font-face {
   font-family: 'Ortica Linear';
-  src: url('/src/assets/font/ortica-main/OrticaLinear-Bold.woff2') format('woff2'),
-       url('/src/assets/font/ortica-main/OrticaLinear-Bold.woff') format('woff');
+  src: url('/fonts/ortica/OrticaLinear-Bold.woff2') format('woff2');
   font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+// ─── iCiel Cadena (logotype « display ») ────────────────────
+
+@font-face {
+  font-family: 'iCiel Cadena';
+  src: url('/fonts/iciel-cadena.ttf') format('truetype');
+  font-weight: 400;
   font-style: normal;
   font-display: swap;
 }

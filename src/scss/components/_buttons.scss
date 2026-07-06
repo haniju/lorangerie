@@ -1,62 +1,61 @@
-// ─── Base button reset ──────────────────────────────────────
+// Boutons — construits depuis Figma (bouton/nav-*). Cf. SITE-PLAN.md.
+// Rampe complète (primary / secondary / fab / lien-cliquable) : Phase 3.
 
-.btn {
+%btn-base {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-2xs);
+  justify-content: center;
   font-family: var(--font-body);
-  font-size: var(--step--1);
-  letter-spacing: var(--tracking-wide);
-  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 0.875rem; // 14px — font/nav/navbar/font-size
+  line-height: 1;
+  white-space: nowrap;
   text-decoration: none;
+  border: 0;
   cursor: pointer;
-  border: none;
-  background: none;
-  transition: all var(--duration-normal) var(--ease-out);
 }
 
-// ─── Filled ─────────────────────────────────────────────────
-
-.btn--filled {
-  padding: var(--space-xs) var(--space-m);
-  background-color: var(--color-accent);
-  color: var(--color-text-inverse);
-  border: 1px solid transparent;
+// ─── bouton/nav-primary ─────────────────────────────────────
+.btn--nav-primary {
+  @extend %btn-base;
+  gap: var(--space-10);
+  padding: var(--space-10) var(--space-40);
+  background: var(--action-nav-nav-primary-initial);
+  color: var(--action-nav-nav-primary-texte-primary);
+  border-bottom: var(--stroke-big) solid transparent; // réserve la place de l'état actif
 
   &:hover {
-    background-color: transparent;
-    color: var(--color-accent);
-    border-color: var(--color-accent);
+    background: var(--action-nav-nav-primary-hover);
+    color: var(--action-nav-nav-primary-texte-hover);
+  }
+  &:active {
+    background: var(--action-nav-nav-primary-pressed);
+    color: var(--action-nav-nav-primary-texte-pressed);
+  }
+
+  // état actif (Figma « statut=focus ») : soulignement + bordure basse « warm »
+  // NB: --action-nav-warm absent de l'export Figma → primitive interim (peche/80).
+  &[aria-current='page'] {
+    border-bottom-color: var(--peche-80);
+    text-decoration: underline;
   }
 }
 
-// ─── Outlined ───────────────────────────────────────────────
+// ─── bouton/nav-secondary (CTA) ─────────────────────────────
+.btn--nav-secondary {
+  @extend %btn-base;
+  gap: 0.3125rem; // 5px
+  padding-block: var(--space-10);
+  padding-inline: var(--space-40) var(--space-34);
+  background: var(--action-nav-nav-secondary-initial);
+  color: var(--action-nav-nav-secondary-texte-initial);
 
-.btn--outlined {
-  padding: var(--space-xs) var(--space-m);
-  background-color: transparent;
-  color: var(--color-accent);
-  border: 1px solid var(--color-accent);
-
-  &:hover {
-    background-color: var(--color-accent);
-    color: var(--color-text-inverse);
-  }
+  &:hover  { background: var(--action-nav-nav-secondary-hover); }
+  &:active { background: var(--action-nav-nav-secondary-pressed); }
 }
 
-// ─── Link (underlined hyperlink) ────────────────────────────
-
-.btn--link {
-  padding: 0;
-  font-size: var(--step-0);
-  text-transform: none;
-  letter-spacing: var(--tracking-normal);
-  color: var(--color-text-primary);
-  text-decoration: underline;
-  text-underline-offset: 0.3em;
-  text-decoration-thickness: 1px;
-
-  &:hover {
-    text-decoration-thickness: 2px;
-  }
+.btn--nav-secondary__picto {
+  flex-shrink: 0;
+  width: 1.5rem;  // 24px
+  height: 1.5rem;
 }

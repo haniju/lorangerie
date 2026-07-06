@@ -44,8 +44,8 @@
 // @link https://utopia.fyi/grid/calculator
 
 :root {
-  --grid-max-width: 77.5rem;
-  --grid-gutter: var(--space-s-l);
+  --grid-max-width: var(--content-cap); // 1550px (cf. _fluid.scss)
+  --grid-gutter: var(--pad-grid);        // marge fluide 20→60 (cf. _fluid.scss)
   --grid-columns: 12;
 }
 
@@ -162,6 +162,7 @@
 // ─── Typography ─────────────────────────────────────────────
 
 :root {
+  --font-display: 'iCiel Cadena', 'Ortica Linear', 'Georgia', serif; // logotype « L'ORANGERIE »
   --font-heading: 'Ortica Linear', 'Georgia', 'Times New Roman', serif;
   --font-body: 'DM Sans', -apple-system, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
 
