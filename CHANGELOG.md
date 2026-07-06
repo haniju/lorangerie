@@ -11,7 +11,8 @@
 Première section home. `composant/bento` (32:2613) construit en **flex** (les groupes Figma = divs), **première passe desktop** (le layout mobile sera très différent → Embla, passe suivante).
 
 - **`Coworking.astro`** + **`_bento.scss`** + **`_coworking.scss`** : intro + bento (photo+plan légendé / 2 open-spaces / réunion+coordinatrice+colonne kiwi-copieur) + CTA `bouton/primary`.
-- **`.btn--primary`** ajouté à `_buttons.scss` (sapin-80, label sable-20, `--corner-small`, shadow).
+- **Rampe de boutons complète** dans `_buttons.scss` : `.btn--primary` (sapin), `.btn--secondary` (citron), `.btn--fab` (rond « + », picto local `add.svg` en `currentColor`, `rounded 30→20` au survol), `.btn--lien` (lien souligné) — en plus des `nav-primary/secondary`. Tous mappés sur les tokens `action/button-*`, avec transitions. `bouton/charte` & `primary_back` ignorés (morts).
+  - ⚠️ `secondary` / `fab` / `lien` construits mais **pas encore placés** dans une section → non vérifiés visuellement (le build compile).
 - **Assets 100% locaux** (`src/assets/images/*.jpg`, `src/assets/svg/plan.svg`) — **plus aucun téléchargement Figma** (règle verrouillée). Photos servies via `astro:assets` (WebP responsive).
 - **Fonds simples** : pas de glassmorphism (décision) — encarts texte sans fond.
 - Bloc coordinatrice : dégradé pêche + forme arrondie + texte.
