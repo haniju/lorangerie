@@ -6,6 +6,18 @@
 
 ## 2026-07-06
 
+### Phase 2 — Hero (tranche verticale)
+
+Section hero (32:2503) construite → dé-risque le pipeline de bout en bout (tokens + fluide + `--font-display` + illustration optimisée).
+
+- **`src/components/Hero.astro`** + **`_hero.scss`** : logotype (h1) + sous-titre à gauche, illustration bâtiment + proposition à droite. Grille 2 colonnes ≥ 56rem, stack en mobile.
+- **`composant/display`** → `_display.scss` (`.display`) : logotype « L'ORANGERIE » **texte pur** iCiel Cadena sur bloc sapin-80 arrondi/ombré, taille `--step-display` (fluide 40→60). Incliné -9° dans le hero.
+- **`composant/proposition`** → `_proposition.scss` (`.proposition`, variante base) : carte sable-14, bordure basse, coins asymétriques (medium haut / small bas). Les 3 axes de modifieurs à venir.
+- **Illustration bâtiment** (131:1109) téléchargée en PNG → `src/assets/images/hero-batiment.png`, servie via `astro:assets` `<Image>` (WebP responsive 440/640/915, `sizes`).
+- **`index.astro`** rend `<Hero />`.
+
+**Déféré (Phase 8)** : halo jaune du bâtiment + serpentins orange (décorations) — non fabriqués. **Reste** : hero **mobile** (219:1931) à affiner ; contenu à basculer sur `textes.json`.
+
 ### Phase 3 (amorce) — Navbar : premier composant Figma
 
 Début de la récupération des composants depuis Figma. Premier : `nav/NAVBAR` (32:2502, desktop).

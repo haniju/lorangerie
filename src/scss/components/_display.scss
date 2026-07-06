@@ -1,0 +1,20 @@
+// composant/display — logotype « L'ORANGERIE » : TEXTE pur (iCiel Cadena) sur
+// bloc coloré. Pas d'asset SVG. Taille = display/d_desktop 60 → d_mobile 40
+// (token fluide --step-display).
+
+.display {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.4375rem var(--space-20) 0.9375rem; // pt-7 / px-20 / pb-15
+  background: var(--sapin-80);
+  border-bottom: var(--stroke-big) solid var(--sable-14);
+  border-radius: var(--corner-small); // 8px
+  box-shadow: 0 0 10px rgba(68, 7, 5, 0.2); // shadow-1
+  color: var(--sable-14);
+  font-family: var(--font-display);
+  font-size: var(--step-display);
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+}

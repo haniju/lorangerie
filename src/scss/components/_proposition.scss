@@ -1,0 +1,18 @@
+// composant/proposition — bloc accroche récurrent. Base = variante hero
+// (surface --plain, picto à gauche, emphase --regular). Les 3 axes de
+// modifieurs (emphase / position picto / surface) : à ajouter au fil des
+// sections. Cf. SITE-PLAN.md.
+
+.proposition {
+  display: flex;
+  gap: var(--space-20);
+  align-items: center;
+  padding: var(--space-30);
+  background: var(--sable-14);
+  border-bottom: var(--stroke-big) solid var(--text-cold-dark);
+  // haut arrondi medium (25px), bas arrondi small (8px)
+  border-radius: var(--corner-medium) var(--corner-medium) var(--corner-small) var(--corner-small);
+  color: var(--sapin-80);
+  font-size: 0.9375rem; // 15px — font/text/regular
+  line-height: 1.47;    // font/line-height/compact (22px)
+}

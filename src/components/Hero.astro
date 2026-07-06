@@ -1,0 +1,31 @@
+---
+// Section hero (Figma 32:2503). Logotype = texte pur iCiel Cadena sur bloc.
+// Halo jaune + serpentins décoratifs : Phase 8.
+import { Image } from 'astro:assets'
+import batiment from '../assets/images/hero-batiment.png'
+
+// Contenu — interim, à terme depuis le pipeline contenu Figma (textes.json).
+const subtitle =
+  "L'espace de coworking de Malestroit, Morbihan. Équipés et chaleureux, découvrez nos espaces de travail partagés, dédiés aux métiers d'aujourd'hui."
+const proposition =
+  "Situé dans le centre bourg, l'Orangerie vous ouvre ses portes dans le tiers-lieu de l'association Pulpe (Pour Un Lieu Partagé Essentiel)."
+---
+
+<section class="hero u-container" id="hero" aria-labelledby="hero-title">
+  <div class="hero__intro">
+    <h1 class="display hero__logotype" id="hero-title">L'Orangerie</h1>
+    <p class="hero__subtitle">{subtitle}</p>
+  </div>
+
+  <div class="hero__media">
+    <Image
+      class="hero__illustration"
+      src={batiment}
+      alt="Illustration au trait du bâtiment de l'Orangerie"
+      widths={[440, 640, 915]}
+      sizes="(min-width: 56rem) 58vw, 100vw"
+      loading="eager"
+    />
+    <p class="proposition hero__proposition">{proposition}</p>
+  </div>
+</section>

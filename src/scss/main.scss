@@ -14,6 +14,11 @@
 
 // ─── Components ─────────────────────────────────────────────
 @use 'components/buttons';
+@use 'components/display';
+@use 'components/proposition';
 
 // ─── Layout ─────────────────────────────────────────────────
 @use 'layout/navbar';
+
+// ─── Pages ──────────────────────────────────────────────────
+@use 'pages/hero';
