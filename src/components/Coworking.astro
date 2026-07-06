@@ -31,8 +31,8 @@ const widths = [400, 700, 1000]
   <div class="bento">
     <!-- première ligne : photo + plan légendé -->
     <div class="bento__row bento__row--une">
-      <Image class="bento__photo" src={framboise2} alt="Un poste de travail dans la salle Framboise" widths={widths} sizes={sizes} />
-      <div class="bento__plan">
+      <Image class="bento__photo bento__tiers" src={framboise2} alt="Un poste de travail dans la salle Framboise" widths={widths} sizes={sizes} />
+      <div class="bento__plan bento__deux-tiers">
         <div class="bento__plan-row">
           <p class="bento__text">{openSpace}</p>
           <img class="bento__plan-img" src={planUrl} alt="Plan des espaces de l’Orangerie : salles Framboise et Kiwi, salle de réunion, café, WC" loading="lazy" />
@@ -52,14 +52,14 @@ const widths = [400, 700, 1000]
 
     <!-- bas : réunion + coordinatrice, et colonne kiwi/copieur -->
     <div class="bento__row bento__row--bas">
-      <div class="bento__col">
+      <div class="bento__col bento__deux-tiers">
         <Image class="bento__photo" src={reunion} alt="La salle de réunion" widths={widths} sizes={sizes} />
         <div class="bento__coordinatrice">
           <span class="bento__coordinatrice-shape" aria-hidden="true"></span>
           <p class="bento__coordinatrice-text">{coordinatrice}</p>
         </div>
       </div>
-      <div class="bento__col">
+      <div class="bento__col bento__tiers">
         <Image class="bento__photo" src={kiwi2} alt="L’open space Kiwi, seconde vue" widths={widths} sizes={sizes} />
         <Image class="bento__photo" src={photocopies} alt="L’espace copieur multifonction" widths={widths} sizes={sizes} />
       </div>

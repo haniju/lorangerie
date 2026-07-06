@@ -23,14 +23,14 @@
   border-radius: var(--corner-small);
 }
 
-// ── première ligne : photo (1) + plan (2) ──
-.bento__row--une > .bento__photo {
-  flex: 1;
-}
+// Système de largeurs (flex) : un tiers (33 %) / deux tiers (77 %).
+// 1ʳᵉ ligne : photo 33 % + plan 77 % ; dernière ligne : réunion 77 % + col droite 33 %.
+.bento__tiers      { flex: 0 1 33%; min-width: 0; }
+.bento__deux-tiers { flex: 0 1 77%; min-width: 0; }
 
+// ── première ligne : photo (33 %) + plan (77 %) ──
 .bento__plan {
   display: flex;
-  flex: 2;
   flex-direction: column;
   gap: var(--space-20);
 }
@@ -60,10 +60,9 @@
   flex: 1;
 }
 
-// ── bas : 2 colonnes ──
+// ── bas : 2 colonnes (77 % / 33 %) ──
 .bento__col {
   display: flex;
-  flex: 1;
   flex-direction: column;
   gap: var(--space-20);
 }

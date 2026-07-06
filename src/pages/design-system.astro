@@ -1,0 +1,76 @@
+---
+// Page Design System (Astro) — référence vivante des composants.
+// Un modèle de chaque bouton de la rampe. (Produit B legacy = gelé, indépendant.)
+import Layout from '../layouts/Layout.astro'
+import Add from '../assets/pictos/add.svg'
+---
+
+<Layout title="Design System — L'Orangerie">
+  <section class="u-container u-section ds">
+    <h1 class="ds__title">Design System</h1>
+
+    <h2 class="ds__section-title">Boutons</h2>
+
+    <div class="ds__group">
+      <div class="ds__item">
+        <a href="#" class="btn--primary">Bouton primary</a>
+        <code>.btn--primary</code>
+      </div>
+      <div class="ds__item">
+        <a href="#" class="btn--secondary">Bouton secondary</a>
+        <code>.btn--secondary</code>
+      </div>
+      <div class="ds__item">
+        <button type="button" class="btn--fab" aria-label="Ajouter">
+          <Add class="btn--fab__icon" width={40} height={40} aria-hidden="true" />
+        </button>
+        <code>.btn--fab</code>
+      </div>
+      <div class="ds__item">
+        <a href="#" class="btn--lien">Lien cliquable</a>
+        <code>.btn--lien</code>
+      </div>
+      <div class="ds__item">
+        <a href="#" class="btn--nav-primary">Nav primary</a>
+        <code>.btn--nav-primary</code>
+      </div>
+      <div class="ds__item">
+        <a href="#" class="btn--nav-secondary">Nav secondary</a>
+        <code>.btn--nav-secondary</code>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style lang="scss">
+  .ds__title {
+    font-family: var(--font-heading);
+    font-size: var(--step-3);
+    margin-bottom: var(--space-40);
+  }
+
+  .ds__section-title {
+    font-family: var(--font-heading);
+    font-size: var(--step-1);
+    margin-bottom: var(--space-20);
+  }
+
+  .ds__group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-40);
+    align-items: flex-start;
+  }
+
+  .ds__item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-10);
+    align-items: flex-start;
+
+    code {
+      font-size: var(--step--1);
+      color: var(--sapin-60);
+    }
+  }
+</style>
