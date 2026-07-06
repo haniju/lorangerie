@@ -7,12 +7,14 @@ $hero-switch: 56rem;
   display: grid;
   gap: var(--space-40);
   padding-block: var(--space-40) var(--space-70);
+  padding-top: var(--space-270);
   align-items: start;
 
   @media (min-width: $hero-switch) {
     grid-template-columns: 5fr 7fr;
     align-items: center;
     gap: var(--pad-grid);
+    padding-top: var(--space-170);
   }
 }
 
@@ -63,7 +65,17 @@ $hero-switch: 56rem;
   height: auto;
 }
 
+// Encart texte du hero (surface propre au hero — distinct de composant/proposition,
+// qui, lui, porte le picto pulpe). Styles ex-`.proposition`, conservés à l'identique.
 .hero__proposition {
+  padding: var(--space-30);
+  background: var(--sable-14);
+  border-bottom: var(--stroke-big) solid var(--text-cold-dark);
+  // haut arrondi medium (25px), bas arrondi small (8px)
+  border-radius: var(--corner-medium) var(--corner-medium) var(--corner-small) var(--corner-small);
+  color: var(--sapin-80);
+  font-size: 0.9375rem; // 15px — font/text/regular
+  line-height: 1.47; // font/line-height/compact (22px)
   margin-top: calc(var(--space-30) * -1); // léger chevauchement sous l'illustration
 
   @media (min-width: $hero-switch) {

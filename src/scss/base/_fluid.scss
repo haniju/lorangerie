@@ -4,6 +4,7 @@
 
 :root {
   /* ── Espacements (barème Figma, rem fixes) ── */
+  --space-2: 0.1rem; // 7px
   --space-7: 0.4375rem; // 7px
   --space-8: 0.5rem; // 8px
   --space-10: 0.625rem; // 10px
@@ -13,6 +14,8 @@
   --space-40: 2.5rem; // 40px
   --space-50: 3.125rem; // 50px
   --space-70: 4.375rem; // 70px
+  --space-170: 9.5rem; // 70px
+  --space-270: 13rem; // 70px
 
   /* ── Rayons (corners) ── */
   --corner-small: 0.5rem; // 8px

@@ -3,6 +3,13 @@
 // Un modèle de chaque bouton de la rampe. (Produit B legacy = gelé, indépendant.)
 import Layout from '../layouts/Layout.astro'
 import Add from '../assets/pictos/add.svg'
+import Pulpe from '../assets/pictos/Vector.svg'
+import orangerieUrl from '../assets/pictos/orangerie.svg?url'
+
+const loremRegular =
+  'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Espace de travail partagé géré par l’association Pulpe.'
+const loremHighlight =
+  'Un espace de travail partagé, géré par l’association Pulpe, au cœur de Malestroit.'
 ---
 
 <Layout title="Design System — L'Orangerie">
@@ -116,6 +123,86 @@ import Add from '../assets/pictos/add.svg'
         <code>--collapsed · touch &amp; hold → étiquette</code>
       </div>
     </div>
+
+    <h2 class="ds__section-title">Blocs texte</h2>
+
+    <h3 class="ds__subsection-title">Proposition</h3>
+    <p class="ds__note">
+      Encart accroche (<code>composant/proposition</code>) : picto « pulpe » + texte
+      Ortica Bold. 4 surfaces via modificateur.
+    </p>
+    <div class="ds__group ds__group--stack">
+      <div class="ds__item">
+        <div class="proposition">
+          <Pulpe class="proposition__picto" aria-hidden="true" />
+          <p class="proposition__text">Infos sur les photocopies</p>
+        </div>
+        <code>.proposition (color=15)</code>
+      </div>
+      <div class="ds__item">
+        <div class="proposition proposition--gradient">
+          <Pulpe class="proposition__picto" aria-hidden="true" />
+          <p class="proposition__text">Infos sur les photocopies</p>
+        </div>
+        <code>.proposition--gradient</code>
+      </div>
+      <div class="ds__item">
+        <div class="proposition proposition--none">
+          <Pulpe class="proposition__picto" aria-hidden="true" />
+          <p class="proposition__text">Infos sur les photocopies</p>
+        </div>
+        <code>.proposition--none</code>
+      </div>
+      <div class="ds__item">
+        <div class="proposition proposition--outline">
+          <Pulpe class="proposition__picto" aria-hidden="true" />
+          <p class="proposition__text">Infos sur les photocopies</p>
+        </div>
+        <code>.proposition--outline</code>
+      </div>
+    </div>
+
+    <h3 class="ds__subsection-title">Bloc simple</h3>
+    <div class="ds__group ds__group--stack">
+      <div class="ds__item">
+        <p class="bloc-simple">{loremRegular}</p>
+        <code>.bloc-simple (regular)</code>
+      </div>
+      <div class="ds__item">
+        <p class="bloc-simple bloc-simple--highlight">{loremHighlight}</p>
+        <code>.bloc-simple--highlight</code>
+      </div>
+    </div>
+
+    <h2 class="ds__section-title">Tarif</h2>
+    <p class="ds__note">
+      Carte forfait (<code>atome/forfait</code>). 2 niveaux : grand public (sable) et
+      communautaire (pêche).
+    </p>
+    <div class="ds__group ds__group--index">
+      <article class="forfait">
+        <header class="forfait__header"><h4 class="forfait__titre">Grand public</h4></header>
+        <div class="forfait__body">
+          <p class="forfait__prix">
+            <img class="forfait__picto" src={orangerieUrl} alt="" aria-hidden="true" />
+            <span class="forfait__montant">150 €/mois</span>
+          </p>
+          <p class="forfait__desc">Un poste dédié, accès 7j/7, tous les services inclus.</p>
+          <p class="forfait__details">Café, fibre, salle de réunion, cuisine partagée.</p>
+        </div>
+      </article>
+      <article class="forfait forfait--communautaire">
+        <header class="forfait__header"><h4 class="forfait__titre">Communautaire</h4></header>
+        <div class="forfait__body">
+          <p class="forfait__prix">
+            <img class="forfait__picto" src={orangerieUrl} alt="" aria-hidden="true" />
+            <span class="forfait__montant">90 €/mois</span>
+          </p>
+          <p class="forfait__desc">Pour les membres de l’association Pulpe.</p>
+          <p class="forfait__details">Accès mutualisé aux open spaces et services.</p>
+        </div>
+      </article>
+    </div>
   </section>
 </Layout>
 
@@ -154,11 +241,29 @@ import Add from '../assets/pictos/add.svg'
     align-items: flex-start;
   }
 
-  // Boutons d'index : plus d'air vertical, alignement bas commun (tailles variées).
+  // Boutons d'index / cartes tarif : plus d'air, alignement bas (tailles variées).
   .ds__group--index {
     align-items: flex-end;
     gap: var(--space-30) var(--space-40);
     margin-bottom: var(--space-l);
+  }
+
+  // Blocs texte pleine largeur empilés, largeur de lecture bornée.
+  .ds__group--stack {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-30);
+    margin-bottom: var(--space-l);
+  }
+
+  .ds__group--stack .ds__item {
+    width: 100%;
+    max-width: 30rem;
+  }
+
+  .forfait {
+    width: 20.625rem; // 330px — largeur maquette
+    max-width: 100%;
   }
 
   .ds__item {

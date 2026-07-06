@@ -128,16 +128,22 @@
 }
 
 // ─── bouton/nav-secondary (CTA) ─────────────────────────────
+
+$btn-switch: 56rem;
+
 .btn--nav-secondary {
   @extend %btn-base;
   gap: 0.3125rem; // 5px
   padding-block: var(--space-10);
-  padding-inline: var(--space-40) var(--space-34);
+  padding-inline: var(--space-20) var(--space-10);
   background: var(--action-nav-nav-secondary-initial);
   color: var(--action-nav-nav-secondary-texte-initial);
 
   &:hover  { background: var(--action-nav-nav-secondary-hover); }
   &:active { background: var(--action-nav-nav-secondary-pressed); }
+    @media (min-width: $btn-switch) {
+      padding-inline: var(--space-40) var(--space-34);
+    }
 }
 
 .btn--nav-secondary__picto {

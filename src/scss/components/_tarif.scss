@@ -1,0 +1,91 @@
+// atome/forfait (Figma 176:2508) — carte tarif. 2 niveaux :
+// grand public (défaut, bordure/entête sable) / communautaire (bordure/entête pêche).
+// Picto = assets/pictos/orangerie.svg (local). Prix/desc/details en DM Sans.
+
+.forfait {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; // l'entête épouse les coins arrondis de la carte
+  background: var(--sable-05);
+  border: 3px solid var(--sable-30); // border-3 (grand public)
+  border-radius: var(--corner-small); // 8px
+}
+
+.forfait__header {
+  padding: var(--space-20);
+  background: var(--sable-20);
+  text-align: center;
+}
+
+.forfait__titre {
+  margin: 0;
+  font-family: var(--font-heading); // Ortica Linear
+  font-weight: 700; // Bold
+  font-size: 1.375rem; // 22px — title/h2/tarif
+  letter-spacing: 0.06875rem; // 1.1px
+  color: var(--text-cold-dark);
+}
+
+.forfait__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-20);
+  padding: var(--space-30);
+}
+
+.forfait__prix {
+  display: flex;
+  align-items: center;
+  gap: var(--space-10);
+}
+
+.forfait__picto {
+  flex-shrink: 0;
+  width: 2.5rem; // 40px
+  height: 2.5rem;
+}
+
+.forfait__montant {
+  font-family: var(--font-body);
+  font-weight: 700; // Bold
+  font-size: 1.3125rem; // 21px — text/d_highlight-bold
+  color: var(--text-cold-dark);
+  white-space: nowrap;
+  font-variation-settings: 'opsz' 14;
+}
+
+.forfait__desc {
+  margin: 0;
+  font-family: var(--font-body);
+  font-weight: 600; // SemiBold
+  font-size: 0.9375rem; // 15px
+  line-height: 1.8; // 27px — font/line-height
+  color: var(--text-cold-dark);
+  font-variation-settings: 'opsz' 14;
+}
+
+.forfait__details {
+  margin: 0;
+  font-family: var(--font-body);
+  font-weight: 300; // Light
+  font-size: 0.9375rem; // 15px
+  line-height: 1.47; // 22px — font/line-height/compact
+  color: var(--text-cold-dark);
+  font-variation-settings: 'opsz' 14;
+}
+
+// ─── niveau = communautaire ─────────────────────────────────────
+.forfait--communautaire {
+  border-color: var(--peche-80);
+
+  .forfait__header {
+    background: var(--peche-80);
+  }
+
+  .forfait__titre,
+  .forfait__montant,
+  .forfait__desc,
+  .forfait__details {
+    color: var(--text-warm-dark);
+  }
+}
