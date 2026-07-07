@@ -312,3 +312,34 @@ const loremHighlight =
     .ds__item {width:max-content;}
   }
 </style>
+
+<script>
+  // Touch-and-hold pour les items --collapsed dans le DS.
+  // Hold 300ms → label visible (initial). Glissement sur le label → pressed.
+  const HOLD_DELAY = 300
+
+  document.querySelectorAll('.index-nav__item--collapsed').forEach((el) => {
+    const label = el.querySelector('.index-nav__label') as HTMLElement
+    let timer: ReturnType<typeof setTimeout> | null = null
+
+    const reset = () => {
+      if (timer) { clearTimeout(timer); timer = null }
+      el.classList.remove('is-touch-held', 'is-label-pressed')
+    }
+
+    el.addEventListener('touchstart', (e) => {
+      timer = setTimeout(() => el.classList.add('is-touch-held'), HOLD_DELAY)
+    }, { passive: true })
+
+    el.addEventListener('touchmove', (e) => {
+      if (!el.classList.contains('is-touch-held')) return
+      const t = (e as TouchEvent).touches[0]
+      const target = document.elementFromPoint(t.clientX, t.clientY)
+      const onLabel = label && label.contains(target)
+      el.classList.toggle('is-label-pressed', !!onLabel)
+    }, { passive: true })
+
+    el.addEventListener('touchend', reset)
+    el.addEventListener('touchcancel', reset)
+  })
+</script>
