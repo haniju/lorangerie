@@ -4,13 +4,23 @@
 
 $nav-switch: 56rem;
 
+:root {
+  --nav-height: var(--space-60); // 60px (mobile)
+
+  @media (min-width: $nav-switch) {
+    --nav-height: var(--space-70); // 70px (desktop)
+  }
+}
+
 .navbar {
   position: fixed;
+  top: 0;
   display: flex;
   width: 100%;
+  max-width:100%;
   align-items: center;
   justify-content: space-between;
-  min-height: 3.875rem; // 62px (mobile — sizing/button/mobile)
+  height: var(--nav-height);
   padding-left: var(--space-2);
   background: var(--background-nav);   // sable/14 (desktop)
   // NB: --action-nav-dark absent de l'export Figma → primitive interim (sapin/80).
@@ -18,7 +28,7 @@ $nav-switch: 56rem;
   z-index: 10;
 
   @media (min-width: $nav-switch) {
-    min-height: var(--space-50);
+    height: var(--nav-height);
     padding-left: var(--space-20);
   }
 }
@@ -37,7 +47,7 @@ $nav-switch: 56rem;
 .navbar__actions {
   display: flex;
   align-self: stretch;
-
+  width: max-content;
   > * { align-self: stretch; }
 }
 

@@ -5,16 +5,17 @@ $hero-switch: 56rem;
 
 .hero {
   display: grid;
+  width: 100%;
   gap: var(--space-40);
-  padding-block: var(--space-40) var(--space-70);
-  padding-top: var(--space-208);
+  padding-block: var(--space-70) var(--space-10);
   align-items: start;
 
   @media (min-width: $hero-switch) {
-    grid-template-columns: 5fr 7fr;
+    grid-template-columns: 3fr 9fr;
     align-items: center;
     gap: var(--pad-grid);
-    padding-top: var(--space-152);
+    //overflow: hidden;
+    height: 80vh;
   }
 }
 
@@ -23,6 +24,12 @@ $hero-switch: 56rem;
   flex-direction: column;
   align-items: flex-start;
   gap: var(--space-30);
+  padding-top: var(--space-70);
+
+  @media (min-width: $hero-switch) {
+    height: 100%;
+  }
+
 }
 
 // logotype — l'inclinaison est portée par le bloc .display (pivot = le bloc).
@@ -61,8 +68,10 @@ $hero-switch: 56rem;
 }
 
 .hero__illustration {
-  width: 100%;
+  width: 150%;
+  max-width: none;
   height: auto;
+  transform: translateX(-100px);
 }
 
 // Encart texte du hero (surface propre au hero — distinct de composant/proposition,
@@ -77,6 +86,8 @@ $hero-switch: 56rem;
   font-size: 0.9375rem; // 15px — font/text/regular
   line-height: 1.47; // font/line-height/compact (22px)
   margin-top: calc(var(--space-30) * -1); // léger chevauchement sous l'illustration
+  transform: rotate(9.09deg) skewX(0.35deg);
+  transform-origin: left center;
 
   @media (min-width: $hero-switch) {
     position: absolute;
