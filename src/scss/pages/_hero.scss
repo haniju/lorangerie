@@ -6,15 +6,15 @@ $hero-switch: 56rem;
 .hero {
   display: grid;
   width: 100%;
-  gap: var(--space-40);
-  padding-block: var(--space-70) var(--space-10);
+  padding-block: var(--space-70) var(--space-90);
   align-items: start;
+  //padding-bottom: var(--space-50);
 
   @media (min-width: $hero-switch) {
     grid-template-columns: 3fr 9fr;
     align-items: center;
     gap: var(--pad-grid);
-    //overflow: hidden;
+    padding-block: var(--space-90) var(--space-30);
     height: 80vh;
   }
 }
@@ -55,23 +55,36 @@ $hero-switch: 56rem;
 }
 
 .hero__subtitle {
-  max-width: 24ch;
+  max-width: var(--grid-col-mobile-4);
   font-family: var(--font-body);
   font-size: 1.3125rem; // 21px — text/d_highlight
   font-weight: 500;
   line-height: 1.35;
   color: var(--text-warm-dark);
+  padding-left: var(--grid-col-mobile-1);
+
+  @media (min-width: $hero-switch) {
+    max-width: var(--grid-col-desktop-2);
+    padding-left: var(--space-50);
+  }
 }
 
 .hero__media {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  
 }
 
 .hero__illustration {
-  width: 150%;
+  width: 180%;
   max-width: none;
   height: auto;
-  transform: translateX(-100px);
+  transform: translateX(-70px);
+  @media (min-width: $hero-switch) {
+    width: 150%;
+    transform: translateX(-100px);
+  }
 }
 
 // Encart texte du hero (surface propre au hero — distinct de composant/proposition,
@@ -88,12 +101,17 @@ $hero-switch: 56rem;
   margin-top: calc(var(--space-30) * -1); // léger chevauchement sous l'illustration
   transform: rotate(9.09deg) skewX(0.35deg);
   transform-origin: left center;
+  max-width: var(--grid-col-mobile-4);
+  //align-self: flex-end;
+  position: absolute;
+  right: 0;
+  bottom: calc(var(--space-10)* -1);
 
   @media (min-width: $hero-switch) {
     position: absolute;
     right: 0;
     bottom: var(--space-20);
-    max-width: 62%;
+    max-width: var(--grid-col-desktop-3);
     margin-top: 0;
   }
 }
