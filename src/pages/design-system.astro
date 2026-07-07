@@ -125,6 +125,71 @@ const loremHighlight =
       </div>
     </div>
 
+    <h3 class="ds__subsection-title">Rail complet — Desktop</h3>
+    <p class="ds__note">
+      Section active en <code>--start</code>, les autres en <code>--collapsed</code> avec interactions hover.
+      Dot centré dans la marge, étiquette alignée avec le contenu.
+    </p>
+    <div class="ds__index-rail-demo">
+      <p class="ds__index-align-ref">Texte de contenu — les étiquettes s'alignent ici</p>
+      <nav class="index-nav" aria-label="Sections de la page (démo desktop)">
+        <ul class="index-nav__list">
+          <li><a href="#" class="index-nav__item index-nav__item--start">
+            <span class="index-nav__dot" aria-hidden="true"></span>
+            <span class="index-nav__label">Notre espace</span>
+          </a></li>
+          <li><a href="#" class="index-nav__item index-nav__item--collapsed" tabindex="0">
+            <span class="index-nav__dot" aria-hidden="true"></span>
+            <span class="index-nav__label">Notre fonctionnement</span>
+          </a></li>
+          <li><a href="#" class="index-nav__item index-nav__item--collapsed" tabindex="0">
+            <span class="index-nav__dot" aria-hidden="true"></span>
+            <span class="index-nav__label">Nos tarifs</span>
+          </a></li>
+          <li><a href="#" class="index-nav__item index-nav__item--collapsed" tabindex="0">
+            <span class="index-nav__dot" aria-hidden="true"></span>
+            <span class="index-nav__label">Notre histoire</span>
+          </a></li>
+          <li><a href="#" class="index-nav__item index-nav__item--collapsed" tabindex="0">
+            <span class="index-nav__dot" aria-hidden="true"></span>
+            <span class="index-nav__label">Nos partenaires</span>
+          </a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <h3 class="ds__subsection-title">Rail complet — Mobile</h3>
+    <p class="ds__note">
+      Même structure, boutons <code>--mobile</code>. Touch-and-hold pour révéler l'étiquette.
+    </p>
+    <div class="ds__index-rail-demo">
+      <p class="ds__index-align-ref">Texte de contenu — les étiquettes s'alignent ici</p>
+      <nav class="index-nav" aria-label="Sections de la page (démo mobile)">
+        <ul class="index-nav__list">
+          <li><a href="#" class="index-nav__item index-nav__item--mobile index-nav__item--start">
+            <span class="index-nav__dot" aria-hidden="true"></span>
+            <span class="index-nav__label">Notre espace</span>
+          </a></li>
+          <li><a href="#" class="index-nav__item index-nav__item--mobile index-nav__item--collapsed" tabindex="0">
+            <span class="index-nav__dot" aria-hidden="true"></span>
+            <span class="index-nav__label">Notre fonctionnement</span>
+          </a></li>
+          <li><a href="#" class="index-nav__item index-nav__item--mobile index-nav__item--collapsed" tabindex="0">
+            <span class="index-nav__dot" aria-hidden="true"></span>
+            <span class="index-nav__label">Nos tarifs</span>
+          </a></li>
+          <li><a href="#" class="index-nav__item index-nav__item--mobile index-nav__item--collapsed" tabindex="0">
+            <span class="index-nav__dot" aria-hidden="true"></span>
+            <span class="index-nav__label">Notre histoire</span>
+          </a></li>
+          <li><a href="#" class="index-nav__item index-nav__item--mobile index-nav__item--collapsed" tabindex="0">
+            <span class="index-nav__dot" aria-hidden="true"></span>
+            <span class="index-nav__label">Nos partenaires</span>
+          </a></li>
+        </ul>
+      </nav>
+    </div>
+
     <h2 class="ds__section-title">Blocs texte</h2>
 
     <h3 class="ds__subsection-title">Proposition</h3>
@@ -311,35 +376,10 @@ const loremHighlight =
     padding-bottom: var(--space-50);
     .ds__item {width:max-content;}
   }
+
 </style>
 
 <script>
-  // Touch-and-hold pour les items --collapsed dans le DS.
-  // Hold 300ms → label visible (initial). Glissement sur le label → pressed.
-  const HOLD_DELAY = 300
-
-  document.querySelectorAll('.index-nav__item--collapsed').forEach((el) => {
-    const label = el.querySelector('.index-nav__label') as HTMLElement
-    let timer: ReturnType<typeof setTimeout> | null = null
-
-    const reset = () => {
-      if (timer) { clearTimeout(timer); timer = null }
-      el.classList.remove('is-touch-held', 'is-label-pressed')
-    }
-
-    el.addEventListener('touchstart', (e) => {
-      timer = setTimeout(() => el.classList.add('is-touch-held'), HOLD_DELAY)
-    }, { passive: true })
-
-    el.addEventListener('touchmove', (e) => {
-      if (!el.classList.contains('is-touch-held')) return
-      const t = (e as TouchEvent).touches[0]
-      const target = document.elementFromPoint(t.clientX, t.clientY)
-      const onLabel = label && label.contains(target)
-      el.classList.toggle('is-label-pressed', !!onLabel)
-    }, { passive: true })
-
-    el.addEventListener('touchend', reset)
-    el.addEventListener('touchcancel', reset)
-  })
+  import { initIndexNavTouch } from '../js/index-nav.ts'
+  initIndexNavTouch()
 </script>

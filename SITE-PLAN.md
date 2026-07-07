@@ -32,7 +32,6 @@ Slugs validés : `hero`, `coworking`, `fonctionnement`, `tarifs`, `pulpe`, `part
 
 - **Marqueurs d'index placés HORS de l'autolayout des sections (desktop)** = pur confort de maquettage. **En code, aucune distinction** : l'étiquette d'index appartient à sa section (elle est le point d'ancrage du scrollspy).
 - **Étiquette d'index de `pulpe`** : elle porte le **logo Pulpe** (node `181:3025` en mobile ; en desktop l'instance `513:8772` est **volontairement détachée** pour l'y intégrer — le texte « Nos tarifs » qui y traîne est un label résiduel, à ignorer/nettoyer).
-- **Mobile** : le marqueur d'index (`nav/index_boutons`) est répété en tête de chaque section (bandeau ~106px) au lieu d'un panneau fixe.
 
 ---
 

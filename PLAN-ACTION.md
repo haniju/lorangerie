@@ -104,6 +104,26 @@ Le fichier réel `src/data/textes.json` est aujourd'hui un **export brut Figma**
 
 Mapping Figma : `statut=start` = R7 ; `statut=bellow` = R10/R12 ; `statut=constant`/`collapsed` = R5/R8. Variantes `figma_*` = hors code. En code, l'étiquette d'index **appartient à sa section** (point d'ancrage du scrollspy).
 
+### Implémentation réalisée — boutons & rail DS
+
+**Composant `.index-nav__item` (`_index-nav.scss` + `src/js/index-nav.ts`)**
+
+- Dot en `position: absolute` dans la marge gauche : `left: calc(-1 * (var(--pad-grid) / 2 + var(--dot-size) / 2))` → centré dans `--pad-grid`, suit la marge fluide.
+- Label en flux (non-collapsed) → `left: 0` = aligné avec le bord contenu.
+- `::after` invisible `right: -20rem` sur `--collapsed` → zone de hover bridgeant le gap dot↔label sans décalage du dot.
+- `::before` sur `.index-nav__dot` → zone de hit élargie (`inset: -0.5rem`).
+- Sentinel scrollspy : utiliser des éléments existants de chaque section (classe `.js-section-deep` ou `data-sentinel`) plutôt que des `<div>` vides — l'apparition de l'élément déclenche R8.
+
+**Interactions `--collapsed`**
+- Desktop : reveal au `:hover` (label en `initial`) → `:hover` sur label (état `hover`) → `:active` (état `pressed`). Slide `translateX(-6px → 0)` + `opacity`.
+- Mobile : **touch-and-hold** (300 ms) → label `initial` (`is-touch-held`) ; glissement sur label → `pressed` (`is-label-pressed`) ; glissement vers autre dot → transfert du hold ; relâchement → reset. **Scroll lock** (`preventDefault` sur `touchmove` non-passif) pendant le hold.
+- Protections : `user-select: none`, `-webkit-touch-callout: none`, `-webkit-tap-highlight-color: transparent`, `contextmenu → preventDefault`.
+
+**Architecture fichiers**
+- CSS : `src/scss/components/_index-nav.scss` — modèles statiques + rail `.index-nav` + styles DS démo.
+- JS : `src/js/index-nav.ts` — `initIndexNavTouch(root?)` exportée, importée par les pages/composants.
+- Le composant vivant (`IndexNav.astro`) et le scrollspy (Intersection Observer double : section active + sentinel deep) restent à implémenter.
+
 ---
 
 ## Sections de la home (ordre de scroll)
@@ -178,6 +198,12 @@ Skill dédié : `inclusive-writing` (alimenté par `figma-to-content.js` / `text
   - [ ] **Contraste** : checkpoint par section, zone à risque = texte sur **overlays photo** (voiles translucides). *(NB : pas de glassmorphism sur ce projet — décision verrouillée.)*
 - **Budget performance** — mesuré dès la tranche verticale.
 - **Fil rouge art direction** — « lumière et chaleur de l'orangerie », ancré par « le fer et le verre » (structure).
+
+---
+
+## Contenu hardcodé à connecter à textes.json
+
+- **`IndexNav.astro`** — labels des 5 sections (`coworking`, `fonctionnement`, `tarifs`, `pulpe`, `partenaires`) hardcodés en attendant `figma-to-content.js`. Scanner `IndexNav.astro` et remplacer par les clés `textes.json` une fois le système en place.
 
 ---
 

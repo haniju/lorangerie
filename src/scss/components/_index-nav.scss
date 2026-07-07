@@ -147,6 +147,92 @@
   }
 }
 
+// ════════════════════════════════════════════════════════════════════
+// RAIL NAV — composant vivant (.index-nav)
+// Dot en position absolute dans la marge gauche, centré sur --pad-grid/2.
+// Label en flux normal, aligné avec le contenu (left: 0 de l'item).
+// L'item occupe 0px en hauteur propre (dot hors flux) → gap entre items
+// = espace entre étiquettes.
+// ════════════════════════════════════════════════════════════════════
+
+.index-nav {
+  position: sticky;
+  top: var(--space-30);
+  align-self: flex-start;
+  z-index: 10;
+  pointer-events: none; // le contenu sous le rail reste cliquable
+
+  &__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-20);
+  }
+
+  // Surcharge de layout pour le contexte nav : dot en marge, label au bord du contenu
+  .index-nav__item {
+    display: block;
+    position: relative;
+    pointer-events: auto;
+    text-decoration: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: transparent;
+
+    .index-nav__dot {
+      position: absolute;
+      left: calc(-1 * (var(--pad-grid) / 2 + var(--dot-size) / 2));
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  }
+
+  // Start / bellow : label en flux, aligné avec le contenu (left: 0 de l'item)
+  .index-nav__item:not(.index-nav__item--collapsed) .index-nav__label {
+    position: static;
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+
+  // --collapsed dans le rail : reprend le comportement de base mais repositionne
+  // le label par rapport au dot (qui est dans la marge, pas au bord du contenu)
+  .index-nav__item--collapsed .index-nav__label {
+    left: calc(var(--dot-size) / 2 - var(--pad-grid) / 2 + var(--space-10));
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════
+// DESIGN SYSTEM — démo rail en contexte page
+// Simule la marge gauche (padding-left: --pad-grid) pour montrer
+// le dot dans la marge et l'étiquette alignée avec le contenu.
+// ════════════════════════════════════════════════════════════════════
+
+.ds__index-rail-demo {
+  position: relative;
+  padding-left: var(--pad-grid);
+  padding-block: var(--space-30);
+  background: var(--background-sand-light, #faf8f5);
+  border-radius: var(--corner-small);
+  margin-block: var(--space-20);
+  overflow: visible;
+
+  // Position static en démo (pas sticky) pour rester visible
+  .index-nav {
+    position: static;
+  }
+}
+
+.ds__index-align-ref {
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  color: var(--text-warm-dark);
+  opacity: 0.4;
+  margin-bottom: var(--space-40);
+}
+
 // ─── display = mobile (échelle réduite) ─────────────────────────
 .index-nav__item--mobile {
   --dot-size: 0.625rem; // 10px (bellow)
