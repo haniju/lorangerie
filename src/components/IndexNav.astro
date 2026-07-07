@@ -1,0 +1,52 @@
+---
+// Rail de navigation des sections (dot-nav, règles R1–R15 — PLAN-ACTION.md).
+// Positionné entre Hero et les sections dans index.astro.
+// Labels hardcodés — à connecter à textes.json une fois figma-to-content.js en place.
+
+const sections = [
+  { id: 'coworking',      label: 'Notre espace' },
+  { id: 'fonctionnement', label: 'Notre fonctionnement' },
+  { id: 'tarifs',         label: 'Nos tarifs' },
+  { id: 'pulpe',          label: 'Pulpe' },
+  { id: 'partenaires',    label: 'Nos partenaires' },
+]
+---
+
+<nav class="index-nav" aria-label="Navigation des sections">
+  <ul class="index-nav__list" role="list">
+    {sections.map(({ id, label }, i) => (
+      <li>
+        <a
+          href={`#${id}`}
+          class={`index-nav__item ${i === 0 ? 'index-nav__item--start' : 'index-nav__item--collapsed'}`}
+          data-section={id}
+        >
+          <span class="index-nav__dot" aria-hidden="true"></span>
+          <span class="index-nav__label">{label}</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</nav>
+
+<script>
+  import { initIndexNavTouch } from '../js/index-nav.ts'
+  initIndexNavTouch()
+
+  // Le nav suit le top de #coworking : translateY = max(0, coworkingTop - navTop).
+  // Quand coworking remonte jusqu'à la position sticky du nav, translateY = 0 → nav calé.
+  const nav = document.querySelector<HTMLElement>('.index-nav')
+  const coworking = document.getElementById('coworking')
+
+  function updateNavPosition() {
+    if (!nav || !coworking) return
+    const coworkingTop = coworking.getBoundingClientRect().top
+    const navTop = parseFloat(getComputedStyle(nav).top)
+const translate = Math.max(0, coworkingTop - navTop)
+    nav.style.transform = `translateY(${translate}px)`
+  }
+
+  const scroller = document.querySelector('main') ?? window
+  scroller.addEventListener('scroll', updateNavPosition, { passive: true })
+  updateNavPosition()
+</script>

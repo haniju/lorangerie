@@ -124,6 +124,37 @@ Mapping Figma : `statut=start` = R7 ; `statut=bellow` = R10/R12 ; `statut=consta
 - JS : `src/js/index-nav.ts` — `initIndexNavTouch(root?)` exportée, importée par les pages/composants.
 - Le composant vivant (`IndexNav.astro`) et le scrollspy (Intersection Observer double : section active + sentinel deep) restent à implémenter.
 
+### Implémentation réalisée — composant vivant `IndexNav.astro`
+
+**Positionnement (divergence vs plan initial)**
+
+Le plan (R1–R2) envisageait `position: sticky` ancré en bas du hero. En pratique :
+- `position: sticky` ne persiste pas au-delà du containing block de l'élément — problème pour un nav qui couvre 5 sections.
+- `position: fixed` a été retenu. Le composant est placé **en premier enfant de `<main>`** (avant `<Hero />`) pour être rencontré en tête par les lecteurs d'écran, juste après la navbar.
+- Le scroll de la page se passe sur `<main>` (html/body ont `overflow: hidden`, main a `overflow-y: auto`) → l'event listener est branché sur `document.querySelector('main')`, pas sur `window`.
+
+**Animation d'entrée (divergence vs plan initial)**
+
+Pas de fade — le nav suit le **top de `#coworking` en temps réel** via un scroll listener :
+```
+translate = max(0, coworking.getBoundingClientRect().top - getComputedStyle(nav).top)
+nav.style.transform = `translateY(${translate}px)`
+```
+Au chargement le nav est sous le fold (translate ≈ hauteur hero). Il remonte 1:1 avec le scroll jusqu'à se caler à `top: var(--space-30)`.
+
+**Zone hover `::after` (ajustement)**
+
+`right: -20rem` remplacé par `width: calc(var(--dot-size) + var(--space-10) + 12.5rem)` — taille fixe depuis le dot, indépendante de la largeur du conteneur (évite un débordement de ~800px constaté avec `display: block` + `right` négatif).
+
+**État initial**
+
+Premier item en `--start` (hardcodé dans `IndexNav.astro`). Les 4 autres en `--collapsed`. Le scrollspy (Intersection Observer) prendra le relais pour gérer les transitions dynamiques.
+
+**Reste à implémenter**
+- Scrollspy : IO double (section active → `--start`/`--bellow` + sentinel `.js-section-deep` → R8).
+- Mobile : appliquer les tailles `--mobile` via media query dans le rail (pas via classe JS).
+- R9 : hover sur la colonne → tous les dots grands + gap augmenté.
+
 ---
 
 ## Sections de la home (ordre de scroll)

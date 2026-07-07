@@ -15,7 +15,7 @@ $hero-switch: 56rem;
     align-items: center;
     gap: var(--pad-grid);
     padding-block: var(--space-90) var(--space-30);
-    height: 80vh;
+    min-height: 100vh;
   }
 }
 
@@ -83,6 +83,7 @@ $hero-switch: 56rem;
   transform: translateX(-70px);
   @media (min-width: $hero-switch) {
     width: 150%;
+    max-width: 1240px;
     transform: translateX(-100px);
   }
 }

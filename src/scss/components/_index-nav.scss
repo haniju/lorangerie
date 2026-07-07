@@ -151,18 +151,23 @@ $index-switch: 56rem;
 
 // ════════════════════════════════════════════════════════════════════
 // RAIL NAV — composant vivant (.index-nav)
-// Dot en position absolute dans la marge gauche, centré sur --pad-grid/2.
-// Label en flux normal, aligné avec le contenu (left: 0 de l'item).
-// L'item occupe 0px en hauteur propre (dot hors flux) → gap entre items
-// = espace entre étiquettes.
+// Position sticky — naturellement hors viewport pendant le hero (DOM
+// après <Hero />), entre dans le viewport à la jonction hero/coworking,
+// puis colle en haut. Persist sur toutes les sections car le containing
+// block = toute la page.
+// Dot centré dans la marge gauche via left absolu depuis le bord page.
+// Label en flux aligné avec le contenu via padding-left: --pad-grid.
 // ════════════════════════════════════════════════════════════════════
 
 .index-nav {
-  position: sticky;
-  top: var(--space-30);
-  align-self: flex-start;
+  position: fixed;
+  top: calc(var(--nav-height) + var(--space-10));
+  left: 0;
   z-index: 10;
-  pointer-events: none; // le contenu sous le rail reste cliquable
+  pointer-events: none;
+  // translateY piloté par JS en suivant le top de #coworking.
+  // Valeur initiale hors écran; JS prend la main immédiatement.
+  transform: translateY(100vh);
 
   &__list {
     list-style: none;
@@ -175,7 +180,8 @@ $index-switch: 56rem;
     @media (min-width: $index-switch) {gap: var(--space-30);}
   }
 
-  // Surcharge de layout pour le contexte nav : dot en marge, label au bord du contenu
+  // Items : pleine largeur, min-height pour que hover fonctionne même quand
+  // dot + label sont tous deux en position absolute (sinon height = 0).
   .index-nav__item {
     display: block;
     position: relative;
@@ -184,27 +190,29 @@ $index-switch: 56rem;
     user-select: none;
     -webkit-touch-callout: none;
     -webkit-tap-highlight-color: transparent;
+    min-height: calc(var(--dot-size) + 1rem);
 
     .index-nav__dot {
       position: absolute;
-      left: calc(-1 * (var(--pad-grid) / 2 + var(--dot-size) / 2));
+      left: calc(var(--pad-grid) / 2 - var(--dot-size) / 2);
       top: 50%;
       transform: translateY(-50%);
     }
   }
 
-  // Start / bellow : label en flux, aligné avec le contenu (left: 0 de l'item)
+  // Start / bellow : label en flux, aligné avec le bord contenu.
   .index-nav__item:not(.index-nav__item--collapsed) .index-nav__label {
     position: static;
     opacity: 1;
     transform: none;
     pointer-events: auto;
+    margin-left: var(--pad-grid);
   }
 
-  // --collapsed dans le rail : reprend le comportement de base mais repositionne
-  // le label par rapport au dot (qui est dans la marge, pas au bord du contenu)
+  // Collapsed : label absolu depuis le bord gauche du viewport (item à x=0),
+  // positionné depuis le centre du dot vers la droite.
   .index-nav__item--collapsed .index-nav__label {
-    left: calc(var(--dot-size) / 2 - var(--pad-grid) / 2 + var(--space-10));
+    left: calc(var(--pad-grid) / 2 + var(--dot-size) / 2 + var(--space-10));
   }
 }
 
