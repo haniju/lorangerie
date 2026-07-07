@@ -52,6 +52,8 @@ $overlap: var(--space-50); // recouvrement entre les 3 blocs
   align-items: stretch;
   gap: var(--space-20);
   margin-top: var(--space-30);
+  width: var(--grid-col-mobile-5);
+  margin-left: var(--space-20);
 }
 
 .fonctionnement__boutons-label {
@@ -89,7 +91,8 @@ $overlap: var(--space-50); // recouvrement entre les 3 blocs
 
   .fonctionnement__boutons {
     align-items: flex-start;
-    margin-left: var(--grid-col-desktop-1);
+    margin-left: var(--grid-col-desktop-3);
+    margin-top: calc(var(--space-30)*-1);
   }
 
   .fonctionnement__btn {
