@@ -1,0 +1,177 @@
+{
+  "meta": {
+    "titre": "Synthèse des Conditions Générales de Vente",
+    "nomEspace": "L'Orangerie",
+    "sousTitre": "Espace de coworking — PULPE, Pour Un Lieu Partagé Essentiel",
+    "dateDocument": "Juin 2026",
+    "siteWeb": "lorangerie.pulpe.bzh",
+    "valeurContractuelle": false,
+    "avertissement": "Ce document n'a pas de valeur contractuelle. Seules les CGV intégrales font foi."
+  },
+  "presentation": {
+    "texte": "L'Orangerie est l'espace de coworking géré par PULPE (Pour Un Lieu Partagé Essentiel), association loi 1901 porteuse du projet de tiers-lieu. Cet espace propose des solutions flexibles de travail partagé dans un cadre professionnel et convivial.",
+    "adresse": "13 Résidence Faubourg Sainte-Anne, 56140 Malestroit",
+    "porteurProjet": "PULPE (Pour Un Lieu Partagé Essentiel), association loi 1901",
+    "numeroRNA": "W563014251"
+  },
+  "tableauRecapitulatif": [
+    {
+      "id": "objet-du-contrat",
+      "theme": "Objet du contrat",
+      "points": [
+        "Fourniture de services de coworking à L'Orangerie",
+        "Contrat civil de prestation — ni bail, ni droit locatif, ni propriété commerciale"
+      ]
+    },
+    {
+      "id": "parties",
+      "theme": "Parties",
+      "points": [
+        "PULPE (Pour Un Lieu Partagé Essentiel) — association loi 1901, 9-13 Résidence Faubourg Sainte-Anne, 56140 Malestroit (n° RNA W563014251)",
+        "USAGER : toute personne souscrivant aux prestations"
+      ]
+    },
+    {
+      "id": "offres-proposees",
+      "theme": "Offres proposées",
+      "points": [
+        "3 offres coworking : Coworkeur, Coworkeur investi, Copulpeur",
+        "Location salle de réunion et grande salle de convivialité"
+      ]
+    },
+    {
+      "id": "equipements-inclus",
+      "theme": "Équipements inclus",
+      "points": [
+        "Open spaces (Kiwi & Framboise), salle de réunion (6-8 pers.), cuisine, sanitaires, espace thé/café, casiers, Wi-Fi haut débit",
+        "Impression/copie : 50 copies incluses, puis 0,10€/copie au-delà",
+        "Charges incluses (eau, électricité, chauffage)"
+      ]
+    },
+    {
+      "id": "acces-aux-locaux",
+      "theme": "Accès aux locaux",
+      "points": [
+        "Accès 7j/7, 24h/24 (sauf cas exceptionnel)",
+        "Réservations sur lorangerie.pulpe.bzh",
+        "Salle de réunion : maximum 10h/mois pour les usagers à jour de cotisation"
+      ]
+    },
+    {
+      "id": "espace-membre-reservation",
+      "theme": "Espace membre & réservation",
+      "points": [
+        "Création de compte via formulaire en ligne sur lorangerie.pulpe.bzh",
+        "Réservation ferme après règlement",
+        "Contrat à durée déterminée"
+      ]
+    },
+    {
+      "id": "renouvellement",
+      "theme": "Renouvellement",
+      "points": [
+        "Pas de reconduction tacite",
+        "Priorité accordée aux usagers avec un contrat en cours"
+      ]
+    },
+    {
+      "id": "tarifs-paiement",
+      "theme": "Tarifs & paiement",
+      "points": [
+        "Prix en euros TTC affichés sur lorangerie.pulpe.bzh",
+        "Paiement par carte bancaire ou virement via le site",
+        "Préavis de 2 mois avant toute modification tarifaire"
+      ]
+    },
+    {
+      "id": "retard-de-paiement",
+      "theme": "Retard de paiement",
+      "points": [
+        "Coworking : paiement dû avant le 1er du mois",
+        "Retard supérieur à 1 mois → avertissement",
+        "Retard supérieur à 2 mois → majoration de 20% + mise en demeure légale",
+        "3 retards → entretien ; récidive → résiliation définitive du contrat"
+      ]
+    },
+    {
+      "id": "annulation",
+      "theme": "Annulation",
+      "points": [
+        "Par PULPE : remboursement à 100%",
+        "Par l'usager (coworking) : mois dû, pas d'annulation possible avant le 1er du mois",
+        "Par l'usager (salle de réunion) : gratuite si annulation >48h avant, 50% dû si <48h avant (avoir possible dans l'exercice comptable)"
+      ]
+    },
+    {
+      "id": "periode-essai",
+      "theme": "Période d'essai",
+      "points": [
+        "8 jours offerts le mois précédant la souscription",
+        "Mêmes règles que pour un usager abonné"
+      ]
+    },
+    {
+      "id": "obligations-pulpe",
+      "theme": "Obligations de PULPE",
+      "points": [
+        "Fournir les prestations listées sur le site",
+        "Garantir la confidentialité des informations de l'usager",
+        "Aucune garantie de disponibilité des espaces"
+      ]
+    },
+    {
+      "id": "obligations-usager",
+      "theme": "Obligations de l'usager",
+      "points": [
+        "Payer dans les délais",
+        "Usage strictement personnel (pas de sous-location ni partage de codes d'accès)",
+        "Espace non-fumeur",
+        "Assurance responsabilité civile professionnelle obligatoire",
+        "Respecter la confidentialité des activités des autres usagers",
+        "Interdiction de domicilier sa société sur place"
+      ]
+    },
+    {
+      "id": "accueil-de-tiers",
+      "theme": "Accueil de tiers",
+      "points": [
+        "Interdit dans l'open space, sauf exception accordée par PULPE",
+        "Autorisé en salle de réunion"
+      ]
+    },
+    {
+      "id": "force-majeure",
+      "theme": "Force majeure",
+      "points": [
+        "Suspension possible en cas de force majeure (guerre, grève générale, épidémie/pandémie, incendie…)",
+        "PULPE informe l'usager par tout moyen utile"
+      ]
+    },
+    {
+      "id": "droit-applicable-litiges",
+      "theme": "Droit applicable & litiges",
+      "points": [
+        "Droit français applicable",
+        "Règlement amiable privilégié en cas de litige",
+        "À défaut : Tribunal de commerce de Vannes (pour les particuliers, juridiction compétente)"
+      ]
+    },
+    {
+      "id": "donnees-personnelles",
+      "theme": "Données personnelles",
+      "points": [
+        "Collecte nécessaire au traitement des commandes",
+        "Données non communiquées à des tiers, sauf obligation légale"
+      ]
+    }
+  ],
+  "pointsAttention": [
+    "Aucune reconduction tacite : l'usager doit renouveler son contrat avant le début du mois.",
+    "L'adresse de L'Orangerie ne peut pas être utilisée comme siège social ou adresse d'établissement.",
+    "Sous-location et partage des codes d'accès strictement interdits — usage personnel uniquement.",
+    "Assurance responsabilité civile professionnelle obligatoire pour chaque usager.",
+    "Espace entièrement non-fumeur, y compris la cigarette électronique.",
+    "En cas de retard de paiement répété (3 fois), résiliation du contrat et exclusion définitive.",
+    "PULPE peut privatiser exceptionnellement l'espace avec un préavis minimum de 30 jours."
+  ]
+}

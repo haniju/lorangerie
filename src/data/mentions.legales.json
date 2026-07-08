@@ -1,0 +1,115 @@
+{
+  "meta": {
+    "titre": "Mentions légales",
+    "derniereMiseAJour": "[date]"
+  },
+  "identite": {
+    "association": "PULPE",
+    "formeJuridique": "Association loi 1901",
+    "siegeSocial": "13 faubourg Sainte-Anne, 56140 Malestroit",
+    "siren": "918 431 255",
+    "numeroRNA": "W563014251",
+    "emailContact": "contact@pulpe.bzh",
+    "directeurPublication": {
+      "nom": "Romain Chanut",
+      "fonction": "Co-président de l'association PULPE"
+    },
+    "hebergeur": {
+      "nom": "Indie Hosters",
+      "adresse": "Lieu-dit Corsonat, 69440 Mornant",
+      "telephone": "00 33 9 72 27 95 17"
+    }
+  },
+  "sections": [
+    {
+      "id": "editeur",
+      "titre": "Éditeur / Responsable de publication",
+      "paragraphes": [
+        "Le site L'Orangerie – coworking par PULPE est édité par l'association PULPE (association loi 1901), dont le siège social est situé 13 faubourg Sainte-Anne, 56140 Malestroit.",
+        "SIREN : 918 431 255",
+        "Numéro RNA : W563014251",
+        "Contact : contact@pulpe.bzh"
+      ]
+    },
+    {
+      "id": "directeur-publication",
+      "titre": "Directeur de la publication",
+      "paragraphes": [
+        "Romain Chanut, co-président de l'association PULPE.",
+        "Contact : contact@pulpe.bzh"
+      ]
+    },
+    {
+      "id": "hebergement",
+      "titre": "Hébergement",
+      "paragraphes": [
+        "Le site est hébergé par Indie Hosters, Lieu-dit Corsonat, 69440 Mornant.",
+        "Téléphone : 00 33 9 72 27 95 17"
+      ]
+    },
+    {
+      "id": "propriete-intellectuelle",
+      "titre": "Propriété intellectuelle",
+      "paragraphes": [
+        "L'ensemble des contenus présents sur le site (textes, images, photographies, graphismes, logos, éléments visuels et, plus généralement, toute information) sont, sauf mention contraire, la propriété de l'association PULPE ou font l'objet d'autorisations d'utilisation.",
+        "Toute reproduction, représentation, modification, publication, adaptation de tout ou partie des contenus, quel que soit le moyen ou le support, est interdite sans autorisation préalable et écrite de l'association PULPE."
+      ]
+    },
+    {
+      "id": "liens-hypertextes",
+      "titre": "Liens hypertextes",
+      "paragraphes": [
+        "Le site peut contenir des liens vers des sites tiers. L'association PULPE n'exerce aucun contrôle sur ces sites et décline toute responsabilité quant à leur contenu, leurs politiques ou leurs pratiques."
+      ]
+    },
+    {
+      "id": "donnees-personnelles",
+      "titre": "Données personnelles (RGPD)",
+      "paragraphes": [
+        "Le responsable de traitement des données collectées via le site est l'association PULPE, 13 faubourg Sainte-Anne, 56140 Malestroit (contact@pulpe.bzh).",
+        "Les informations collectées via le site (notamment via formulaires) font l'objet d'un traitement conforme au Règlement Général sur la Protection des Données (RGPD) et à la loi Informatique et Libertés.",
+        "Les modalités détaillées (finalités, base légale, durée de conservation, droits des personnes, etc.) figurent dans la politique de confidentialité accessible via : [URL à compléter].",
+        "Conformément à la réglementation, vous disposez d'un droit d'accès, de rectification, d'effacement, de limitation, d'opposition et de portabilité sur vos données. Pour exercer ces droits, contactez contact@pulpe.bzh.",
+        "Vous pouvez également introduire une réclamation auprès de la CNIL (www.cnil.fr)."
+      ],
+      "politiqueConfidentialiteUrl": "[URL à compléter]",
+      "droitsUtilisateur": [
+        "accès",
+        "rectification",
+        "effacement",
+        "limitation",
+        "opposition",
+        "portabilité"
+      ],
+      "cnilUrl": "https://www.cnil.fr"
+    },
+    {
+      "id": "cookies-analytics",
+      "titre": "Cookies / Analytics",
+      "paragraphes": [
+        "Le site utilise Google Analytics afin de mesurer la fréquentation et d'établir des statistiques de navigation anonymisées.",
+        "Ces cookies sont déposés uniquement après votre consentement, recueilli via le bandeau proposé lors de votre première visite.",
+        "Vous pouvez modifier ou retirer votre consentement à tout moment via mail adressé à contact@pulpe.bzh.",
+        "Les données sont conservées pour une durée maximale de 13 mois.",
+        "Elles peuvent être transférées vers les serveurs de Google, y compris hors de l'Union européenne, dans le cadre des garanties prévues par Google pour ce type de transfert."
+      ],
+      "outilAnalytics": "Google Analytics",
+      "dureeConservation": "13 mois"
+    },
+    {
+      "id": "droit-applicable",
+      "titre": "Droit applicable",
+      "paragraphes": [
+        "Les présentes mentions légales sont soumises au droit français.",
+        "En cas de litige, et à défaut de résolution amiable, les tribunaux français seront compétents."
+      ]
+    },
+    {
+      "id": "contact",
+      "titre": "Contact",
+      "paragraphes": [
+        "Pour toute question relative au site, vous pouvez contacter contact@pulpe.bzh."
+      ]
+    }
+  ]
+}

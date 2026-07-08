@@ -1,10 +1,67 @@
 ---
+// CGV — synthèse (pas de valeur contractuelle). Index sticky des thèmes (col2)
+// + colonne de contenu (col3), sur le modèle de la page FAQ.
+// Contenu intégralement issu de src/data/cgv.json — rien en dur ici.
 import Layout from '../layouts/Layout.astro'
+import cgv from '../data/cgv.json'
+
+const { meta, presentation, tableauRecapitulatif, pointsAttention } = cgv
 ---
 
-<Layout title="CGV — L'Orangerie">
-  <section class="u-container u-section">
-    <h1 class="h2">Conditions générales de vente</h1>
-    {/* Phase 5 : placeholder */}
+<Layout title={`${meta.titre} — ${meta.nomEspace}`}>
+  <section class="doc u-container u-section" id="cgv">
+    <header class="doc__header">
+      <h1 class="doc__titre">{meta.titre}</h1>
+      <p class="doc__sous-titre">{meta.sousTitre}</p>
+      <p class="doc__date">{meta.dateDocument}</p>
+      {!meta.valeurContractuelle && (
+        <p class="doc__avertissement" role="note">{meta.avertissement}</p>
+      )}
+    </header>
+
+    <div class="doc__layout">
+      <nav class="doc__index" aria-label="Sommaire des CGV">
+        <ul class="doc__index-list">
+          {tableauRecapitulatif.map((bloc) => (
+            <li><a class="doc__index-link" href={`#${bloc.id}`}>{bloc.theme}</a></li>
+          ))}
+          <li><a class="doc__index-link" href="#points-attention">Points d’attention</a></li>
+        </ul>
+      </nav>
+
+      <div class="doc__contenu">
+        <section class="doc__presentation" id="presentation">
+          <p class="doc__texte">{presentation.texte}</p>
+          <dl class="doc__infos">
+            <div class="doc__info">
+              <dt>Adresse</dt>
+              <dd>{presentation.adresse}</dd>
+            </div>
+            <div class="doc__info">
+              <dt>Porteur du projet</dt>
+              <dd>{presentation.porteurProjet}</dd>
+            </div>
+            <div class="doc__info">
+              <dt>Numéro RNA</dt>
+              <dd>{presentation.numeroRNA}</dd>
+            </div>
+          </dl>
+        </section>
+
+        <div class="doc__list">
+          {tableauRecapitulatif.map((bloc) => (
+            <section class="doc__bloc" id={bloc.id}>
+              <h2 class="doc__bloc-titre">{bloc.theme}</h2>
+              {bloc.points.map((point) => <p class="doc__bloc-texte">{point}</p>)}
+            </section>
+          ))}
+        </div>
+
+        <section class="doc__bloc" id="points-attention">
+          <h2 class="doc__bloc-titre">Points d’attention</h2>
+          {pointsAttention.map((point) => <p class="doc__bloc-texte">{point}</p>)}
+        </section>
+      </div>
+    </div>
   </section>
 </Layout>

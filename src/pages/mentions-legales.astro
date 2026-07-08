@@ -1,10 +1,50 @@
 ---
+// Mentions légales — même grammaire « document » que la CGV : sommaire sticky
+// (col2) + colonne de contenu (col4), titre + paragraphes à plat.
+// Contenu intégralement issu de src/data/mentions.legales.json — rien en dur.
+//
+// Le bloc `identite` du JSON n'est pas rendu : chacune de ses valeurs est déjà
+// reprise en clair dans les sections « editeur », « directeur-publication » et
+// « hebergement ». L'afficher en plus ferait doublon.
 import Layout from '../layouts/Layout.astro'
+import mentions from '../data/mentions.legales.json'
+
+const { meta, sections } = mentions
+
+// Le JSON porte encore des gabarits non résolus (« [date] »). On ne les affiche
+// pas plutôt que de rendre un crochet à l'écran.
+const estGabarit = (valeur: string) => /^\[.*\]$/.test(valeur.trim())
+const miseAJour = estGabarit(meta.derniereMiseAJour) ? null : meta.derniereMiseAJour
 ---
 
-<Layout title="Mentions légales — L'Orangerie">
-  <section class="u-container u-section">
-    <h1 class="h2">Mentions légales</h1>
-    {/* Phase 5 : à rédiger (SIRET, hébergeur, directeur·rice de publication) */}
+<Layout title={`${meta.titre} — L'Orangerie`}>
+  <section class="doc u-container u-section" id="mentions-legales">
+    <header class="doc__header">
+      <h1 class="doc__titre">{meta.titre}</h1>
+      {miseAJour && <p class="doc__date">Dernière mise à jour : {miseAJour}</p>}
+    </header>
+
+    <div class="doc__layout">
+      <nav class="doc__index" aria-label="Sommaire des mentions légales">
+        <ul class="doc__index-list">
+          {sections.map((section) => (
+            <li><a class="doc__index-link" href={`#${section.id}`}>{section.titre}</a></li>
+          ))}
+        </ul>
+      </nav>
+
+      <div class="doc__contenu">
+        <div class="doc__list">
+          {sections.map((section) => (
+            <section class="doc__bloc" id={section.id}>
+              <h2 class="doc__bloc-titre">{section.titre}</h2>
+              {section.paragraphes.map((paragraphe) => (
+                <p class="doc__bloc-texte">{paragraphe}</p>
+              ))}
+            </section>
+          ))}
+        </div>
+      </div>
+    </div>
   </section>
 </Layout>

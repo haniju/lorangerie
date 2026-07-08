@@ -1,0 +1,175 @@
+// Pages « document » (CGV, mentions légales) — sommaire des sections (col2)
+// + colonne de contenu (col4). Titre + paragraphes à plat, sans cadre.
+// Desktop : flex-row. Mobile : reflow en colonne, sommaire sticky en haut.
+
+$doc-switch: 56rem;
+
+// ─── en-tête de page ────────────────────────────────────────────
+.doc__header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-10);
+  width: var(--grid-col-mobile-5);
+  margin-bottom: var(--space-40);
+
+  @media (min-width: $doc-switch) {
+    width: var(--grid-col-desktop-5);
+  }
+}
+
+.doc__titre {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: var(--step-3);
+  color: var(--text-cold-dark);
+}
+
+.doc__sous-titre {
+  margin: 0;
+  font-size: var(--step-1);
+  color: var(--text-cold-dark);
+}
+
+.doc__date {
+  margin: 0;
+  font-size: var(--step--1);
+  color: var(--text-cold-dark);
+  opacity: 0.7;
+}
+
+.doc__avertissement {
+  margin: var(--space-10) 0 0;
+  padding: var(--space-10) var(--space-20);
+  font-size: var(--step--1);
+  color: var(--text-cold-dark);
+  background: var(--sable-05);
+  border-left: 3px solid var(--sable-30);
+  border-radius: var(--corner-small);
+}
+
+// ─── layout ─────────────────────────────────────────────────────
+.doc__layout {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-30);
+
+  @media (min-width: $doc-switch) {
+    flex-direction: row;
+    gap: var(--space-20);
+  }
+}
+
+// ─── sommaire ───────────────────────────────────────────────────
+.doc__index {
+  position: sticky;
+  top: calc(var(--nav-height) + var(--space-20));
+  z-index: 5;
+  width: var(--grid-col-mobile-5);
+
+  @media (min-width: $doc-switch) {
+    width: var(--grid-col-desktop-2);
+    flex-shrink: 0;
+  }
+}
+
+.doc__index-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-10);
+
+  // Sommaire long : on borne la hauteur pour qu'il reste utilisable en sticky.
+  max-height: calc(100vh - var(--nav-height) - var(--space-40));
+  overflow-y: auto;
+}
+
+.doc__index-link {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 0.9375rem;
+  color: var(--text-cold-dark);
+  text-decoration: none;
+
+  &:hover { text-decoration: underline; }
+}
+
+// ─── colonne de contenu ─────────────────────────────────────────
+.doc__contenu {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-50);
+  width: var(--grid-col-mobile-5);
+
+  @media (min-width: $doc-switch) {
+    width: var(--grid-col-desktop-4);
+  }
+}
+
+.doc__presentation {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-20);
+}
+
+.doc__texte {
+  margin: 0;
+  color: var(--text-cold-dark);
+}
+
+.doc__infos {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-10);
+}
+
+.doc__info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-7);
+
+  dt {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--step--1);
+    color: var(--text-cold-dark);
+  }
+
+  dd {
+    margin: 0;
+    color: var(--text-cold-dark);
+  }
+}
+
+// ─── blocs de thèmes ────────────────────────────────────────────
+// Plus de cartes : titre + paragraphes, à plat. Les « points d'attention »
+// utilisent le même bloc, d'où l'absence de variante dédiée.
+.doc__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-40);
+}
+
+.doc__bloc {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-10);
+  scroll-margin-top: calc(var(--nav-height) + var(--space-20));
+}
+
+.doc__bloc-titre {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: var(--step-1);
+  color: var(--text-cold-dark);
+}
+
+.doc__bloc-texte {
+  margin: 0;
+  color: var(--text-cold-dark);
+}
