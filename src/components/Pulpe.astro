@@ -1,0 +1,101 @@
+---
+// Section pulpe (Figma 482:9032).
+// Layout desktop : flex-row, indent col1 gauche.
+//   col-textes (col3) | col-media (col2) qui s'étire sur la hauteur des textes.
+//   Dans col-media : carousel en position absolute (inset:0) + proposition
+//   en position absolute (top/left: -space-50) qui chevauche le carousel.
+// Mobile : display:contents sur col-media → order : carousel(1) · textes(2) · proposition(3).
+
+import concert    from '../assets/images/pulpe/concert.jpg'
+import foot       from '../assets/images/pulpe/foot.jpg'
+import potager    from '../assets/images/pulpe/potager.jpg'
+import repetition from '../assets/images/pulpe/repetition.jpg'
+import secours    from '../assets/images/pulpe/secours.jpg'
+import theatre    from '../assets/images/pulpe/theatre.jpg'
+import travaux    from '../assets/images/pulpe/travaux.jpg'
+
+const photos = [
+  { src: concert,    alt: 'Concert au lieu partagé Pulpe' },
+  { src: foot,       alt: 'Match de foot organisé par Pulpe' },
+  { src: potager,    alt: 'Potager partagé' },
+  { src: repetition, alt: 'Répétition musicale' },
+  { src: secours,    alt: 'Formation aux premiers secours' },
+  { src: theatre,    alt: 'Spectacle de théâtre' },
+  { src: travaux,    alt: 'Travaux du bâtiment Faubourg Sainte-Anne' },
+]
+---
+
+<section class="pulpe u-container u-section" id="pulpe">
+  <h2 class="section-label-deco" data-label-for="pulpe">À propos de</h2>
+
+  <p class="pulpe__intro">
+    L'Orangerie s'inscrit dans un projet plus grand. Le projet de Pulpe et son bâtiment
+    sont pensés comme des outils au service de tous ses usagers.ères, dont les coworkers
+    (possibilité d'y organiser ateliers, événements réseaux, etc...).
+  </p>
+
+  <div class="pulpe__grid">
+    <!-- col1 : textes + bouton -->
+    <div class="pulpe__col-textes">
+      <h3 class="pulpe__titre">Historique de Pulpe</h3>
+      <p class="pulpe__texte">
+        Partant d'un constat de manque de locaux professionnels accessibles, d'une envie
+        de travailler à plusieurs, de mutualiser des outils et des espaces et de proposer
+        une offre socioculturelle de proximité aux habitant.e.s, un collectif composé
+        d'entrepreneur.e.s, d'associations et d'habitant.e.s du territoire se forme en
+        2021. En juin 2022, l'association PULPE est créée avec le projet d'ouvrir un lieu
+        partagé (ou tiers-lieu) à Malestroit (56).
+      </p>
+      <h3 class="pulpe__titre">Pulpe aujourd'hui</h3>
+      <p class="pulpe__texte">
+        C'est en novembre 2024 que la ville de Malestroit (56) met à disposition le
+        bâtiment Faubourg Sainte-Anne et permet au projet de poser ses valises. Ce dernier
+        accueille aujourd'hui l'espace valorisation de la ressourcerie de Malestroit
+        (Rouages) et un espace de convivialité où se déroulent régulièrement concerts,
+        ateliers, goûters, temps de rencontres et de vie associative. En 2025, 67
+        événements ont été organisés au sein du lieu partagé.
+      </p>
+      <p class="pulpe__btn-label">Envie de nous rejoindre&nbsp;?</p>
+      <a href="/contact" class="btn--primary pulpe__btn">Contacte PULPE&nbsp;!</a>
+    </div>
+
+    <!-- col2 : carousel + proposition en overlap (display:contents en mobile) -->
+    <div class="pulpe__col-media">
+      <!-- carousel : crossfade auto, remplit tout le col-media en desktop -->
+      <div class="pulpe__carousel" role="img" aria-label="Photos des activités de Pulpe">
+        {photos.map(({ src, alt }, i) => (
+          <img
+            class:list={['pulpe__carousel-img', { 'is-active': i === 0 }]}
+            src={src.src}
+            width={src.width}
+            height={src.height}
+            alt={alt}
+            loading={i === 0 ? 'eager' : 'lazy'}
+          />
+        ))}
+      </div>
+
+      <!-- proposition : absolute desktop (chevauchement top-left), flow normal mobile -->
+      <div class="proposition proposition--gradient pulpe__proposition">
+        <p class="proposition__text">
+          «&nbsp;Coworking progress&nbsp;» comme on aime à dire à l'Orangerie
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const carousel = document.querySelector<HTMLElement>('.pulpe__carousel')
+  if (carousel) {
+    const imgs = Array.from(carousel.querySelectorAll<HTMLElement>('.pulpe__carousel-img'))
+    if (imgs.length > 1 && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      let current = 0
+      setInterval(() => {
+        imgs[current].classList.remove('is-active')
+        current = (current + 1) % imgs.length
+        imgs[current].classList.add('is-active')
+      }, 4000)
+    }
+  }
+</script>
