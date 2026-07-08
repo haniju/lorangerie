@@ -1,10 +1,65 @@
 ---
+// FAQ — index de rubriques (col2) + cartes-questions empilées (col3), alignés à gauche.
+// Cartes construites sur le modèle .forfait (bordure sable, header/body).
+// Mobile : reflow en colonne, index sticky en haut.
 import Layout from '../layouts/Layout.astro'
+import faq from '../data/faq.json'
+
+const categories = faq.meta.categoriesOrder
+  .map((id) => faq.categories.find((c) => c.id === id))
+  .filter(Boolean)
 ---
 
-<Layout title="FAQ — L'Orangerie">
-  <section class="u-container u-section">
-    <h1 class="h2">FAQ</h1>
-    {/* Phase 5 : accordéon depuis faq.json */}
+<Layout title={faq.meta.title}>
+  <section class="faq u-container u-section" id="faq">
+    <div class="faq__layout">
+      <nav class="faq__index" aria-label="Rubriques de la FAQ">
+        <ul class="faq__index-list">
+          {categories.map((cat) => (
+            <li><a class="faq__index-link" href={`#${cat.id}`}>{cat.label}</a></li>
+          ))}
+        </ul>
+      </nav>
+
+      <div class="faq__cards">
+        {categories.map((cat) => (
+          <div class="faq__category" id={cat.id}>
+            <h2 class="faq__category-titre">{cat.label}</h2>
+            <div class="faq__list">
+              {cat.questions.map((q) => (
+                <article class="faq-card" data-faq-card>
+                  <button
+                    class="faq-card__toggle-btn"
+                    type="button"
+                    aria-expanded="false"
+                    aria-controls={`faq-answer-${q.id}`}
+                  >
+                    <span class="faq-card__question">{q.question}</span>
+                    <span class="faq-card__icon" aria-hidden="true"></span>
+                  </button>
+                  <div class="faq-card__body" id={`faq-answer-${q.id}`} hidden>
+                    {q.answer.split('\n\n').map((paragraphe) => (
+                      <p class="faq-card__answer">{paragraphe}</p>
+                    ))}
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
   </section>
 </Layout>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-faq-card]').forEach((card) => {
+    const btn = card.querySelector<HTMLButtonElement>('.faq-card__toggle-btn')
+    const body = card.querySelector<HTMLElement>('.faq-card__body')
+    btn?.addEventListener('click', () => {
+      const isOpen = card.classList.toggle('faq-card--open')
+      btn.setAttribute('aria-expanded', String(isOpen))
+      if (body) body.hidden = !isOpen
+    })
+  })
+</script>

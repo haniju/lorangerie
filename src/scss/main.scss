@@ -19,6 +19,7 @@
 @use 'components/proposition';
 @use 'components/bloc-simple';
 @use 'components/tarif';
+@use 'components/faq-card';
 @use 'components/text-box-liste';
 @use 'components/bento';
 @use 'components/index-nav';
@@ -35,3 +36,4 @@
 @use 'pages/pulpe';
 @use 'pages/partenaire';
 @use 'pages/contact';
+@use 'pages/faq';
