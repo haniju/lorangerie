@@ -6,6 +6,123 @@
 
 const HOLD_DELAY = 300
 
+// ─── Scrollspy (R4, R7, R8, R11) ─────────────────────────────────────────────
+// IO 1 : sections → item actif (--start) / inactif (--collapsed)
+// IO 2 : [data-sentinel-for] → item actif profond (--bellow) + label déco --bellow
+
+export function initIndexNavScrollspy() {
+  const main = document.querySelector<HTMLElement>('main')
+  if (!main) return
+
+  const items = Array.from(document.querySelectorAll<HTMLElement>('[data-section]'))
+  if (!items.length) return
+
+  const itemMap = new Map(items.map((el) => [el.dataset.section!, el]))
+
+  let activeId: string | null = null
+  const passedSections = new Set<string>()
+
+  const getDecoLabel = (id: string) =>
+    document.querySelector<HTMLElement>(`[data-label-for="${id}"]`)
+
+  function setActive(id: string) {
+    if (id === activeId) return
+
+    if (activeId) {
+      const prev = itemMap.get(activeId)
+      if (prev) {
+        prev.classList.remove('index-nav__item--start', 'index-nav__item--bellow')
+        prev.classList.add('index-nav__item--collapsed')
+        prev.removeAttribute('aria-current')
+      }
+    }
+
+    activeId = id
+    const curr = itemMap.get(id)
+    if (curr) {
+      curr.classList.remove('index-nav__item--collapsed', 'index-nav__item--bellow')
+      curr.classList.add('index-nav__item--start')
+      curr.setAttribute('aria-current', 'true')
+    }
+  }
+
+  function recompute() {
+    let newActive: string | null = null
+    for (const item of items) {
+      const id = item.dataset.section!
+      if (passedSections.has(id)) newActive = id
+    }
+    if (newActive) setActive(newActive)
+  }
+
+  // IO 1 — sections : déclenché quand le haut de la section atteint le haut de <main>
+  // (= position où le label déco se cale en sticky)
+  const sectionEls = items
+    .map((item) => document.getElementById(item.dataset.section!))
+    .filter(Boolean) as HTMLElement[]
+
+  const sectionIO = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        const id = (entry.target as HTMLElement).id
+        if (!entry.isIntersecting && entry.boundingClientRect.top < 0) {
+          passedSections.add(id)
+        } else if (entry.isIntersecting) {
+          passedSections.delete(id)
+          // Retour arrière : annuler --bellow sur item et label déco
+          const item = itemMap.get(id)
+          if (item?.classList.contains('index-nav__item--bellow')) {
+            item.classList.remove('index-nav__item--bellow')
+            item.classList.add('index-nav__item--start')
+          }
+          getDecoLabel(id)?.classList.remove('section-label-deco--bellow')
+        }
+        recompute()
+      }
+    },
+    { root: main, rootMargin: '-1px 0px 0px 0px', threshold: 0 }
+  )
+
+  sectionEls.forEach((el) => sectionIO.observe(el))
+
+  // IO 2 — sentinelles : --bellow sur item actif + label déco
+  const sentinels = Array.from(
+    document.querySelectorAll<HTMLElement>('[data-sentinel-for]')
+  )
+
+  const sentinelIO = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        const id = (entry.target as HTMLElement).dataset.sentinelFor!
+        const item = itemMap.get(id)
+        const decoLabel = getDecoLabel(id)
+        if (!item) continue
+
+        const isActive =
+          item.classList.contains('index-nav__item--start') ||
+          item.classList.contains('index-nav__item--bellow')
+        if (!isActive) continue
+
+        if (!entry.isIntersecting && entry.boundingClientRect.top < 0) {
+          item.classList.remove('index-nav__item--start')
+          item.classList.add('index-nav__item--bellow')
+          decoLabel?.classList.add('section-label-deco--bellow')
+        } else if (entry.isIntersecting) {
+          item.classList.remove('index-nav__item--bellow')
+          item.classList.add('index-nav__item--start')
+          decoLabel?.classList.remove('section-label-deco--bellow')
+        }
+      }
+    },
+    { root: main, rootMargin: '-1px 0px 0px 0px', threshold: 0 }
+  )
+
+  sentinels.forEach((el) => sentinelIO.observe(el))
+
+  // Init : coworking est actif dès le chargement
+  setActive('coworking')
+}
+
 export function initIndexNavTouch(root: ParentNode = document) {
   const allCollapsed = Array.from(
     root.querySelectorAll<HTMLElement>('.index-nav__item--collapsed')

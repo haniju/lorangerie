@@ -30,8 +30,9 @@ const sections = [
 </nav>
 
 <script>
-  import { initIndexNavTouch } from '../js/index-nav.ts'
+  import { initIndexNavTouch, initIndexNavScrollspy } from '../js/index-nav.ts'
   initIndexNavTouch()
+  initIndexNavScrollspy()
 
   // Le nav suit le top de #coworking : translateY = max(0, coworkingTop - navTop).
   // Quand coworking remonte jusqu'à la position sticky du nav, translateY = 0 → nav calé.

@@ -150,6 +150,57 @@ $index-switch: 56rem;
 }
 
 // ════════════════════════════════════════════════════════════════════
+// LABEL DÉCORATIF DE SECTION — .section-label-deco
+// Miroir visuel de .index-nav__label : même typographie, même fond pill,
+// pas d'interactions. Positionné sticky dans sa section pour "voyager"
+// vers le rail et pousser l'étiquette précédente vers le haut.
+// Position x calée via --index-nav-label-left (set par JS à l'init).
+// ════════════════════════════════════════════════════════════════════
+
+.section-label-deco {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-heading);
+  font-weight: 400;
+  line-height: 1;
+  white-space: nowrap;
+  font-size: 2.25rem; // 36px — état start (défaut)
+  padding: var(--space-7) var(--space-30) var(--space-10);
+  border-radius: var(--corner-big); // 80px
+  background: var(--action-index-initial);
+  color: var(--action-index-texte-initial);
+
+  // Sticky : se cale à la hauteur du rail quand la section scroll
+  // Y = même formule que .index-nav { top }
+  // X = --pad-grid depuis le bord viewport, corrigé du décalage de centrage du container au-delà de 1550px
+  position: sticky;
+  top: calc(var(--nav-height) + var(--space-10));
+  margin-left: calc(var(--pad-grid) - max(0px, (100vw - var(--content-cap)) / 2));
+  // Hors du flux vertical — ne pousse pas le contenu de la section
+  margin-bottom: calc(-1 * (2.25rem * 1.0 + var(--space-7) + var(--space-10)));
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition: font-size 220ms ease, padding 220ms ease, border-radius 220ms ease;
+  }
+
+  // ── état bellow : réduit (miroir de .index-nav__item--bellow .index-nav__label)
+  &.section-label-deco--bellow {
+    font-size: 1rem; // 16px
+    padding: var(--space-7) var(--space-20);
+    border-radius: var(--corner-medium); // 25px
+  }
+
+  // ── mobile
+  @media (max-width: #{$index-switch}) {
+    font-size: 1.625rem; // 26px
+
+    &.section-label-deco--bellow {
+      font-size: 1rem;
+    }
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════
 // RAIL NAV — composant vivant (.index-nav)
 // Position sticky — naturellement hors viewport pendant le hero (DOM
 // après <Hero />), entre dans le viewport à la jonction hero/coworking,

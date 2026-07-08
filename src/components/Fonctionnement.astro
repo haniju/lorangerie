@@ -23,7 +23,8 @@ const principes = [
 ]
 ---
 
-<section class="fonctionnement u-container u-section" id="fonctionnement" aria-label="Notre fonctionnement">
+<section class="fonctionnement u-container u-section" id="fonctionnement">
+  <h2 class="section-label-deco" data-label-for="fonctionnement">Notre fonctionnement</h2>
   <div class="fonctionnement__grid">
     <!-- proposition 1 — accroche accès (width_2, coin big haut-droite) -->
     <div class="proposition proposition--gradient fonctionnement__prop fonctionnement__prop--1">
@@ -41,6 +42,7 @@ const principes = [
     </div>
 
     <!-- proposition 2 — accroche entretien partagé (width_2, coin big bas-droite) -->
+    <div class="bento__row bento__row--milieu" data-sentinel-for="fonctionnement"></div>
     <div class="proposition proposition--gradient fonctionnement__prop fonctionnement__prop--2">
       <p class="proposition__text">{prop2}</p>
     </div>
