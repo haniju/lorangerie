@@ -23,7 +23,10 @@ main {
   margin-top: var(--nav-height);
   overflow-y: auto;
   overflow-x: hidden;
-  height: 100%;
+  // main est le conteneur de scroll : sa hauteur doit défalquer le margin-top,
+  // sinon sa boîte déborde sous le viewport (html/body en overflow:hidden)
+  // et la fin du contenu — le bas du footer — devient inatteignable.
+  height: calc(100% - var(--nav-height));
 }
 
 body {
