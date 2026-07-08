@@ -6,6 +6,7 @@
 //   en position absolute (top/left: -space-50) qui chevauche le carousel.
 // Mobile : display:contents sur col-media → order : carousel(1) · textes(2) · proposition(3).
 
+import pulpeGroupe from '../assets/images/pulpe_groupe.jpg'
 import concert    from '../assets/images/pulpe/concert.jpg'
 import foot       from '../assets/images/pulpe/foot.jpg'
 import potager    from '../assets/images/pulpe/potager.jpg'
@@ -83,6 +84,14 @@ const photos = [
       </div>
     </div>
   </div>
+  <img
+    class="pulpe__groupe"
+    src={pulpeGroupe.src}
+    width={pulpeGroupe.width}
+    height={pulpeGroupe.height}
+    alt="L'équipe et les membres de l'association Pulpe"
+    loading="lazy"
+  />
 </section>
 
 <script>

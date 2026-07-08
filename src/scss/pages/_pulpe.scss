@@ -91,6 +91,16 @@ $pulpe-switch: 56rem;
   border-radius: var(--corner-small) var(--corner-small) var(--corner-medium) var(--corner-small);
 }
 
+// ── photo de groupe ──────────────────────────────────────────────────────────
+.pulpe__groupe {
+  display: block;
+  width: var(--grid-col-mobile-5);
+  height: auto;
+  object-fit: cover;
+  border-radius: var(--corner-small);
+  margin-top: var(--space-40);
+}
+
 // ════════════════════════════════════════════════════════════════════════════════
 // DESKTOP (≥ 56rem)
 // ════════════════════════════════════════════════════════════════════════════════
@@ -121,6 +131,12 @@ $pulpe-switch: 56rem;
     width: var(--grid-col-desktop-2);
     flex-shrink: 0;
     overflow: visible; // la proposition déborde à gauche et en haut
+  }
+
+  // photo de groupe : col4, alignée à droite du container
+  .pulpe__groupe {
+    width: var(--grid-col-desktop-4);
+    margin-left: auto;
   }
 
   // carousel : remplit tout le col-media (hauteur = hauteur des textes)

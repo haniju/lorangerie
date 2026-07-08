@@ -1,0 +1,52 @@
+---
+// Section partenaires (Figma).
+// Desktop : padding-left col-desktop-1, flex-row-wrap gap --space-40.
+//   col1 (col-desktop-1) : légende + logo Pulpe.
+//   col2 (auto) : légende + 2.a (col-desktop-5, flex-row-wrap) contenant les autres logos.
+// Mobile : col1 et col2 en col-mobile-5, 2.a en col-mobile-5 avec logos en space-between.
+
+import textes from '../data/textes.json'
+import pulpeLogoUrl        from '../assets/logos/pulpe.svg?url'
+import communLogoUrl       from '../assets/logos/commu.svg?url'
+import franceActiveLogoUrl from '../assets/logos/franceactive.svg?url'
+import passtempsLogoUrl    from "../assets/logos/pass'temps.svg?url"
+import regionLogoUrl       from '../assets/logos/region.svg?url'
+import villeLogoUrl        from '../assets/logos/ville.svg?url'
+
+const mode = textes[0]['textes']['modes']['Mode 1']
+const t = mode
+const partenaire = mode['partenaire_']
+
+const logosSoutien = [
+  { src: communLogoUrl,       alt: 'Communauté de communes' },
+  { src: franceActiveLogoUrl, alt: 'France Active' },
+  { src: passtempsLogoUrl,    alt: "Pass'temps" },
+  { src: regionLogoUrl,       alt: 'Région Bretagne' },
+  { src: villeLogoUrl,        alt: 'Ville de Malestroit' },
+]
+---
+
+<section class="partenaire u-container u-section" id="partenaires">
+  <h2 class="section-label-deco" data-label-for="partenaires">{t['index_']['partenaire']['$value']}</h2>
+
+  <div class="partenaire__grid">
+    <!-- col1 : lieu créé par + logo Pulpe -->
+    <div class="partenaire__col-createur">
+      <p class="partenaire__legende">{partenaire['label1']['$value']}</p>
+      <img class="partenaire__logo-pulpe" src={pulpeLogoUrl} alt="Pulpe" loading="lazy" />
+    </div>
+
+    <!-- col2 : soutenue par + logos partenaires -->
+    <div class="partenaire__col-soutien">
+      <p class="partenaire__legende">{partenaire['label2']['$value']}</p>
+      <div class="partenaire__logos">
+        {logosSoutien.map(({ src, alt }) => (
+          <img class="partenaire__logo" src={src} alt={alt} loading="lazy" />
+        ))}
+      </div>
+    </div>
+  </div>
+
+  <p class="partenaire__btn-label">{partenaire['btnprimarylabel']['$value']}</p>
+  <a href="/contact" class="btn--primary">{partenaire['btnprimary']['$value']}</a>
+</section>

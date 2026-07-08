@@ -1,10 +1,61 @@
 ---
-// Placeholder structurel (Phase 0). Footer définitif en Phase 3.
+// footer/NAV-FOOTER — Figma 44:4570 (desktop 44:4561 / mobile 44:4571).
+// Un seul point de bascule structurel (top : row ↔ column) cf. Navbar.
+import Facebook from '../assets/pictos/facebook.svg'
+import Linkedin from '../assets/pictos/linkedin.svg'
+
 const year = new Date().getFullYear()
+
+const pageAccueil = [
+  { label: 'Le coworking', href: '#coworking' },
+  { label: 'Notre fonctionnement', href: '#fonctionnement' },
+  { label: 'Nos tarifs', href: '#tarifs' },
+  { label: 'À propos de', href: '#pulpe' },
+  { label: 'Nos partenaires', href: '#partenaires' },
+]
+
+const autresPages = [
+  { label: 'Contactez-nous', href: '/contact' },
+  { label: 'Foire Aux Questions (F.A.Q.)', href: '/faq' },
+]
 ---
 
 <footer class="site-footer">
-  <div class="u-container site-footer__inner">
-    <span>&copy; {year} L'Orangerie</span>
+  <div class="site-footer__top">
+    <div class="site-footer__brand">
+      <a href="/" class="site-footer__logo">L'Orangerie</a>
+      <p class="bloc-simple site-footer__recap">
+        {`Récap rapide sur l'Orangerie en deux lignes grand max`}
+      </p>
+      <div class="site-footer__socials">
+        <a href="https://facebook.com" class="site-footer__social" aria-label="Facebook">
+          <Facebook width={40} height={36} aria-hidden="true" />
+        </a>
+        <a href="https://linkedin.com" class="site-footer__social" aria-label="LinkedIn">
+          <Linkedin width={40} height={36} aria-hidden="true" />
+        </a>
+      </div>
+    </div>
+
+    <div class="site-footer__pages">
+      <nav class="site-footer__links-group" aria-label="Page d'accueil">
+        <p class="site-footer__links-title">Page d'accueil</p>
+        {pageAccueil.map(({ label, href }) => (
+          <a href={href} class="btn--lien">{label}</a>
+        ))}
+      </nav>
+      <nav class="site-footer__links-group" aria-label="Autres pages">
+        <p class="site-footer__links-title">Autres pages</p>
+        {autresPages.map(({ label, href }) => (
+          <a href={href} class="btn--lien">{label}</a>
+        ))}
+      </nav>
+    </div>
+  </div>
+
+  <div class="site-footer__legals">
+    <p class="bloc-simple site-footer__copyright">{year} L'Orangerie - Tous droits réservés</p>
+    <a href="/cgv" class="btn--lien">Conditions générales de vente</a>
+    <a href="/mentions-legales" class="btn--lien">Mentions légales</a>
   </div>
 </footer>

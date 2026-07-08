@@ -1,0 +1,91 @@
+// Section partenaires.
+// Mobile : col1 puis col2 en pleine largeur utile (col-mobile-5), logos en space-between.
+// Desktop (≥ 56rem) : padding-left col-desktop-1, flex-row-wrap, col1 = col-desktop-1,
+//   col2 auto → 2.a (logos) = col-desktop-5.
+
+$partenaire-switch: 56rem;
+
+// Hauteur de logo : fixe (90px) jusqu'à 1280px, puis fluide (scale avec le contenu
+// plafonné à 1550px) pour encaisser les résolutions plus larges.
+:root {
+  --logo-height: max(5.625rem, calc(5.625rem / 80 * min(100vw, var(--content-cap))));
+}
+
+.partenaire__grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-40);
+}
+
+.partenaire__col-createur,
+.partenaire__col-soutien {
+  display: flex;
+  flex-direction: column;
+  width: var(--grid-col-mobile-5);
+}
+
+.partenaire__legende {
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: 0.875rem;
+  color: var(--text-warm-dark);
+  margin-bottom: var(--space-20);
+}
+
+.partenaire__logo-pulpe {
+  height: var(--logo-height);
+  width: auto;
+}
+
+.partenaire__logos {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-20);
+  width: var(--grid-col-mobile-5);
+}
+
+.partenaire__logo {
+  height: var(--logo-height);
+  width: auto;
+}
+
+.partenaire__btn-label {
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: 0.875rem;
+  color: var(--text-warm-dark);
+  margin-top: var(--space-40);
+  margin-bottom: var(--space-10);
+}
+
+// ════════════════════════════════════════════════════════════════════════════════
+// DESKTOP (≥ 56rem)
+// ════════════════════════════════════════════════════════════════════════════════
+@media (min-width: $partenaire-switch) {
+  .u-container.partenaire {
+    margin-inline: unset;
+  }
+
+  .partenaire__grid {
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding-left: var(--grid-col-desktop-1);
+    gap: var(--space-40);
+  }
+
+  .partenaire__col-createur {
+    width: var(--grid-col-desktop-1);
+    flex-shrink: 0;
+  }
+
+  .partenaire__col-soutien {
+    width: auto;
+    flex: 1;
+  }
+
+  .partenaire__logos {
+    width: var(--grid-col-desktop-5);
+  }
+}

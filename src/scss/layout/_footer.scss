@@ -1,0 +1,127 @@
+// footer/NAV-FOOTER — construit depuis Figma 44:4570 (desktop 44:4561 / mobile 44:4571).
+// Un seul point de bascule STRUCTUREL (top : row ↔ column), comme la navbar.
+
+$footer-switch: 56rem;
+
+.site-footer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-30);
+  width: 100%;
+  padding: var(--space-20) var(--pad-grid);
+  // dégradé Figma : transparent → sable/05 (26.9%) → peche/50 — pas de token
+  // dédié dans l'export couleur, primitives existantes réutilisées (interim).
+  background: linear-gradient(
+    to bottom,
+    rgb(from var(--sable-05) r g b / 0),
+    var(--sable-05) 26.9%,
+    var(--peche-50)
+  );
+
+  @media (min-width: $footer-switch) {
+    padding: var(--space-20) var(--space-40);
+  }
+}
+
+.site-footer__top {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-10);
+
+  @media (min-width: $footer-switch) {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+}
+
+.site-footer__brand {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-10);
+
+  @media (min-width: $footer-switch) {
+    gap: var(--space-20);
+  }
+}
+
+.site-footer__logo {
+  font-family: var(--font-display);
+  font-size: 2.5rem; // 40px
+  text-transform: uppercase;
+  color: var(--text-warm-dark);
+  text-decoration: none;
+}
+
+.site-footer__recap {
+  max-width: 21.5rem; // 344px ≈ largeur Figma (233px + padding), lisible sur 2 lignes
+}
+
+.site-footer__socials {
+  display: flex;
+  align-items: center;
+}
+
+.site-footer__social {
+  display: inline-flex;
+
+  svg path { fill: var(--text-warm-dark); }
+}
+
+.site-footer__pages {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-30);
+  padding-top: var(--space-20);
+
+  @media (min-width: $footer-switch) {
+    flex-direction: row;
+    gap: var(--space-60);
+    padding-top: var(--space-60);
+    padding-inline: var(--space-40);
+  }
+}
+
+.site-footer__links-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-10);
+  align-items: flex-start;
+
+  .btn--lien { text-align: left; }
+}
+
+.site-footer__links-title {
+  margin: 0;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 1rem; // 16px
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-warm-dark);
+}
+
+.site-footer__legals {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-10);
+  align-items: flex-start;
+  justify-content: center;
+  width: 100%;
+  padding-top: var(--space-10);
+  border-top: var(--stroke-fine) solid var(--sapin-80);
+
+  @media (min-width: $footer-switch) {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--space-20);
+  }
+}
+
+.site-footer__copyright {
+  margin: 0;
+
+  @media (min-width: $footer-switch) {
+    flex: 1 0 0;
+  }
+}

@@ -25,6 +25,7 @@
 
 // ─── Layout ─────────────────────────────────────────────────
 @use 'layout/navbar';
+@use 'layout/footer';
 
 // ─── Pages ──────────────────────────────────────────────────
 @use 'pages/hero';
@@ -32,3 +33,4 @@
 @use 'pages/fonctionnement';
 @use 'pages/tarifs';
 @use 'pages/pulpe';
+@use 'pages/partenaire';
