@@ -1,0 +1,65 @@
+---
+// Section tarifs — 3 forfaits : Coworker (grand public) + Coworker Investi & Copulpeur.euse (communautaire).
+// Desktop : tableau-tarifs indent 1 col, forfait-a 2 col, div-b 4 col, gap --space-20.
+// Mobile : forfait-a 5 col (pleine utile), div-b scroll horizontal, instances 4 col chacune.
+import textes from '../data/textes.json'
+import orangerieUrl from '../assets/pictos/orangerie.svg?url'
+
+const mode = textes[0]["textes"]["modes"]["Mode 1"]
+const t = mode
+const tarifs = mode["tarifs_"]
+---
+
+<section class="tarifs u-container u-section" id="tarifs">
+  <h2 class="section-label-deco" data-label-for="tarifs">{t["index_"]["tarif"]["$value"]}</h2>
+
+
+  <p class="tarifs__intro">{tarifs["infos"]["$value"]}</p>
+
+  <div class="tarifs__tableau">
+    <!-- a. Coworker — forfait grand public -->
+    <article class="forfait tarifs__forfait-a">
+      <div class="forfait__header">
+        <h3 class="forfait__titre">{tarifs["coworker_"]["titre"]["$value"]}</h3>
+      </div>
+      <div class="forfait__body">
+        <div class="forfait__prix">
+          <img class="forfait__picto" src={orangerieUrl} alt="" aria-hidden="true" />
+          <span class="forfait__montant">{tarifs["coworker_"]["tarif"]["$value"]}</span>
+        </div>
+        <p class="forfait__desc">{tarifs["coworker_"]["infos"]["$value"]}</p>
+      </div>
+    </article>
+
+    <!-- b. Coworker Investi + Copulpeur.euse — forfaits communautaires -->
+    <div class="tarifs__communautaires">
+      <article class="forfait forfait--communautaire">
+        <div class="forfait__header">
+          <h3 class="forfait__titre">{tarifs["investi_"]["titre"]["$value"]}</h3>
+        </div>
+        <div class="forfait__body">
+          <div class="forfait__prix">
+            <img class="forfait__picto" src={orangerieUrl} alt="" aria-hidden="true" />
+            <span class="forfait__montant">{tarifs["investi_"]["tarif"]["$value"]}</span>
+          </div>
+          <p class="forfait__desc">{tarifs["investi_"]["info"]["$value"]}</p>
+          <p class="forfait__details">{tarifs["investi_"]["contribution"]["$value"]}</p>
+        </div>
+      </article>
+
+      <article class="forfait forfait--communautaire">
+        <div class="forfait__header">
+          <h3 class="forfait__titre">{tarifs["copulpeur_"]["copulpeur"]["$value"]}</h3>
+        </div>
+        <div class="forfait__body">
+          <div class="forfait__prix">
+            <img class="forfait__picto" src={orangerieUrl} alt="" aria-hidden="true" />
+            <span class="forfait__montant">{tarifs["copulpeur_"]["tarif"]["$value"]}</span>
+          </div>
+          <p class="forfait__desc">{tarifs["copulpeur_"]["info"]["$value"]}</p>
+          <p class="forfait__details">{tarifs["copulpeur_"]["contribution"]["$value"]}</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,78 @@
+// Section tarifs (Figma — section Nos tarifs).
+// Desktop (≥ 56rem) : tableau-tarifs flex-row, indent 1 col, forfait-a 2 col, div-b 4 col, gap --space-20.
+// Mobile : forfait-a pleine utile (5 col), div-b scroll horizontal natif, instances 4 col chacune.
+
+$tarif-switch: 56rem;
+
+.tarifs {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-30);
+}
+
+.tarifs__intro {
+  margin: 0;
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: var(--step-0);
+  color: var(--text-cold-dark);
+}
+
+// ─── tableau principal ────────────────────────────────────────────
+.tarifs__tableau {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-20);
+
+  @media (min-width: $tarif-switch) {
+    flex-direction: row;
+    align-items: flex-start;
+    padding-left: var(--grid-col-desktop-1);
+    gap: var(--space-20);
+  }
+}
+
+// a. Forfait Coworker
+.tarifs__forfait-a {
+  width: var(--grid-col-mobile-5); // mobile : pleine largeur utile
+
+  @media (min-width: $tarif-switch) {
+    width: var(--grid-col-desktop-2);
+    flex-shrink: 0;
+  }
+}
+
+// b. Bloc communautaires
+.tarifs__communautaires {
+  display: flex;
+  flex-direction: row; // côte à côte en mobile (scroll horizontal)
+  gap: var(--space-20);
+
+  // scroll horizontal natif en mobile
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+
+  // déborde jusqu'au bord droit de l'écran : on annule le padding-right du container
+  // et on laisse le contenu calé sur la marge gauche (héritée du flux)
+  margin-right: calc(-1 * var(--pad-grid));
+  padding-right: var(--pad-grid); // dernière carte ne colle pas au bord
+
+  .forfait {
+    flex-shrink: 0;
+    width: var(--grid-col-mobile-4);
+    scroll-snap-align: start;
+  }
+
+  @media (min-width: $tarif-switch) {
+    flex-direction: column;
+    overflow-x: visible;
+    margin-right: 0;
+    padding-right: 0;
+    width: var(--grid-col-desktop-4);
+
+    .forfait {
+      width: 100%;
+    }
+  }
+}
