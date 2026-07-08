@@ -8,6 +8,9 @@
 $fonct-switch: 56rem;
 $overlap: var(--space-50); // recouvrement entre les 3 blocs
 
+.fonctionnement {
+  gap: var(--space-152);
+}
 .fonctionnement__grid {
   display: flex;
   flex-direction: column;

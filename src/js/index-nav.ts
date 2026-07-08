@@ -55,35 +55,32 @@ export function initIndexNavScrollspy() {
     if (newActive) setActive(newActive)
   }
 
-  // IO 1 — sections : déclenché quand le haut de la section atteint le haut de <main>
-  // (= position où le label déco se cale en sticky)
+  // Scroll listener — section active = dernière dont le haut a franchi le haut de <main>
+  // (IO threshold:0 ne se déclenche que quand toute la section est sortie, trop tard)
   const sectionEls = items
     .map((item) => document.getElementById(item.dataset.section!))
     .filter(Boolean) as HTMLElement[]
 
-  const sectionIO = new IntersectionObserver(
-    (entries) => {
-      for (const entry of entries) {
-        const id = (entry.target as HTMLElement).id
-        if (!entry.isIntersecting && entry.boundingClientRect.top < 0) {
-          passedSections.add(id)
-        } else if (entry.isIntersecting) {
-          passedSections.delete(id)
-          // Retour arrière : annuler --bellow sur item et label déco
-          const item = itemMap.get(id)
-          if (item?.classList.contains('index-nav__item--bellow')) {
-            item.classList.remove('index-nav__item--bellow')
-            item.classList.add('index-nav__item--start')
-          }
-          getDecoLabel(id)?.classList.remove('section-label-deco--bellow')
-        }
-        recompute()
-      }
-    },
-    { root: main, rootMargin: '-1px 0px 0px 0px', threshold: 0 }
-  )
+  function updateActive() {
+    const mainTop = main.getBoundingClientRect().top
+    let newId = sectionEls[0].id
+    for (const el of sectionEls) {
+      if (el.getBoundingClientRect().top <= mainTop + 1) newId = el.id
+    }
 
-  sectionEls.forEach((el) => sectionIO.observe(el))
+    // Retour arrière : si la section qui redevient active était en --bellow, reset
+    if (newId !== activeId) {
+      const incoming = itemMap.get(newId)
+      if (incoming?.classList.contains('index-nav__item--bellow')) {
+        incoming.classList.remove('index-nav__item--bellow')
+        incoming.classList.add('index-nav__item--start')
+        getDecoLabel(newId)?.classList.remove('section-label-deco--bellow')
+      }
+      setActive(newId)
+    }
+  }
+
+  main.addEventListener('scroll', updateActive, { passive: true })
 
   // IO 2 — sentinelles : --bellow sur item actif + label déco
   const sentinels = Array.from(
@@ -119,8 +116,8 @@ export function initIndexNavScrollspy() {
 
   sentinels.forEach((el) => sentinelIO.observe(el))
 
-  // Init : coworking est actif dès le chargement
-  setActive('coworking')
+  // Init : calcul immédiat (gère aussi un rechargement en milieu de page)
+  updateActive()
 }
 
 export function initIndexNavTouch(root: ParentNode = document) {

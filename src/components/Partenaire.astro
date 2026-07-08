@@ -37,7 +37,7 @@ const logosSoutien = [
     </div>
 
     <!-- col2 : soutenue par + logos partenaires -->
-    <div class="partenaire__col-soutien">
+    <div class="partenaire__col-soutien" data-sentinel-for="partenaire">
       <p class="partenaire__legende">{partenaire['label2']['$value']}</p>
       <div class="partenaire__logos">
         {logosSoutien.map(({ src, alt }) => (
