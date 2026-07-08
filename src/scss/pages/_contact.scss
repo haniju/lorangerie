@@ -1,0 +1,98 @@
+// page/contact — non maquettée (cf. SITE-PLAN.md) : formulaire (nom, email,
+// objet, message) + coordonnées + carte Leaflet/OSM. Construite depuis le DS.
+
+.contact__title {
+  margin: 0 0 var(--space-40);
+  font-family: var(--font-heading); // Ortica Linear
+  font-weight: 700;
+  font-size: var(--step-h1); // 26→36px, cf. base/_fluid.scss
+  color: var(--text-warm-dark);
+}
+
+.contact__grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-60);
+
+  @media (min-width: 56rem) {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: var(--space-40);
+  }
+}
+
+// ─── Formulaire ─────────────────────────────────────────────
+
+.contact__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-20);
+  width: var(--grid-col-mobile-5);
+
+  @media (min-width: 56rem) {
+    width: var(--grid-col-desktop-4);
+  }
+}
+
+.contact__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+
+  label {
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: 0.875rem; // 14px
+    color: var(--text-warm-dark);
+  }
+
+  input,
+  textarea {
+    font-family: var(--font-body);
+    font-size: 0.9375rem; // 15px
+    color: var(--text-warm-dark);
+    background: var(--sable-05);
+    border: var(--stroke-fine) solid var(--sable-30);
+    border-radius: var(--corner-small);
+    padding: var(--space-10) var(--space-20);
+    resize: vertical;
+
+    &:focus-visible {
+      outline: var(--stroke-fine) solid var(--action-button-primary-initial);
+      outline-offset: 2px;
+    }
+  }
+}
+
+.contact__form .btn--primary {
+  align-self: flex-start;
+}
+
+// ─── Coordonnées + carte ────────────────────────────────────
+
+.contact__infos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-10);
+  width: var(--grid-col-mobile-5);
+
+  @media (min-width: 56rem) {
+    width: var(--grid-col-desktop-3);
+  }
+}
+
+.contact__adresse {
+  font-family: var(--font-body);
+  font-style: normal;
+  font-size: 0.9375rem; // 15px
+  line-height: 1.47;
+  color: var(--text-warm-dark);
+}
+
+.contact__map {
+  margin-top: var(--space-20);
+  width: 100%;
+  height: 18.75rem; // 300px
+  border-radius: var(--corner-small);
+  overflow: hidden;
+}
