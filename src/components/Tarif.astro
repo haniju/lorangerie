@@ -3,7 +3,8 @@
 // Desktop : tableau-tarifs indent 1 col, forfait-a 2 col, div-b 4 col, gap --space-20.
 // Mobile : forfait-a 5 col (pleine utile), div-b scroll horizontal, instances 4 col chacune.
 import textes from '../data/textes.json'
-import orangerieUrl from '../assets/pictos/orangerie.svg?url'
+import soleilUrl from '../assets/pictos/soleil.svg?url'
+import blurredLeavesUrl from '../assets/images/blurred_leaves.jpg?url'
 
 const mode = textes[0]["textes"]["modes"]["Mode 1"]
 const t = mode
@@ -17,19 +18,23 @@ const tarifs = mode["tarifs_"]
   <p class="tarifs__intro">{tarifs["infos"]["$value"]}</p>
 
   <div class="tarifs__tableau">
-    <!-- a. Coworker — forfait grand public -->
-    <article class="forfait tarifs__forfait-a">
-      <div class="forfait__header">
-        <h3 class="forfait__titre">{tarifs["coworker_"]["titre"]["$value"]}</h3>
-      </div>
-      <div class="forfait__body">
-        <div class="forfait__prix">
-          <img class="forfait__picto" src={orangerieUrl} alt="" aria-hidden="true" />
-          <span class="forfait__montant">{tarifs["coworker_"]["tarif"]["$value"]}</span>
+    <!-- a. Coworker — forfait grand public + CTA -->
+    <div class="tarifs__forfait-a">
+      <article class="forfait">
+        <div class="forfait__header">
+          <h3 class="forfait__titre">{tarifs["coworker_"]["titre"]["$value"]}</h3>
         </div>
-        <p class="forfait__desc">{tarifs["coworker_"]["infos"]["$value"]}</p>
-      </div>
-    </article>
+        <div class="forfait__body">
+          <div class="forfait__prix">
+            <img class="forfait__picto" src={soleilUrl} alt="" aria-hidden="true" />
+            <span class="forfait__montant">{tarifs["coworker_"]["tarif"]["$value"]}</span>
+          </div>
+          <p class="forfait__desc">{tarifs["coworker_"]["infos"]["$value"]}</p>
+        </div>
+      </article>
+      <p class="tarifs__btn-label">{tarifs["btnprimarylabel"]["$value"]}</p>
+      <a href="#" class="btn--primary">{tarifs["btnprimary"]["$value"]}</a>
+    </div>
 
     <!-- b. Coworker Investi + Copulpeur.euse — forfaits communautaires -->
     <div class="tarifs__communautaires">
@@ -39,7 +44,7 @@ const tarifs = mode["tarifs_"]
         </div>
         <div class="forfait__body">
           <div class="forfait__prix">
-            <img class="forfait__picto" src={orangerieUrl} alt="" aria-hidden="true" />
+            <img class="forfait__picto" src={soleilUrl} alt="" aria-hidden="true" />
             <span class="forfait__montant">{tarifs["investi_"]["tarif"]["$value"]}</span>
           </div>
           <p class="forfait__desc">{tarifs["investi_"]["info"]["$value"]}</p>
@@ -53,7 +58,7 @@ const tarifs = mode["tarifs_"]
         </div>
         <div class="forfait__body">
           <div class="forfait__prix">
-            <img class="forfait__picto" src={orangerieUrl} alt="" aria-hidden="true" />
+            <img class="forfait__picto" src={soleilUrl} alt="" aria-hidden="true" />
             <span class="forfait__montant">{tarifs["copulpeur_"]["tarif"]["$value"]}</span>
           </div>
           <p class="forfait__desc">{tarifs["copulpeur_"]["info"]["$value"]}</p>
@@ -61,5 +66,20 @@ const tarifs = mode["tarifs_"]
         </div>
       </article>
     </div>
+  </div>
+
+  <!-- bloc CTA : fond feuilles floutées, 2 propositions demi-lune + bouton -->
+  <div class="tarifs__cta-bloc" style={`background-image: url(${blurredLeavesUrl})`}>
+    <div class="tarifs__propositions">
+      <div class="proposition proposition--demi-lune tarifs__prop tarifs__prop--1">
+        <img class="proposition__picto" src={soleilUrl} alt="" aria-hidden="true" />
+        <p class="proposition__text">{tarifs["suisje"]["$value"]}</p>
+      </div>
+      <div class="proposition proposition--demi-lune proposition--demi-lune--orange tarifs__prop tarifs__prop--2">
+        <img class="proposition__picto" src={soleilUrl} alt="" aria-hidden="true" />
+        <p class="proposition__text">{tarifs["question"]["$value"]}</p>
+      </div>
+    </div>
+    <a href="#" class="btn--secondary tarifs__cta-btn">{tarifs["btnsecondary"]["$value"]}</a>
   </div>
 </section>

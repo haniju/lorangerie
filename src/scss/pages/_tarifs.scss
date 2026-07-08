@@ -32,14 +32,25 @@ $tarif-switch: 56rem;
   }
 }
 
-// a. Forfait Coworker
+// a. Forfait Coworker + CTA
 .tarifs__forfait-a {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-20);
   width: var(--grid-col-mobile-5); // mobile : pleine largeur utile
 
   @media (min-width: $tarif-switch) {
     width: var(--grid-col-desktop-2);
     flex-shrink: 0;
   }
+}
+
+.tarifs__btn-label {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-style: italic;
+  font-size: var(--step-0);
+  color: var(--text-cold-dark);
 }
 
 // b. Bloc communautaires
@@ -75,4 +86,68 @@ $tarif-switch: 56rem;
       width: 100%;
     }
   }
+}
+
+// ─── bloc CTA fond feuilles ───────────────────────────────────────
+.tarifs__cta-bloc {
+  // Casse le padding du u-container pour aller bord à bord
+  margin-inline: calc(-1 * var(--pad-grid));
+  padding-block: var(--space-80);
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-50);
+
+  // Réintroduit l'indent mobile (même que --pad-grid)
+  padding-inline: var(--pad-grid);
+
+  @media (min-width: $tarif-switch) {
+    padding-inline: calc(var(--pad-grid) + var(--grid-col-desktop-1));
+  }
+}
+
+// Conteneur des deux cartes demi-lune — position relative pour l'absolu desktop
+.tarifs__propositions {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-30);
+
+  @media (min-width: $tarif-switch) {
+    min-height: 30rem; // absorbe les rotations et l'overlap
+  }
+}
+
+// Wrapper de rotation pour chaque carte
+.tarifs__prop {
+  width: var(--grid-col-mobile-4);
+
+  @media (min-width: $tarif-switch) {
+    position: absolute;
+    width: var(--grid-col-desktop-3);
+  }
+}
+
+.tarifs__prop--1 {
+  @media (min-width: $tarif-switch) {
+    top: var(--space-50);
+    left: 0;
+    transform: rotate(-10.64deg);
+  }
+}
+
+.tarifs__prop--2 {
+  @media (min-width: $tarif-switch) {
+    top: var(--space-208);
+    left: var(--grid-col-desktop-1);
+    transform: rotate(8.9deg);
+  }
+}
+
+.tarifs__cta-btn {
+  // en mobile : centré ; en desktop : aligné sous les cartes (hérité du flex)
+  align-self: flex-start;
 }

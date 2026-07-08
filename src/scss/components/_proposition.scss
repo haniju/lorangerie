@@ -59,3 +59,28 @@
   border-bottom: var(--stroke-big) solid var(--text-cold-dark);
   border-radius: var(--corner-small); // 8px
 }
+
+// ─── demi-lune (Figma suisje/question, 293:5066) ────────────────
+// Forme capsule : coins en demi-cercle en haut, petits en bas.
+// Flex-col centré, texte italic bold DM Sans, border-bottom sombre.
+// Rotation portée par .tarifs__prop (pas ici pour éviter les débordements).
+.proposition--demi-lune {
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  border-radius: var(--corner-huge) var(--corner-huge) var(--corner-small) var(--corner-small);
+  border-bottom: var(--stroke-big) solid var(--text-cold-dark);
+  box-shadow: 0 0 5px rgba(68, 7, 5, 0.2);
+  font-family: var(--font-body);
+  font-style: italic;
+  --picto-color: var(--sapin-80);
+
+  .proposition__picto {
+    width: 2.375rem;
+    height: auto;
+  }
+}
+
+.proposition--demi-lune--orange {
+  --picto-color: var(--peche-100);
+}
