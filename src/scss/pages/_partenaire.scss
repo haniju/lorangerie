@@ -11,6 +11,10 @@ $partenaire-switch: 56rem;
   --logo-height: max(5.625rem, calc(5.625rem / 80 * min(100vw, var(--content-cap))));
 }
 
+h2 {
+  margin-bottom : var(--space-40);
+}
+
 .partenaire__grid {
   display: flex;
   flex-direction: column;
@@ -70,13 +74,14 @@ $partenaire-switch: 56rem;
   margin-bottom: var(--space-10);
 }
 
+.partenaire__btn-group {
+  width: max-content;
+  align-self: flex-end;
+}
 // ════════════════════════════════════════════════════════════════════════════════
 // DESKTOP (≥ 56rem)
 // ════════════════════════════════════════════════════════════════════════════════
 @media (min-width: $partenaire-switch) {
-  .u-container.partenaire {
-    margin-inline: unset;
-  }
 
   .partenaire__grid {
     flex-direction: row;
