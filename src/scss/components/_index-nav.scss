@@ -1,11 +1,11 @@
 // Marqueur d'index (dot-nav) — composant Figma `nav/index_boutons` (168:2334).
-// Ici : les 6 MODÈLES STATIQUES servant de référence dans le Design System.
-// La dot-nav vivante (rail sticky + scrollspy, règles R1–R15) est une passe
-// ultérieure — cf. PLAN-ACTION.md. Les états sont ici forcés par modificateur
-// (`--hover`, `--pressed`…) pour être montrés côte à côte ; le composant vivant
-// les branchera sur :hover / :active / scroll.
+// Deux usages cohabitent ici :
+//   1. Modèles STATIQUES du Design System — états forcés par modificateur
+//      (`--hover`, `--pressed`, `--collapsed`…) pour être montrés côte à côte.
+//   2. Rail VIVANT `.index-nav` — piloté au scroll par une machine à états à 5 stades
+//      (collapse-before → actif → start → bellow → collapse-after), cf. `src/js/index-nav.ts`
+//      et PLAN-ACTION.md. Miroir décoratif voyageur = `.index-nav__deco`.
 //
-// 6 modèles = { desktop | mobile } × { start | bellow | collapsed }.
 // Pastille = tokens `--action-index-*` ; étiquette = Ortica Linear (serif).
 
 $index-switch: 56rem;
@@ -48,8 +48,16 @@ $index-switch: 56rem;
   color: var(--action-index-texte-initial);
 }
 
-// ─── statut = start (pastille pleine, non interactive) ──────────
-.index-nav__item--start {
+// ════════════════════════════════════════════════════════════════════
+// ÉTATS VIVANTS DU RAIL — 5 stades pilotés par le scrollspy
+//   collapse-before → actif → start → bellow → collapse-after
+// Quatre axes : taille · couleur du dot · visibility · position (cf. index-nav.ts).
+// ════════════════════════════════════════════════════════════════════
+
+// ── Axe TAILLE — grande (before / actif / start), sinon petite (défaut label) ──
+.index-nav__item--start,
+.index-nav__item--actif,
+.index-nav__item--collapse-before {
   gap: var(--space-30);
   --dot-size: 1.25rem; // 20px
 
@@ -58,6 +66,13 @@ $index-switch: 56rem;
     border-radius: var(--corner-big); // 80px
     font-size: 2.25rem; // 36px — title/h1/section_focus_desktop
   }
+}
+
+// ── Axe COULEUR DU DOT — sapin-60 (actif / start / bellow) ──
+.index-nav__item--actif,
+.index-nav__item--start,
+.index-nav__item--bellow {
+  --dot-color: var(--sapin-60);
 }
 
 // ─── statut = bellow — états initial / hover / pressed ──────────
@@ -150,14 +165,14 @@ $index-switch: 56rem;
 }
 
 // ════════════════════════════════════════════════════════════════════
-// LABEL DÉCORATIF DE SECTION — .section-label-deco
+// LABEL DÉCORATIF DE SECTION — .index-nav__deco
 // Miroir visuel de .index-nav__label : même typographie, même fond pill,
 // pas d'interactions. Positionné sticky dans sa section pour "voyager"
 // vers le rail et pousser l'étiquette précédente vers le haut.
 // Position x calée via --index-nav-label-left (set par JS à l'init).
 // ════════════════════════════════════════════════════════════════════
 
-.section-label-deco {
+.index-nav__deco {
   height: 55px;
   display: inline-flex;
   align-items: center;
@@ -178,14 +193,18 @@ $index-switch: 56rem;
   top: var(--space-10);
   margin-left: 0px;
   // Hors du flux vertical — ne pousse pas le contenu de la section
-  //margin-bottom: calc(-1 * (2.25rem * 1.0 + var(--space-7) + var(--space-10)));
+  margin-bottom: -55px;
+
+  &.index-nav__deco--hidden {
+    visibility: hidden;
+  }
 
   @media (prefers-reduced-motion: no-preference) {
     transition: font-size 220ms ease, padding 220ms ease, border-radius 220ms ease;
   }
 
   // ── état bellow : réduit (miroir de .index-nav__item--bellow .index-nav__label)
-  &.section-label-deco--bellow {
+  &.index-nav__deco--bellow {
     font-size: 1rem; // 16px
     padding: var(--space-7) var(--space-20);
     border-radius: var(--corner-medium); // 25px
@@ -195,7 +214,7 @@ $index-switch: 56rem;
   @media (max-width: #{$index-switch}) {
     font-size: 1.625rem; // 26px
 
-    &.section-label-deco--bellow {
+    &.index-nav__deco--bellow {
       font-size: 1rem;
     }
   }
@@ -252,19 +271,35 @@ $index-switch: 56rem;
     }
   }
 
-  // Start / bellow : label en flux, aligné avec le bord contenu.
-  .index-nav__item:not(.index-nav__item--collapsed) .index-nav__label {
+  // ── Axe POSITION — tous les labels sont en flux, alignés au contenu.
+  // before : position par défaut (à côté de son dot, dans le flux du rail).
+  // actif / start / bellow / after : translateY vers la position de l'item 1 (10px du top).
+  .index-nav__item .index-nav__label {
     position: static;
-    opacity: 1;
-    transform: none;
     pointer-events: auto;
     margin-left: var(--pad-grid);
+
+    @media (prefers-reduced-motion: no-preference) {
+      transition: font-size 220ms ease, padding 220ms ease, border-radius 220ms ease,
+        background 180ms ease, color 180ms ease;
+    }
   }
 
-  // Collapsed : label absolu depuis le bord gauche du viewport (item à x=0),
-  // positionné depuis le centre du dot vers la droite.
-  .index-nav__item--collapsed .index-nav__label {
-    left: calc(var(--pad-grid) / 2 + var(--dot-size) / 2 + var(--space-10));
+  .index-nav__item--actif .index-nav__label,
+  .index-nav__item--start .index-nav__label,
+  .index-nav__item--bellow .index-nav__label,
+  .index-nav__item--collapse-after .index-nav__label {
+    transform: translateY(var(--label-to-first, 0px));
+  }
+
+  // ── Axe VISIBILITY — visible seulement en start / bellow.
+  // before / actif / after : hidden (le stade actif pré-positionne à 10px sans
+  // se montrer → aucun saut quand start le révèle).
+  .index-nav__item--collapse-before .index-nav__label,
+  .index-nav__item--actif .index-nav__label,
+  .index-nav__item--collapse-after .index-nav__label {
+    visibility: hidden;
+    pointer-events: none;
   }
 }
 

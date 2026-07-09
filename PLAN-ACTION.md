@@ -150,10 +150,51 @@ Au chargement le nav est sous le fold (translate ≈ hauteur hero). Il remonte 1
 
 Premier item en `--start` (hardcodé dans `IndexNav.astro`). Les 4 autres en `--collapsed`. Le scrollspy (Intersection Observer) prendra le relais pour gérer les transitions dynamiques.
 
+### Implémentation réalisée — scrollspy « machine à états dérivée »
+
+Le scrollspy vivant (`initIndexNavScrollspy`, `src/js/index-nav.ts`) remplace l'IO double
+envisagé par une **machine à états dérivée du scroll** : à chaque frame on lit la géométrie
+(deco vs dot, sentinelles) et on **recalcule** le stade de chaque étiquette — l'état n'est jamais
+accumulé, donc la remontée rejoue exactement la chorégraphie à l'envers.
+
+**Deux acteurs**
+- `.index-nav__label` (dans `IndexNav.astro`) — l'étiquette du rail, une par section.
+- `.index-nav__deco` (`h2` dans chaque section, `data-label-for`) — miroir décoratif `sticky`
+  qui « voyage » vers le rail. *(anciennement `.section-label-deco`.)*
+
+**5 états de l'étiquette de rail**, franchis dans l'ordre au scroll descendant :
+
+| État (`.index-nav__item--…`) | Taille | Dot | Visibility | Position | Trigger |
+|---|---|---|---|---|---|
+| `collapse-before` | grande | normal | hidden | défaut (flux) | défaut, jamais atteint |
+| `actif` | grande | sapin-60 | hidden | 10px du top | deco atteint son dot miroir (`decoTop ≤ dotTop`) |
+| `start` | grande | sapin-60 | **visible** | 10px du top | deco collé à la ligne du rail (`decoTop ≤ stickyTop`) |
+| `bellow` | petite | sapin-60 | **visible** | 10px du top | sentinelle de **sa** section franchie |
+| `collapse-after` | petite | normal | hidden | 10px du top | sentinelle de la section **suivante** franchie |
+
+La `.index-nav__deco` passe `--hidden` dès que son étiquette atteint `bellow` (la relève est faite).
+`aria-current` posé sur l'item en `start` (R15). *(coworking, sans deco, démarre en `start`.)*
+
+**Deux pièges résolus (repères de coordonnées)**
+- **`stickyTopPx`** = ligne du rail en coords **viewport**, lue sur `.index-nav`
+  (`calc(nav-height + space-10)`), PAS le `top:10px` de la deco (relatif à `main`, décalé de
+  `nav-height` via son `margin-top`). Sinon `isStuck` ne se déclenche jamais.
+- **`--label-to-first`** (offset translateY qui docke l'étiquette N sur la position de l'item 1)
+  **n'est pas invariant** : les hauteurs du rail changent au scroll (grande ↔ petite). Il est donc
+  recalculé à **chaque frame, après** application des classes d'état. Le `transform` du label
+  n'affecte pas la boîte de l'`<a>` mesurée → pas de boucle de rétroaction.
+
+**Empilement** : les étiquettes sont dockées au même endroit ; l'ordre de peinture = ordre DOM,
+donc l'étiquette N+1 recouvre la N (règle « la 2 au-dessus de la 1 »). Aucun `z-index` nécessaire.
+
+**Sentinelles** : `data-sentinel-for="<id>"` sur un élément réel du bas de chaque section (les ids
+doivent matcher `data-section` — corrigé `tarif`→`tarifs`, `partenaire`→`partenaires`).
+
 **Reste à implémenter**
-- Scrollspy : IO double (section active → `--start`/`--bellow` + sentinel `.js-section-deep` → R8).
 - Mobile : appliquer les tailles `--mobile` via media query dans le rail (pas via classe JS).
 - R9 : hover sur la colonne → tous les dots grands + gap augmenté.
+- Interactions `--collapsed` (hover/touch-hold) : conservées pour la démo DS, non branchées sur
+  le rail vivant qui est désormais piloté au scroll.
 
 ---
 

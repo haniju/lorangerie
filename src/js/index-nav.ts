@@ -6,9 +6,31 @@
 
 const HOLD_DELAY = 300
 
-// ─── Scrollspy (R4, R7, R8, R11) ─────────────────────────────────────────────
-// IO 1 : sections → item actif (--start) / inactif (--collapsed)
-// IO 2 : [data-sentinel-for] → item actif profond (--bellow) + label déco --bellow
+// ─── Scrollspy — machine à états dérivée du scroll ───────────────────────────
+// Cinq états par étiquette de rail, franchis dans l'ordre au scroll descendant
+// (et réversibles à la remontée puisque l'état est *dérivé*, pas accumulé) :
+//
+//   collapse-before → actif → start → bellow → collapse-after
+//
+//   • collapse-before : jamais atteint — grande taille, hidden, position défaut
+//   • actif           : deco atteint son miroir (dot) — dot sapin-60, grande, hidden, à 10px
+//   • start           : deco collé à 10px — visible (section active)
+//   • bellow          : sentinelle de la section franchie — petit, visible
+//   • collapse-after  : sentinelle de la section *suivante* franchie — petit, hidden
+//
+// Chaque frame : on lit la géométrie (deco vs dot, sentinelles) et on recalcule
+// le stade de chaque étiquette. La deco est masquée dès que son étiquette
+// atteint `bellow`.
+
+const enum Stage { Before, Actif, Start, Bellow, After }
+
+const STAGE_CLASS = [
+  'index-nav__item--collapse-before',
+  'index-nav__item--actif',
+  'index-nav__item--start',
+  'index-nav__item--bellow',
+  'index-nav__item--collapse-after',
+]
 
 export function initIndexNavScrollspy() {
   const main = document.querySelector<HTMLElement>('main')
@@ -17,107 +39,83 @@ export function initIndexNavScrollspy() {
   const items = Array.from(document.querySelectorAll<HTMLElement>('[data-section]'))
   if (!items.length) return
 
-  const itemMap = new Map(items.map((el) => [el.dataset.section!, el]))
-
-  let activeId: string | null = null
-  const passedSections = new Set<string>()
-
-  const getDecoLabel = (id: string) =>
-    document.querySelector<HTMLElement>(`[data-label-for="${id}"]`)
-
-  function setActive(id: string) {
-    if (id === activeId) return
-
-    if (activeId) {
-      const prev = itemMap.get(activeId)
-      if (prev) {
-        prev.classList.remove('index-nav__item--start', 'index-nav__item--bellow')
-        prev.classList.add('index-nav__item--collapsed')
-        prev.removeAttribute('aria-current')
-      }
-    }
-
-    activeId = id
-    const curr = itemMap.get(id)
-    if (curr) {
-      curr.classList.remove('index-nav__item--collapsed', 'index-nav__item--bellow')
-      curr.classList.add('index-nav__item--start')
-      curr.setAttribute('aria-current', 'true')
-    }
+  // ── Calcul de --label-to-first pour chaque item ──────────────────
+  // Offset translateY qui ramène le label de l'item N à la position Y de l'item 1.
+  // Les hauteurs du rail changent au fil du scroll (grande ↔ petite selon l'état),
+  // donc cet offset n'est PAS invariant : on le recalcule à chaque frame, après avoir
+  // appliqué les classes d'état (le transform du label n'affecte pas la boîte de l'item mesurée).
+  function calcLabelOffsets() {
+    const firstTop = items[0].getBoundingClientRect().top
+    items.forEach((item) => {
+      const offset = firstTop - item.getBoundingClientRect().top
+      item.style.setProperty('--label-to-first', `${offset}px`)
+    })
   }
 
-  function recompute() {
-    let newActive: string | null = null
-    for (const item of items) {
-      const id = item.dataset.section!
-      if (passedSections.has(id)) newActive = id
-    }
-    if (newActive) setActive(newActive)
+  // ── Entrées de section (ordre DOM = ordre du rail) ───────────────
+  const sectionEntries = items.map((item) => ({
+    id: item.dataset.section!,
+    item,
+    dot: item.querySelector<HTMLElement>('.index-nav__dot'),
+    decoLabel: document.querySelector<HTMLElement>(`[data-label-for="${item.dataset.section}"]`),
+    sentinel: document.querySelector<HTMLElement>(`[data-sentinel-for="${item.dataset.section}"]`),
+  }))
+
+  // Ligne du rail en coordonnées viewport (= où les labels dockés s'alignent et
+  // où la deco vient se coller). getBoundingClientRect renvoie du viewport-relatif,
+  // donc on lit le `top` résolu de .index-nav (calc(nav-height + space-10)) — et NON
+  // le `top:10px` de la deco, qui est relatif à `main` (décalé de nav-height).
+  const stickyTopPx = (() => {
+    const nav = document.querySelector<HTMLElement>('.index-nav')
+    return nav ? parseFloat(getComputedStyle(nav).top) : 10
+  })()
+
+  // Une sentinelle est « franchie » quand elle passe au-dessus de la ligne du rail.
+  function passed(entry: (typeof sectionEntries)[number]) {
+    return entry.sentinel
+      ? entry.sentinel.getBoundingClientRect().top <= stickyTopPx
+      : false
   }
 
-  // Scroll listener — section active = dernière dont le haut a franchi le haut de <main>
-  // (IO threshold:0 ne se déclenche que quand toute la section est sortie, trop tard)
-  const sectionEls = items
-    .map((item) => document.getElementById(item.dataset.section!))
-    .filter(Boolean) as HTMLElement[]
+  function stageOf(i: number): Stage {
+    const entry = sectionEntries[i]
+    const next = sectionEntries[i + 1]
 
-  function updateActive() {
-    const mainTop = main.getBoundingClientRect().top
-    let newId = sectionEls[0].id
-    for (const el of sectionEls) {
-      if (el.getBoundingClientRect().top <= mainTop + 1) newId = el.id
-    }
+    if (next && passed(next)) return Stage.After
+    if (passed(entry)) return Stage.Bellow
 
-    // Retour arrière : si la section qui redevient active était en --bellow, reset
-    if (newId !== activeId) {
-      const incoming = itemMap.get(newId)
-      if (incoming?.classList.contains('index-nav__item--bellow')) {
-        incoming.classList.remove('index-nav__item--bellow')
-        incoming.classList.add('index-nav__item--start')
-        getDecoLabel(newId)?.classList.remove('section-label-deco--bellow')
-      }
-      setActive(newId)
-    }
+    // Pas encore franchi : coworking (sans deco) démarre actif → start.
+    if (!entry.decoLabel || !entry.dot) return Stage.Start
+
+    const decoTop = entry.decoLabel.getBoundingClientRect().top
+    const dotTop  = entry.dot.getBoundingClientRect().top
+    if (decoTop <= stickyTopPx + 1.5) return Stage.Start   // collé à la ligne du rail
+    if (decoTop <= dotTop + 1)        return Stage.Actif   // a atteint son miroir
+    return Stage.Before
   }
 
-  main.addEventListener('scroll', updateActive, { passive: true })
+  function updateScrollspy() {
+    sectionEntries.forEach((entry, i) => {
+      const stage = stageOf(i)
+      const { item, decoLabel } = entry
 
-  // IO 2 — sentinelles : --bellow sur item actif + label déco
-  const sentinels = Array.from(
-    document.querySelectorAll<HTMLElement>('[data-sentinel-for]')
-  )
-
-  const sentinelIO = new IntersectionObserver(
-    (entries) => {
-      for (const entry of entries) {
-        const id = (entry.target as HTMLElement).dataset.sentinelFor!
-        const item = itemMap.get(id)
-        const decoLabel = getDecoLabel(id)
-        if (!item) continue
-
-        const isActive =
-          item.classList.contains('index-nav__item--start') ||
-          item.classList.contains('index-nav__item--bellow')
-        if (!isActive) continue
-
-        if (!entry.isIntersecting && entry.boundingClientRect.top < 0) {
-          item.classList.remove('index-nav__item--start')
-          item.classList.add('index-nav__item--bellow')
-          decoLabel?.classList.add('section-label-deco--bellow')
-        } else if (entry.isIntersecting) {
-          item.classList.remove('index-nav__item--bellow')
-          item.classList.add('index-nav__item--start')
-          decoLabel?.classList.remove('section-label-deco--bellow')
-        }
+      if (!item.classList.contains(STAGE_CLASS[stage])) {
+        item.classList.remove(...STAGE_CLASS)
+        item.classList.add(STAGE_CLASS[stage])
       }
-    },
-    { root: main, rootMargin: '-1px 0px 0px 0px', threshold: 0 }
-  )
+      item.toggleAttribute('aria-current', stage === Stage.Start)
 
-  sentinels.forEach((el) => sentinelIO.observe(el))
+      // Deco masqué dès que l'étiquette passe en bellow (la relève est faite).
+      decoLabel?.classList.toggle('index-nav__deco--hidden', stage >= Stage.Bellow)
+    })
 
-  // Init : calcul immédiat (gère aussi un rechargement en milieu de page)
-  updateActive()
+    // Après application des états (donc des hauteurs courantes) : recale les offsets.
+    calcLabelOffsets()
+  }
+
+  main.addEventListener('scroll', updateScrollspy, { passive: true })
+  new ResizeObserver(updateScrollspy).observe(document.documentElement)
+  updateScrollspy()
 }
 
 export function initIndexNavTouch(root: ParentNode = document) {
