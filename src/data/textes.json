@@ -317,6 +317,13 @@
                 "$type": "string",
                 "$value": "Accès aux locaux 7j/7 et 24h/24 - Thé et café à volonté | Contribution active* au conseil des usagers de L’Orangerie (2h/mois)"
               },
+              "desc_titre": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "string",
+                "$value": ""
+              },
               "contribution": {
                 "$scopes": [
                   "ALL_SCOPES"
@@ -346,6 +353,13 @@
                 ],
                 "$type": "string",
                 "$value": "Accès aux locaux 7j/7 et 24h/24 - Thé et café à volonté. | Contribution active* au conseil des usagers de L’Orangerie (2h/mois). Participation bénévole aux activités de PULPE (2h/mois)"
+              },
+              "desc_titre": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "string",
+                "$value": ""
               },
               "contribution": {
                 "$scopes": [

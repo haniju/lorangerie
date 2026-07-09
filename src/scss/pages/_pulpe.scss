@@ -33,6 +33,10 @@ $pulpe-switch: 56rem;
   & + & { margin-top: var(--space-30); }
 }
 
+.pulpe_presentation {
+  gap: var(--space-20);
+}
+
 .pulpe__texte {
   font-family: var(--font-body);
   font-size: 1rem;
@@ -102,15 +106,11 @@ $pulpe-switch: 56rem;
 // DESKTOP (≥ 56rem)
 // ════════════════════════════════════════════════════════════════════════════════
 @media (min-width: $pulpe-switch) {
-  .u-container.pulpe {
-    margin-inline: unset;
-  }
-
   .pulpe__grid {
     flex-direction: row;
-    align-items: stretch; // col-media suit la hauteur de col-textes
+    align-items: flex-end; // col-media est plus haut que col-textes
     padding-left: var(--grid-col-desktop-1);
-    gap: calc(var(--space-20) * -1);
+    gap: var(--space-20);
   }
 
   // col-textes
@@ -120,12 +120,17 @@ $pulpe-switch: 56rem;
     flex-shrink: 0;
   }
 
+  .pulpe__group-texte {
+    margin-bottom: var(--space-20);
+  }
+
   // col-media : wrapper restauré, position relative pour les enfants absolus
   .pulpe__col-media {
     display: block;
     position: relative;
     order: 2;
-    width: var(--grid-col-desktop-2);
+    width: calc(var(--grid-col-desktop-3) - var(--space-20));
+    height: 70vh;
     flex-shrink: 0;
     overflow: visible; // la proposition déborde à gauche et en haut
   }

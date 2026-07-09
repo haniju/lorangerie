@@ -64,6 +64,16 @@
   font-variation-settings: 'opsz' 14;
 }
 
+.forfait__desc-titre {
+  margin: 0;
+  font-family: var(--font-body);
+  font-weight: 700; // Bold
+  font-size: 0.9375rem; // 15px
+  line-height: 1.47; // 22px — font/line-height/compact
+  color: var(--text-cold-dark);
+  font-variation-settings: 'opsz' 14;
+}
+
 .forfait__details {
   margin: 0;
   font-family: var(--font-body);
@@ -85,6 +95,7 @@
   .forfait__titre,
   .forfait__montant,
   .forfait__desc,
+  .forfait__desc-titre,
   .forfait__details {
     color: var(--text-warm-dark);
   }

@@ -43,7 +43,13 @@ const sections = [
   // remonte jusqu'au nav malgré son pointer-events:none). Le CSS repositionne
   // alors l'item --start à sa place d'origine.
   nav?.addEventListener('mouseover', (e) => {
-    if ((e.target as HTMLElement).closest?.('.index-nav__dot')) nav.classList.add('is-dot-hover')
+    if ((e.target as HTMLElement).closest?.('.index-nav__dot')) {
+      nav.classList.add('is-dot-hover')
+      const start = nav.querySelector<HTMLElement>('.index-nav__item--start')
+      console.log('[index-nav] dot hover → is-dot-hover ajouté.',
+        'start =', start?.dataset.section,
+        '--label-to-first =', start ? getComputedStyle(start).getPropertyValue('--label-to-first') : 'n/a')
+    }
   })
   nav?.addEventListener('mouseout', (e) => {
     if (!(e.target as HTMLElement).closest?.('.index-nav__dot')) return
