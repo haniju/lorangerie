@@ -34,7 +34,7 @@ const principes = [
     <!-- liste des principes (width_3) -->
     <div class="text-box-liste fonctionnement__liste">
       {principes.map((text) => (
-        <div class="text-box-liste__item">
+        <div class="text-box-liste__item" data-sentinel-for="fonctionnement">
           <img class="text-box-liste__arrow" src={arrowUrl} alt="" aria-hidden="true" />
           <p class="text-box-liste__text">{text}</p>
         </div>
@@ -42,7 +42,7 @@ const principes = [
     </div>
 
     <!-- proposition 2 — accroche entretien partagé (width_2, coin big bas-droite) -->
-    <div class="bento__row bento__row--milieu" data-sentinel-for="fonctionnement"></div>
+    <div class="bento__row bento__row--milieu"></div>
     <div class="proposition proposition--gradient fonctionnement__prop fonctionnement__prop--2">
       <p class="proposition__text">{prop2}</p>
     </div>

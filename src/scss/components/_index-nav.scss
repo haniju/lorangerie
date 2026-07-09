@@ -54,18 +54,22 @@ $index-switch: 56rem;
 // Quatre axes : taille · couleur du dot · visibility · position (cf. index-nav.ts).
 // ════════════════════════════════════════════════════════════════════
 
-// ── Axe TAILLE — grande (before / actif / start), sinon petite (défaut label) ──
+// ── Axe TAILLE (label) — grand en before / actif / start, petit ailleurs (défaut) ──
 .index-nav__item--start,
 .index-nav__item--actif,
 .index-nav__item--collapse-before {
   gap: var(--space-30);
-  --dot-size: 1.25rem; // 20px
 
   .index-nav__label {
     padding: var(--space-7) var(--space-30) var(--space-10);
     border-radius: var(--corner-big); // 80px
     font-size: 2.25rem; // 36px — title/h1/section_focus_desktop
   }
+}
+
+// ── Axe TAILLE (dot) — grand uniquement en --start, petit dans tous les autres états ──
+.index-nav__item--start {
+  --dot-size: 1.25rem; // 20px
 }
 
 // ── Axe COULEUR DU DOT — sapin-60 (actif / start / bellow) ──
@@ -248,7 +252,7 @@ $index-switch: 56rem;
     flex-direction: column;
     gap: var(--space-20);
 
-    @media (min-width: $index-switch) {gap: var(--space-30);}
+    @media (min-width: $index-switch) {gap: var(--space-10);}
   }
 
   // Items : pleine largeur, min-height pour que hover fonctionne même quand

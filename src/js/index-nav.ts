@@ -77,11 +77,20 @@ export function initIndexNavScrollspy() {
       : false
   }
 
+  // La deco d'une section est « collée » = son item atteint --start.
+  function isStart(entry: (typeof sectionEntries)[number]) {
+    return entry.decoLabel
+      ? entry.decoLabel.getBoundingClientRect().top <= stickyTopPx + 1.5
+      : false
+  }
+
   function stageOf(i: number): Stage {
     const entry = sectionEntries[i]
     const next = sectionEntries[i + 1]
 
-    if (next && passed(next)) return Stage.After
+    // collapse-after : dès que la section suivante passe en --start.
+    if (next && isStart(next)) return Stage.After
+    // bellow : sentinelle de la section franchie.
     if (passed(entry)) return Stage.Bellow
 
     // Pas encore franchi : coworking (sans deco) démarre actif → start.
@@ -89,8 +98,8 @@ export function initIndexNavScrollspy() {
 
     const decoTop = entry.decoLabel.getBoundingClientRect().top
     const dotTop  = entry.dot.getBoundingClientRect().top
-    if (decoTop <= stickyTopPx + 1.5) return Stage.Start   // collé à la ligne du rail
-    if (decoTop <= dotTop + 1)        return Stage.Actif   // a atteint son miroir
+    if (isStart(entry))        return Stage.Start   // collé à la ligne du rail
+    if (decoTop <= dotTop + 1) return Stage.Actif   // a atteint son miroir
     return Stage.Before
   }
 

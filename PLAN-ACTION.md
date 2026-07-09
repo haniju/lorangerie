@@ -164,13 +164,15 @@ accumulé, donc la remontée rejoue exactement la chorégraphie à l'envers.
 
 **5 états de l'étiquette de rail**, franchis dans l'ordre au scroll descendant :
 
-| État (`.index-nav__item--…`) | Taille | Dot | Visibility | Position | Trigger |
+Taille = celle du **label** (grand/petit) ; le **dot** est grand uniquement en `start`, petit partout ailleurs.
+
+| État (`.index-nav__item--…`) | Label | Dot | Visibility | Position | Trigger |
 |---|---|---|---|---|---|
-| `collapse-before` | grande | normal | hidden | défaut (flux) | défaut, jamais atteint |
-| `actif` | grande | sapin-60 | hidden | 10px du top | deco atteint son dot miroir (`decoTop ≤ dotTop`) |
-| `start` | grande | sapin-60 | **visible** | 10px du top | deco collé à la ligne du rail (`decoTop ≤ stickyTop`) |
-| `bellow` | petite | sapin-60 | **visible** | 10px du top | sentinelle de **sa** section franchie |
-| `collapse-after` | petite | normal | hidden | 10px du top | sentinelle de la section **suivante** franchie |
+| `collapse-before` | grand | petit | hidden | défaut (flux) | défaut, jamais atteint |
+| `actif` | grand | petit · sapin-60 | hidden | 10px du top | deco atteint son dot miroir (`decoTop ≤ dotTop`) |
+| `start` | grand | **grand** · sapin-60 | **visible** | 10px du top | deco collé à la ligne du rail (`decoTop ≤ stickyTop`) |
+| `bellow` | petit | petit · sapin-60 | **visible** | 10px du top | sentinelle de **sa** section franchie |
+| `collapse-after` | petit | petit · normal | hidden | 10px du top | l'item de la section **suivante** passe en `start` (deco suivante collée) |
 
 La `.index-nav__deco` passe `--hidden` dès que son étiquette atteint `bellow` (la relève est faite).
 `aria-current` posé sur l'item en `start` (R15). *(coworking, sans deco, démarre en `start`.)*
