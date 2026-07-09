@@ -10,14 +10,6 @@ $tarif-switch: 56rem;
   gap: var(--space-30);
 }
 
-.tarifs__intro {
-  margin: 0;
-  font-family: var(--font-body);
-  font-weight: 400;
-  font-size: var(--step-0);
-  color: var(--text-cold-dark);
-}
-
 // ─── tableau principal ────────────────────────────────────────────
 .tarifs__tableau {
   display: flex;
@@ -90,8 +82,10 @@ $tarif-switch: 56rem;
 
 // ─── bloc CTA fond feuilles ───────────────────────────────────────
 .tarifs__cta-bloc {
-  // Casse le padding du u-container pour aller bord à bord
-  margin-inline: calc(-1 * var(--pad-grid));
+  // Casse le u-container (plafonné à 1550px) pour aller à 100% du viewport
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
   padding-block: var(--space-80);
   background-size: cover;
   background-position: center;

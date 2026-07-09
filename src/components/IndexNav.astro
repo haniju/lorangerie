@@ -39,6 +39,18 @@ const sections = [
   const nav = document.querySelector<HTMLElement>('.index-nav')
   const coworking = document.getElementById('coworking')
 
+  // Survol de n'importe quel dot → classe .is-dot-hover (délégation ; l'event
+  // remonte jusqu'au nav malgré son pointer-events:none). Le CSS repositionne
+  // alors l'item --start à sa place d'origine.
+  nav?.addEventListener('mouseover', (e) => {
+    if ((e.target as HTMLElement).closest?.('.index-nav__dot')) nav.classList.add('is-dot-hover')
+  })
+  nav?.addEventListener('mouseout', (e) => {
+    if (!(e.target as HTMLElement).closest?.('.index-nav__dot')) return
+    const related = e.relatedTarget as HTMLElement | null
+    if (!related?.closest?.('.index-nav__dot')) nav.classList.remove('is-dot-hover')
+  })
+
   function updateNavPosition() {
     if (!nav || !coworking) return
     const coworkingTop = coworking.getBoundingClientRect().top

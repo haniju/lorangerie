@@ -178,6 +178,7 @@ $index-switch: 56rem;
 
 .index-nav__deco {
   height: 55px;
+  width: max-content;
   display: inline-flex;
   align-items: center;
   font-family: var(--font-heading);
@@ -197,7 +198,7 @@ $index-switch: 56rem;
   top: var(--space-10);
   margin-left: 0px;
   // Hors du flux vertical — ne pousse pas le contenu de la section
-  margin-bottom: -55px;
+  //margin-bottom: -55px;
 
   &.index-nav__deco--hidden {
     visibility: hidden;
@@ -232,12 +233,14 @@ $index-switch: 56rem;
 // block = toute la page.
 // Dot centré dans la marge gauche via left absolu depuis le bord page.
 // Label en flux aligné avec le contenu via padding-left: --pad-grid.
+// left = même marge que les sections (.u-container) : au-delà de --content-cap
+// le contenu se centre, donc on ajoute le décalage de centrage au bord viewport.
 // ════════════════════════════════════════════════════════════════════
 
 .index-nav {
   position: fixed;
   top: calc(var(--nav-height) + var(--space-10));
-  left: 0;
+  left: max(0px, calc((100vw - var(--content-cap)) / 2));
   z-index: 10;
   pointer-events: none;
   // translateY piloté par JS en suivant le top de #coworking.
@@ -251,14 +254,18 @@ $index-switch: 56rem;
     display: flex;
     flex-direction: column;
     gap: var(--space-20);
+    width: max-content; // se réduit au contenu (pas d'étalement pleine largeur)
 
-    @media (min-width: $index-switch) {gap: var(--space-10);}
+    @media (min-width: $index-switch) {gap: 0px;}
+
+    > li { width: max-content; }
   }
 
-  // Items : pleine largeur, min-height pour que hover fonctionne même quand
-  // dot + label sont tous deux en position absolute (sinon height = 0).
+  // Items : largeur = contenu (dot + label), min-height pour que hover fonctionne
+  // même quand dot + label sont tous deux en position absolute (sinon height = 0).
   .index-nav__item {
     display: block;
+    width: max-content;
     position: relative;
     pointer-events: auto;
     text-decoration: none;
@@ -294,6 +301,12 @@ $index-switch: 56rem;
   .index-nav__item--bellow .index-nav__label,
   .index-nav__item--collapse-after .index-nav__label {
     transform: translateY(var(--label-to-first, 0px));
+  }
+
+  // Survol de n'importe quel dot (classe posée par JS) → l'item de la section
+  // courante (--start) revient à sa position initiale (aligné sur son propre dot).
+  &.is-dot-hover .index-nav__item--start .index-nav__label {
+    transform: none;
   }
 
   // ── Axe VISIBILITY — visible seulement en start / bellow.

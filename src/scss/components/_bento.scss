@@ -6,11 +6,12 @@
 //     horizontal (scroll-snap natif, pas d'Embla) — .bento-mobile
 
 $bento-switch: 56rem;
+$bento-gap: var(--space-10);
 
 .bento {
   display: flex;
   flex-direction: column;
-  gap: var(--space-20);
+  gap: $bento-gap;
 }
 
 // ── bascule desktop ⇄ mobile ──
@@ -26,7 +27,7 @@ $bento-switch: 56rem;
 
 .bento__row {
   display: flex;
-  gap: var(--space-20);
+  gap: $bento-gap;
   align-items: stretch;
 }
 
@@ -48,23 +49,25 @@ $bento-switch: 56rem;
 .bento__plan {
   display: flex;
   flex-direction: column;
-  gap: var(--space-20);
+  gap: $bento-gap;
 }
 
 .bento__plan-row {
   display: flex;
-  gap: var(--space-20);
+  gap: $bento-gap;
   align-items: center;
 }
 
 .bento__plan-img {
-  flex: none;
-  width: clamp(12rem, 28vw, 24rem);
+  flex: 4 1 0; // 4/7 de la largeur du plan-row
+  min-width: 0;
   height: auto;
 }
 
 .bento__text {
-  flex: 1;
+  flex: 3 1 0; // 3/7 de la largeur du plan-row
+  min-width: 0;
+  padding: var(--space-30);
   font-family: var(--font-body);
   font-size: 0.9375rem; // 15px — font/text/regular
   line-height: 1.47;    // font/line-height/compact
@@ -80,7 +83,7 @@ $bento-switch: 56rem;
 .bento__col {
   display: flex;
   flex-direction: column;
-  gap: var(--space-20);
+  gap: $bento-gap;
 }
 
 // bloc coordinatrice : dégradé pêche + forme arrondie + texte
@@ -89,7 +92,7 @@ $bento-switch: 56rem;
   display: flex;
   gap: var(--space-30);
   align-items: center;
-  padding: var(--space-50) var(--space-30);
+  padding: var(--space-20) var(--space-20);
   border-radius: var(--corner-small);
   background: linear-gradient(
     to bottom,
@@ -101,10 +104,10 @@ $bento-switch: 56rem;
 
 .bento__coordinatrice-shape {
   flex: none;
-  width: 5.75rem;  // ~93px
-  height: 6.5rem;  // ~104px
-  background: var(--sable-09);
-  border-radius: 4.375rem 4.375rem 0 0; // arrondi haut (forme Figma)
+  width: var(--space-152);  // ~93px
+  height: var(--space-152);  // ~104px
+  object-fit: cover;
+  border-radius: var(--corner-big) var(--corner-big) 0 0; // arrondi haut (forme Figma) — sert de masque à la photo
 }
 
 .bento__coordinatrice-text {
@@ -125,7 +128,7 @@ $bento-switch: 56rem;
 .bento-mobile {
   // display piloté par le bloc bascule en haut (ne pas le redéfinir ici)
   flex-direction: column;
-  gap: var(--space-10);
+  gap: $bento-gap;
 }
 
 // hauteur commune des rangées photos (Figma : 300px @ 440) — plafonnée
@@ -134,7 +137,7 @@ $bento-mobile-row-h: clamp(15rem, 62vw, 20rem);
 // rangée à défilement horizontal : scroll-snap doux, scrollbar masquée
 .bento-mobile__scroller {
   display: flex;
-  gap: var(--space-20);
+  gap: $bento-gap;
   overflow-x: auto;
   scroll-snap-type: x proximity;
   -webkit-overflow-scrolling: touch;
@@ -152,7 +155,7 @@ $bento-mobile-row-h: clamp(15rem, 62vw, 20rem);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-10);
+  gap: $bento-gap;
 }
 
 .bento-mobile__plan-img {

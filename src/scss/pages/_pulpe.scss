@@ -5,11 +5,8 @@
 
 $pulpe-switch: 56rem;
 
-// ── intro ────────────────────────────────────────────────────────────────────
+// ── intro (composant/proposition, cf. _proposition.scss) ─────────────────────
 .pulpe__intro {
-  font-family: var(--font-body);
-  font-size: 1rem;
-  color: var(--text-warm-dark);
   margin-bottom: var(--space-40);
 }
 

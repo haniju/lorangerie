@@ -7,7 +7,7 @@
   flex-direction: column;
   gap: var(--space-20);
   // pt/pl 50, pr/pb 30 (spacing/padding)
-  padding: var(--space-50) var(--space-30) var(--space-30) var(--space-50);
+  padding: var(--space-50) var(--space-30) var(--space-50) var(--space-50);
   background: var(--sable-14);
   // gros arrondi haut-gauche (100px, one-off hors échelle corners), reste small (8px)
   border-radius: 6.25rem var(--corner-small) var(--corner-small) var(--corner-small);

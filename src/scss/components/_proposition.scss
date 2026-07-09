@@ -84,3 +84,19 @@
 .proposition--demi-lune--orange {
   --picto-color: var(--peche-100);
 }
+
+// ─── section-intro (bloc de texte d'intro de section, sans picto) ──
+// Largeur figée (col-mobile-5 / col-desktop-3), flush gauche (pas d'indent
+// supplémentaire au-delà du gutter de .u-container), pas de carte (padding=0).
+// Combiner avec .proposition--none pour le fond transparent.
+$proposition-switch: 56rem;
+
+.proposition--section-intro {
+  width: var(--grid-col-mobile-5);
+  text-align: left;
+  justify-content: flex-start;
+
+  @media (min-width: $proposition-switch) {
+    width: var(--grid-col-desktop-3);
+  }
+}

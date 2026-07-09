@@ -11,6 +11,7 @@ import kiwi1 from '../assets/images/kiwi_1.jpg'
 import reunion from '../assets/images/reunion.jpg'
 import kiwi2 from '../assets/images/kiwi_2.jpg'
 import photocopies from '../assets/images/photocopies.jpg'
+import ludivine from '../assets/images/ludivine.jpg'
 import planUrl from '../assets/svg/plan.svg?url'
 
 const intro =
@@ -29,7 +30,9 @@ const widths = [400, 700, 1000]
 
 <section class="coworking u-container u-section" id="coworking">
   <!--h2 class="index-nav__deco" data-label-for="coworking">Notre espace</h2-->
-  <p class="coworking__intro">{intro}</p>
+  <div class="proposition proposition--none proposition--section-intro">
+    <p class="proposition__text">{intro}</p>
+  </div>
 
   <!-- ── DESKTOP : grille bento (≥ 56rem) ── -->
   <div class="bento bento--desktop">
@@ -59,7 +62,7 @@ const widths = [400, 700, 1000]
       <div class="bento__col bento__deux-tiers">
         <Image class="bento__photo" src={reunion} alt="La salle de réunion" widths={widths} sizes={sizes} />
         <div class="bento__coordinatrice">
-          <span class="bento__coordinatrice-shape" aria-hidden="true"></span>
+          <Image class="bento__coordinatrice-shape" src={ludivine} alt="Ludivine, coordinatrice de l’Orangerie" widths={[200, 300]} sizes="6rem" />
           <p class="bento__coordinatrice-text">{coordinatrice}</p>
         </div>
       </div>
@@ -99,7 +102,7 @@ const widths = [400, 700, 1000]
 
     <!-- carte coordinatrice (pleine largeur, comme desktop) -->
     <div class="bento__coordinatrice">
-      <span class="bento__coordinatrice-shape" aria-hidden="true"></span>
+      <Image class="bento__coordinatrice-shape" src={ludivine} alt="Ludivine, coordinatrice de l’Orangerie" widths={[200, 300]} sizes="6rem" />
       <p class="bento__coordinatrice-text">{coordinatrice}</p>
     </div>
   </div>

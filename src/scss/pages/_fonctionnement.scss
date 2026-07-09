@@ -6,10 +6,12 @@
 // ou --space-20 (mobile).
 
 $fonct-switch: 56rem;
-$overlap: var(--space-50); // recouvrement entre les 3 blocs
+$overlap: var(--space-20); // recouvrement entre les 3 blocs
 
 .fonctionnement {
   gap: var(--space-152);
+  display: flex;
+  flex-direction: column;
 }
 .fonctionnement__grid {
   display: flex;
@@ -81,7 +83,7 @@ $overlap: var(--space-50); // recouvrement entre les 3 blocs
     margin-inline : unset;
   }
   .fonctionnement__grid {
-    padding-left: var(--grid-col-desktop-1);
+    padding-left: var(--grid-col-desktop-2);
     max-width: 58rem;
     margin-inline: 0px;
   }
