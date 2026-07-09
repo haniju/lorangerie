@@ -108,16 +108,17 @@ $tarif-switch: 56rem;
   width: 100%;
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: var(--space-30);
 
   @media (min-width: $tarif-switch) {
-    min-height: 30rem; // absorbe les rotations et l'overlap
+    min-height: 25rem; // absorbe les rotations et l'overlap
   }
 }
 
 // Wrapper de rotation pour chaque carte
 .tarifs__prop {
-  width: var(--grid-col-mobile-4);
+  width: var(--grid-col-mobile-3);
 
   @media (min-width: $tarif-switch) {
     position: absolute;
@@ -128,20 +129,18 @@ $tarif-switch: 56rem;
 .tarifs__prop--1 {
   @media (min-width: $tarif-switch) {
     top: var(--space-50);
-    left: 0;
-    transform: rotate(-10.64deg);
+    transform: rotate(-10.64deg) translate(calc(var(--grid-col-desktop-1)*-.7));
   }
 }
 
 .tarifs__prop--2 {
   @media (min-width: $tarif-switch) {
     top: var(--space-208);
-    left: var(--grid-col-desktop-1);
-    transform: rotate(8.9deg);
+    transform: rotate(8.9deg) translate(calc(var(--grid-col-desktop-1)*.7));
   }
 }
 
 .tarifs__cta-btn {
   // en mobile : centré ; en desktop : aligné sous les cartes (hérité du flex)
-  align-self: flex-start;
+  align-self: center;
 }

@@ -55,7 +55,7 @@ $hero-switch: 56rem;
 }
 
 .hero__subtitle {
-  max-width: var(--grid-col-mobile-4);
+  width: var(--grid-col-mobile-4);
   font-family: var(--font-body);
   font-size: 1.3125rem; // 21px — text/d_highlight
   font-weight: 500;

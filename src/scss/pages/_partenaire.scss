@@ -17,6 +17,16 @@ $partenaire-switch: 56rem;
   gap: var(--space-40);
 }
 
+.partenaire__col-createur {
+  align-items: center;
+
+  p {align-self: flex-start;}
+}
+
+.partenaire__col-soutien  {
+  flex-wrap: wrap;
+}
+
 .partenaire__col-createur,
 .partenaire__col-soutien {
   display: flex;
@@ -40,7 +50,7 @@ $partenaire-switch: 56rem;
 .partenaire__logos {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
   gap: var(--space-20);
   width: var(--grid-col-mobile-5);
@@ -70,7 +80,6 @@ $partenaire-switch: 56rem;
 
   .partenaire__grid {
     flex-direction: row;
-    flex-wrap: wrap;
     padding-left: var(--grid-col-desktop-1);
     gap: var(--space-40);
   }
@@ -81,8 +90,9 @@ $partenaire-switch: 56rem;
   }
 
   .partenaire__col-soutien {
-    width: auto;
+    width: calc(var(--grid-col-desktop-5)-var(--space-20));
     flex: 1;
+    flex-wrap: nowrap;
   }
 
   .partenaire__logos {
