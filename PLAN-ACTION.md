@@ -154,45 +154,71 @@ Premier item en `--start` (hardcodé dans `IndexNav.astro`). Les 4 autres en `--
 
 Le scrollspy vivant (`initIndexNavScrollspy`, `src/js/index-nav.ts`) remplace l'IO double
 envisagé par une **machine à états dérivée du scroll** : à chaque frame on lit la géométrie
-(deco vs dot, sentinelles) et on **recalcule** le stade de chaque étiquette — l'état n'est jamais
-accumulé, donc la remontée rejoue exactement la chorégraphie à l'envers.
+(deco vs dot, deco vs section) et on **recalcule** le stade de chaque étiquette — l'état n'est
+jamais accumulé, donc la remontée rejoue exactement la chorégraphie à l'envers.
 
 **Deux acteurs**
 - `.index-nav__label` (dans `IndexNav.astro`) — l'étiquette du rail, une par section.
 - `.index-nav__deco` (`h2` dans chaque section, `data-label-for`) — miroir décoratif `sticky`
   qui « voyage » vers le rail. *(anciennement `.section-label-deco`.)*
 
-**5 états de l'étiquette de rail**, franchis dans l'ordre au scroll descendant :
+> **TEST en cours (2026-07)** — le modèle est passé de 5 à **4 états** : `--actif` a été retiré,
+> `--bellow` ne dépend plus des sentinelles, et `--collapse-after` utilise un nouveau repère
+> (« dernier dot de la liste »). Détail des triggers ci-dessous ; à valider avant de considérer
+> ce modèle comme définitif (cf. points ouverts en fin de section).
 
-Taille = celle du **label** (grand/petit). Le **dot** est désormais de taille **uniforme (petit)**
-sur tous les états ; seule sa **couleur** varie (`sapin-60` en actif/start/bellow, normal sinon).
+**4 états de l'étiquette de rail**, franchis dans l'ordre au scroll descendant :
+`collapse-before → start → bellow → collapse-after`
 
-| État (`.index-nav__item--…`) | Label | Dot | Visibility | Position | Trigger |
-|---|---|---|---|---|---|
-| `collapse-before` | **petit** (= bellow) | petit | hidden | défaut (flux) | défaut, jamais atteint |
-| `actif` | grand | petit · sapin-60 | hidden | 10px du top | deco atteint son dot miroir (`decoTop ≤ dotTop`) |
-| `start` | grand | petit · sapin-60 | **visible** | 10px du top | deco collé à la ligne du rail (`decoTop ≤ stickyTop`) |
-| `bellow` | petit | petit · sapin-60 | **visible** | 10px du top | sentinelle de **sa** section franchie |
-| `collapse-after` | petit | petit · normal | hidden | 10px du top | l'item de la section **suivante** passe en `actif` (deco suivante croise **son propre** dot) |
+Taille = celle du **label** (grand/petit). Le **dot** est de taille **uniforme (petit)** sur tous
+les états ; seule sa **couleur** varie (`sapin-60` en start/bellow, normal sinon).
 
-> Trigger `collapse-after` avancé (2026-07) : auparavant câblé sur `isStart(next)` (deco suivante
-> **collée** à la ligne du rail). Basculé sur `isActif(next)` (deco suivante **croise son propre
-> dot miroir**, `decoTop ≤ dotTop`) — événement plus précoce dans la timeline. Extrait en fonction
-> dédiée `isActif()` (miroir de `isStart()`) dans `index-nav.ts`. `collapse-after` étant prioritaire
-> dans `stageOf`, ce trigger peut désormais court-circuiter `bellow` pour une section courte (l'item
-> saute avant que sa propre sentinelle ne se déclenche) — comportement voulu, pas un bug.
+| État (`.index-nav__item--…`) | Label | Dot | Visibility | Trigger |
+|---|---|---|---|---|
+| `collapse-before` | grand | petit | hidden | défaut, jamais atteint |
+| `start` | grand | petit · sapin-60 | **visible** | deco croise son **propre** dot miroir (`isStart` : `decoTop ≤ dotTop`) |
+| `bellow` | petit | petit · sapin-60 | **visible** | la **`<section>`** elle-même touche le haut de l'écran (`isSectionAtTop` : `sectionTop ≤ 0`) |
+| `collapse-after` | petit | petit · normal | hidden | la deco de la section **suivante** croise le dot du **dernier item de la liste** (`crossedLastDot`) |
+
+**Position découplée du reveal** — c'est le point le plus subtil du modèle actuel. `isStart`
+(reveal, `decoTop ≤ dotTop`) déclenche bien avant que la deco n'atteigne son vrai point de collage.
+Si l'étiquette dockait (translate vers le haut) au même instant que le reveal, elle apparaîtrait
+directement calée en haut — sans transition, un comportement jugé cassé (c'était le rôle qu'assurait
+l'ex-`--actif`, en pré-positionnant *invisible* avant que `--start` ne révèle). Le modèle actuel
+sépare donc en deux fonctions distinctes :
+- `isStart(entry)` → reveal (classe `--start`, visibilité).
+- `isDocked(entry)` → `decoTop ≤ stickyTopPx` (l'ancien seuil, repris tel quel) → autorise le
+  docking (translate réel vers la position 1).
+
+Tant qu'un item est `--start` mais **pas encore docké**, `updateScrollspy` force
+`--label-to-first: 0px` sur cet item (après le calcul normal des offsets) → le label reste à
+**sa position naturelle** dans le flux du rail. Dès que `isDocked` devient vrai (au fil du
+scroll), le vrai offset reprend la main et le label migre vers le haut. *(Sans deco — coworking —
+`isDocked` renvoie toujours vrai : offset ≈ 0 de toute façon, item déjà en position 1.)*
+
+> Trigger `collapse-after` — dernier repère (2026-07) : câblé sur `crossedLastDot(next)`, PAS sur
+> `isStart(next)`. `lastDot` = le dot du **dernier** item du rail (`partenaires`), capté une fois
+> à l'init. La deco entrante descend vers le haut de l'écran et croise ce dot (le plus bas de la
+> liste) bien **avant** d'atteindre son propre miroir → l'item précédent disparaît plus tôt que
+> si le trigger restait sur le miroir de la section suivante. Cas particulier auto-cohérent : pour
+> l'avant-dernière section, `next` EST le dernier item → `crossedLastDot(next) ≡ isStart(next)`,
+> aucun cas spécial à coder. `collapse-after` étant prioritaire dans `stageOf`, ce trigger peut
+> court-circuiter `bellow` pour une section courte — comportement voulu, pas un bug.
 
 > Refactor dots (2026-07) : (1) `--collapse-before` passé en petite taille de label (comme `--bellow`) ;
 > (2) taille du dot uniformisée (petite partout) — supprime le décalage horizontal dû au `left`
 > qui dépendait de `--dot-size`. Le rond visuel est `.index-nav__dot-core` dans l'enveloppe paddée `.index-nav__dot`.
 
-La `.index-nav__deco` passe `--hidden` dès que son étiquette atteint `bellow` (la relève est faite).
+La `.index-nav__deco` se masque **peu après** le passage `collapse-before → start` (et non plus
+au passage `bellow`) : `isStart()` n'étant pas figé (contrairement à l'ancien repère "sticky"), le
+JS mémorise le `scrollTop` du franchissement (`entry.startScrollTop`) puis masque la deco
+`DECO_HIDE_AFTER_START_PX` (2px) de scroll plus loin. Réversible à la remontée.
 `aria-current` posé sur l'item en `start` (R15). *(coworking, sans deco, démarre en `start`.)*
 
 **Deux pièges résolus (repères de coordonnées)**
 - **`stickyTopPx`** = ligne du rail en coords **viewport**, lue sur `.index-nav`
-  (`calc(nav-height + space-10)`), PAS le `top:10px` de la deco (relatif à `main`, décalé de
-  `nav-height` via son `margin-top`). Sinon `isStuck` ne se déclenche jamais.
+  (`calc(nav-height + index-nav-gap)`), PAS le `top` de la deco (relatif à `main`, décalé de
+  `nav-height` via son `margin-top`). Sinon `isDocked` ne se déclenche jamais.
 - **`--label-to-first`** (offset translateY qui docke l'étiquette N sur la position de l'item 1)
   **n'est pas invariant** : les hauteurs du rail changent au scroll (grande ↔ petite). Il est donc
   recalculé à **chaque frame, après** application des classes d'état. Le `transform` du label
@@ -201,74 +227,65 @@ La `.index-nav__deco` passe `--hidden` dès que son étiquette atteint `bellow` 
 **Empilement** : les étiquettes sont dockées au même endroit ; l'ordre de peinture = ordre DOM,
 donc l'étiquette N+1 recouvre la N (règle « la 2 au-dessus de la 1 »). Aucun `z-index` nécessaire.
 
-**Sentinelles** : `data-sentinel-for="<id>"` sur un élément réel du bas de chaque section (les ids
-doivent matcher `data-section` — corrigé `tarif`→`tarifs`, `partenaire`→`partenaires`).
+**Sentinelles — laissées de côté pour ce test** : `[data-sentinel-for="<id>"]` reste dans le
+markup de chaque section (`Coworking.astro`, `Fonctionnement.astro`, `Tarif.astro`, `Pulpe.astro`,
+`Partenaire.astro`) mais **n'est plus lu par le scrollspy** (`passed()`/`entry.sentinel` retirés
+de `index-nav.ts`). `bellow` utilise désormais `entry.section` (la `<section>` elle-même, captée
+via `document.getElementById(entry.id)`). À trancher : si ce modèle est validé, retirer les
+attributs `data-sentinel-for` du markup (dette sinon — deux mécanismes qui se chevauchent).
 
 **Reste à implémenter**
 - Mobile : appliquer les tailles `--mobile` via media query dans le rail (pas via classe JS).
-- R9 : hover sur la colonne → tous les dots grands + gap augmenté.
+- R9 : hover sur la colonne → tous les dots grands + gap augmenté (reste séparé du hover par-dot
+  ci-dessous, cf. `IndexNav.astro`/`_index-nav.scss` — pas encore construit).
 - Interactions `--collapsed` (hover/touch-hold) : conservées pour la démo DS, non branchées sur
   le rail vivant qui est désormais piloté au scroll.
-- **Mobile — touch-and-hold à rétablir** (voir note ci-dessous).
-- **`is-dot-hover` — affiner pour cibler un seul point** (voir note ci-dessous).
+- **Mobile — touch-and-hold rétabli** (voir note ci-dessous).
+- Valider le modèle à 4 états (test 2026-07) puis, si retenu, nettoyer le markup des sentinelles
+  et mettre à jour cette note.
 
-> **Note pour l'ingénieur — Mobile touch-and-hold (dette, 2026-07)**
+> **Note pour l'ingénieur — Mobile touch-and-hold (résolu, 2026-07)**
 >
-> `initIndexNavTouch()` (`src/js/index-nav.ts:149`) cible `.index-nav__item--collapsed`
-> pour le hold 300 ms → révélation du label + `is-label-pressed` au glissement sur le
-> label. Cette classe **n'est plus posée par le scrollspy vivant** depuis le refactor à
-> 5 stades (`collapse-before / actif / start / bellow / collapse-after`, tableau
-> ci-dessus) : le JS de touch tourne donc dans le vide sur `index.astro`. Seule la démo
-> Design System, qui pose `--collapsed` en dur sur du markup statique, l'exerce encore —
-> d'où l'écart constaté entre le DS et le rail réel.
+> Cause : `initIndexNavTouch()` (`src/js/index-nav.ts`) ciblait `.index-nav__item--collapsed`,
+> classe posée par l'ancien modèle à 5 stades mais **plus jamais** par le scrollspy vivant
+> (passé à 4 stades `collapse-before / start / bellow / collapse-after`) — le JS de touch
+> tournait dans le vide sur `index.astro`. Seule la démo Design System (markup statique
+> avec `--collapsed` en dur) l'exerçait encore, d'où l'écart DS ↔ rail réel.
 >
-> À faire :
-> 1. Décider quel(s) état(s) du rail vivant doivent recevoir le hold tactile —
->    probablement `collapse-before` et `collapse-after` (seuls états où le label est
->    invisible hors interaction ; `start`/`bellow` sont déjà visibles en permanence donc
->    pas concernés).
-> 2. Adapter `initIndexNavTouch` pour cibler ces classes réelles au lieu de `--collapsed`
->    (ou généraliser le sélecteur à tout `.index-nav__item` dont le label est masqué).
-> 3. Vérifier le contrat R12/R13 : hold 300 ms → label visible, glissement vers un autre
->    point → transfert du hold, glissement sur le label → `pressed`, relâchement sur
->    label déplié → navigation (smooth scroll). **R13 n'est implémenté nulle part**
->    (ni desktop ni mobile) — à construire en même temps que ce chantier.
-> 4. Rejouer le scroll-lock (`preventDefault` sur `touchmove` non-passif pendant le hold)
->    une fois le ciblage corrigé — actuellement inoffensif mais inactif faute de match.
-> 5. Si l'état choisi en 1. porte un autre nom de classe que `--collapsed`, retirer (ou
->    documenter comme legacy DS-only) les styles `.index-nav__item--collapsed` dans
->    `_index-nav.scss` pour éviter un second jeu de règles mortes.
+> Fix (miroir du hover desktop déjà en prod, `IndexNav.astro` / `.index-nav__item:hover`) :
+> 1. `initIndexNavTouch` généralisé à **tous** les `.index-nav__item` (au lieu du seul
+>    `--collapsed`) — peu importe le stade courant, comme le hover desktop.
+> 2. Le hold pose `.is-touch-held` ; nouvelle règle CSS `.index-nav__item.is-touch-held
+>    .index-nav__label { display: inline-flex; transform: none; }` dans le bloc `.index-nav`
+>    vivant (`_index-nav.scss`) — même mécanisme de spécificité (0,3,0) que le hover pour
+>    percer le `display:none` des stades repliés.
+> 3. Le glissement sur le label pose désormais `.index-nav__item--touch-drag` (classe déjà
+>    prévue en CSS pour l'apparence pressed mobile, mais jamais posée par le JS avant ce fix)
+>    au lieu de l'ancien `is-label-pressed`, orphelin.
+> 4. **R13 implémenté** (ne l'était nulle part avant, ni desktop ni mobile) : relâchement du
+>    hold avec `--touch-drag` actif → `target.scrollIntoView({ behavior: 'smooth' | 'auto' })`,
+>    nécessaire car le `preventDefault` sur `touchmove` pendant le hold empêche le navigateur
+>    de synthétiser le click natif de l'`<a href="#id">`. Respecte `prefers-reduced-motion`.
+> 5. Scroll-lock (`preventDefault` sur `touchmove` non-passif pendant le hold) inchangé,
+>    maintenant actif puisque le ciblage matche le rail réel.
+>
+> Reste ouvert : les styles `.index-nav__item--collapsed` dans `_index-nav.scss` restent
+> **legacy DS-only** (démo Design System uniquement, non utilisés par le rail vivant) —
+> à retirer ou documenter explicitement comme tel si le modèle à 4 états est validé.
 
-> **Note pour l'ingénieur — Affiner `is-dot-hover` (cibler un seul point, 2026-07)**
+> **Hover par-dot — résolu (2026-07)**, l'ancienne note ci-dessus est obsolète. Deux mécanismes
+> distincts cohabitent désormais dans `_index-nav.scss` (repérés `// @hover-reveal`) :
+> 1. `.index-nav__item:hover .index-nav__label { display: inline-flex; transform: none }` —
+>    reveal **par entrée** : au repos le label est `display:none` donc la boîte de l'`<a>` ≈ le
+>    dot seul (déclenchement de fait « sur le point ») ; une fois révélé, la boîte s'étend et
+>    englobe dot + gap + label → la zone de hover suit jusqu'au label, qui devient **cliquable**
+>    sans perdre le survol (evite le piège « hover reveals unreachable target »).
+> 2. `.is-dot-hover .index-nav__item--start .index-nav__label, .is-dot-hover .index-nav__item--bellow .index-nav__label { transform: none }`
+>    — au survol de **n'importe quelle** entrée (classe posée par JS via
+>    `closest('.index-nav__item')`, `IndexNav.astro`), l'item **affiché** (`start` ou `bellow`)
+>    se recale sur son propre dot. Les deux états visibles sont couverts (pas seulement `start`).
 >
-> Comportement actuel (`_index-nav.scss:368`, `IndexNav.astro:45`) : au survol de
-> **n'importe quel** dot, la classe `.is-dot-hover` est posée sur `.index-nav` entier,
-> ce qui révèle **toutes** les étiquettes en même temps (`transform:none` +
-> `display:inline-flex` sur `.index-nav__item .index-nav__label`, sans distinction de
-> l'item survolé) et repositionne tout le monde à sa place d'origine simultanément.
->
-> Cible R9/R10 : au survol de la colonne, tous les points grandissent (gap augmenté),
-> **mais seule l'étiquette du point précisément survolé** doit devenir visible (les
-> autres restent masquées si leur stade est avant/après `start`/`bellow`) ; l'item
-> survolé doit revenir à sa position propre pendant ce hover, sans déplacer les autres.
->
-> Pistes d'implémentation :
-> 1. L'écoute est déjà en place au niveau du `<nav>` (délégation `mouseover`/`mouseout`
->    sur `.index-nav__dot`, `IndexNav.astro:45-52`) — remplacer la classe globale
->    `is-dot-hover` par une classe posée sur l'`.index-nav__item` survolé uniquement
->    (`closest('.index-nav__item')` au lieu de `nav.classList.add`).
-> 2. Simplifie le CSS : plus besoin de `.is-dot-hover .index-nav__item .index-nav__label`,
->    juste `.index-nav__item.is-hovered .index-nav__label { transform: none; display: inline-flex; }`.
-> 3. Vérifier que ça ne casse pas les items déjà en `start`/`bellow` (visibles en
->    permanence) : le hover ne doit rien changer pour eux à part le repositionnement
->    (`transform: none`) le temps du survol.
-> 4. Repositionnement "à sa place" = court-circuiter `--label-to-first` pour l'item
->    survolé (offset ramené à `0px`, ou l'item ignore la variable tant qu'il est
->    `.is-hovered`), pendant que les autres gardent leur empilement normal.
-> 5. Le gap augmenté au survol de la colonne (R9) reste un axe séparé — probablement une
->    classe posée sur `.index-nav` au `mouseenter`/`mouseleave` de `.index-nav__list`
->    (survol de la colonne, pas du dot précis) : à ne pas confondre avec ce hover ciblé
->    par point.
+> R9 (hover colonne → tous les dots grands + gap augmenté) reste **non construit**.
 
 ---
 

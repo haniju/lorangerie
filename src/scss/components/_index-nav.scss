@@ -387,6 +387,14 @@ $index-switch: 56rem;
     transform: none;
   }
 
+  // Mobile — équivalent touch du hover ci-dessus (R12, posé par initIndexNavTouch,
+  // src/js/index-nav.ts). Même mécanisme de spécificité : (0,3,0) > (0,2,0) du
+  // masquage --collapse-before/--collapse-after ci-dessous, donc gagne sans ordre à gérer.
+  .index-nav__item.is-touch-held .index-nav__label {
+    display: inline-flex;
+    transform: none;
+  }
+
   // ── Axe VISIBILITY — visible seulement en start / bellow.
   // before / actif / after : hidden (le stade actif pré-positionne à 10px sans
   // se montrer → aucun saut quand start le révèle).
