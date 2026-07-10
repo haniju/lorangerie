@@ -33,12 +33,18 @@ $index-switch: 56rem;
 }
 
 .index-nav__label {
-	height: 35px;
+  height: 35px;
 }
 
 // ici ça ne doit s'appliquer que quand on hover sur un point
 .is-dot-hover {
-  .index-nav__item--actif {
+  .index-nav__dot {
+    height: 45px;
+  };
+  .index-nav__item--actif,
+  .index-nav__item--start {
+    height: 55px;
+
     .index-nav__dot {
       height: 55px;
     }
@@ -292,7 +298,7 @@ $index-switch: 56rem;
   // Items : largeur = contenu (dot + label), min-height pour que hover fonctionne
   // même quand dot + label sont tous deux en position absolute (sinon height = 0).
   .index-nav__item {
-    display: block;
+    display: flex;
     width: max-content;
     position: relative;
     pointer-events: auto;

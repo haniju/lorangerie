@@ -59,7 +59,12 @@ export function initIndexNavScrollspy() {
     dot: item.querySelector<HTMLElement>('.index-nav__dot-core'), // @dot-pad — le rond visuel (pas l'enveloppe paddée) pour le trigger --actif
     decoLabel: document.querySelector<HTMLElement>(`[data-label-for="${item.dataset.section}"]`),
     sentinel: document.querySelector<HTMLElement>(`[data-sentinel-for="${item.dataset.section}"]`),
+    // scrollTop au moment où la deco s'est collée (sticky) ; null tant qu'elle ne l'est pas.
+    stuckScrollTop: null as number | null,
   }))
+
+  // La deco est masquée 2px de scroll APRÈS avoir atteint son point de sticky.
+  const DECO_HIDE_AFTER_STICKY_PX = 2
 
   // Ligne du rail en coordonnées viewport (= où les labels dockés s'alignent et
   // où la deco vient se coller). getBoundingClientRect renvoie du viewport-relatif,
@@ -104,6 +109,8 @@ export function initIndexNavScrollspy() {
   }
 
   function updateScrollspy() {
+    const scrollTop = main.scrollTop
+
     sectionEntries.forEach((entry, i) => {
       const stage = stageOf(i)
       const { item, decoLabel } = entry
@@ -114,8 +121,20 @@ export function initIndexNavScrollspy() {
       }
       item.toggleAttribute('aria-current', stage === Stage.Start)
 
-      // Deco masqué dès que l'étiquette passe en bellow (la relève est faite).
-      decoLabel?.classList.toggle('index-nav__deco--hidden', stage >= Stage.Bellow)
+      // Deco masquée 2px de scroll après avoir atteint son point de sticky.
+      // Une fois collée elle est figée (sticky) → on ne peut pas mesurer le dépassement
+      // via decoTop ; on mémorise donc le scrollTop du calage puis on masque +2px plus loin.
+      // Réversible : si elle se décolle (remontée), on ré-arme.
+      if (decoLabel) {
+        if (isStart(entry)) {
+          if (entry.stuckScrollTop === null) entry.stuckScrollTop = scrollTop
+        } else {
+          entry.stuckScrollTop = null
+        }
+        const hidden = entry.stuckScrollTop !== null &&
+          scrollTop >= entry.stuckScrollTop + DECO_HIDE_AFTER_STICKY_PX
+        decoLabel.classList.toggle('index-nav__deco--hidden', hidden)
+      }
     })
 
     // Après application des états (donc des hauteurs courantes) : recale les offsets.
