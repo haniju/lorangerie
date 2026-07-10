@@ -23,8 +23,26 @@ $index-switch: 56rem;
 .index-nav__dot {
   flex-shrink: 0;
   position: relative;
-  display: inline-flex;
-  padding: var(--space-7); // @dot-pad
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 35px;
+  height: 35px;
+  background-color: pink;
+}
+
+.index-nav__label {
+	height: 35px;
+}
+
+// ici ça ne doit s'appliquer que quand on hover sur un point
+.is-dot-hover {
+  .index-nav__item--actif {
+    .index-nav__dot {
+      height: 55px;
+    }
+  }
 }
 
 .index-nav__dot-core {
@@ -54,10 +72,12 @@ $index-switch: 56rem;
 // Quatre axes : taille · couleur du dot · visibility · position (cf. index-nav.ts).
 // ════════════════════════════════════════════════════════════════════
 
-// ── Axe TAILLE (label) — grand en before / actif / start, petit ailleurs (défaut) ──
+// ── Axe TAILLE (label) — grand en actif / start uniquement.
+// CHANGEMENT (refactor) : --collapse-before est passé en PETITE taille (identique à
+// --bellow) → il n'est PLUS dans cette liste. Il retombe donc sur le .index-nav__label
+// de base (font 16px, padding space-7/space-20, gap space-10), comme --bellow.
 .index-nav__item--start,
-.index-nav__item--actif,
-.index-nav__item--collapse-before {
+.index-nav__item--actif {
   gap: var(--space-30);
 
   .index-nav__label {
@@ -67,10 +87,12 @@ $index-switch: 56rem;
   }
 }
 
-// ── Axe TAILLE (dot) — grand uniquement en --start, petit dans tous les autres états ──
-.index-nav__item--start {
-  --dot-size: 1.25rem; // 20px
-}
+// ── Axe TAILLE (dot) — UNIFORME (petite) sur tous les états.
+// CHANGEMENT (refactor) : auparavant --start portait un dot de 20px (1.25rem).
+// Désormais tous les dots utilisent le --dot-size de base (0.875rem / 14px), défini
+// sur .index-nav__item. Bénéfice : le `left` du dot (qui dépend de --dot-size) ne
+// varie plus selon l'état → plus de décalage horizontal entre start et les autres.
+// Le rond visuel reste .index-nav__dot-core ; seule sa COULEUR varie encore (ci-dessous).
 
 // ── Axe COULEUR DU DOT — sapin-60 (actif / start / bellow) ──
 .index-nav__item--actif,
@@ -130,11 +152,12 @@ $index-switch: 56rem;
 
   // ── Desktop ──
   @media (hover: hover) {
+
     // Survol du dot → label révélé en initial
     &:hover .index-nav__label,
     &:focus-visible .index-nav__label {
       //opacity: 1;
-      display:flex;
+      display: flex;
       transform: translateY(-50%) translateX(0);
       pointer-events: auto;
     }
@@ -257,9 +280,13 @@ $index-switch: 56rem;
     gap: var(--space-20);
     width: max-content; // se réduit au contenu (pas d'étalement pleine largeur)
 
-    @media (min-width: $index-switch) {gap: 0px;}
+    @media (min-width: $index-switch) {
+      gap: 0px;
+    }
 
-    > li { width: max-content; }
+    >li {
+      width: max-content;
+    }
   }
 
   // Items : largeur = contenu (dot + label), min-height pour que hover fonctionne
@@ -308,7 +335,8 @@ $index-switch: 56rem;
   // à sa position d'origine (transform: none = alignée sur son propre dot) ET
   // s'affiche en simultané (display), révélant les états masqués (before/actif/after).
   // inline-flex = état « montré » conservé. Spécificité 0,4,0 > le masquage 0,3,0.
-  &.is-dot-hover .index-nav__item .index-nav__label { // @hover-reveal
+  &.is-dot-hover .index-nav__item .index-nav__label {
+    // @hover-reveal
     transform: none; // @hover-reveal — repositionnement sur le dot (start + bellow + autres)
     display: inline-flex; // @hover-reveal — reveal simultané des états masqués
   }
@@ -320,7 +348,7 @@ $index-switch: 56rem;
   .index-nav__item--actif .index-nav__label,
   .index-nav__item--collapse-after .index-nav__label {
     //visibility: hidden;
-    display:none;
+    display: none;
     pointer-events: none;
   }
 }

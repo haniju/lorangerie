@@ -164,15 +164,20 @@ accumulé, donc la remontée rejoue exactement la chorégraphie à l'envers.
 
 **5 états de l'étiquette de rail**, franchis dans l'ordre au scroll descendant :
 
-Taille = celle du **label** (grand/petit) ; le **dot** est grand uniquement en `start`, petit partout ailleurs.
+Taille = celle du **label** (grand/petit). Le **dot** est désormais de taille **uniforme (petit)**
+sur tous les états ; seule sa **couleur** varie (`sapin-60` en actif/start/bellow, normal sinon).
 
 | État (`.index-nav__item--…`) | Label | Dot | Visibility | Position | Trigger |
 |---|---|---|---|---|---|
-| `collapse-before` | grand | petit | hidden | défaut (flux) | défaut, jamais atteint |
+| `collapse-before` | **petit** (= bellow) | petit | hidden | défaut (flux) | défaut, jamais atteint |
 | `actif` | grand | petit · sapin-60 | hidden | 10px du top | deco atteint son dot miroir (`decoTop ≤ dotTop`) |
-| `start` | grand | **grand** · sapin-60 | **visible** | 10px du top | deco collé à la ligne du rail (`decoTop ≤ stickyTop`) |
+| `start` | grand | petit · sapin-60 | **visible** | 10px du top | deco collé à la ligne du rail (`decoTop ≤ stickyTop`) |
 | `bellow` | petit | petit · sapin-60 | **visible** | 10px du top | sentinelle de **sa** section franchie |
 | `collapse-after` | petit | petit · normal | hidden | 10px du top | l'item de la section **suivante** passe en `start` (deco suivante collée) |
+
+> Refactor dots (2026-07) : (1) `--collapse-before` passé en petite taille de label (comme `--bellow`) ;
+> (2) taille du dot uniformisée (petite partout) — supprime le décalage horizontal dû au `left`
+> qui dépendait de `--dot-size`. Le rond visuel est `.index-nav__dot-core` dans l'enveloppe paddée `.index-nav__dot`.
 
 La `.index-nav__deco` passe `--hidden` dès que son étiquette atteint `bellow` (la relève est faite).
 `aria-current` posé sur l'item en `start` (R15). *(coworking, sans deco, démarre en `start`.)*
