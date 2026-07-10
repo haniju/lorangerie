@@ -73,7 +73,7 @@ $overlap: var(--space-20); // recouvrement entre les 3 blocs
 // ════════════════════════════════════════════════════════════════════
 @media (min-width: $fonct-switch) {
   .u-container.fonctionnement {
-    margin-inline : unset;
+    //margin-inline : unset;
   }
   .fonctionnement__grid {
     padding-left: var(--grid-col-desktop-2);
