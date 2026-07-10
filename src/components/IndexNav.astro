@@ -39,16 +39,19 @@ const sections = [
   const nav = document.querySelector<HTMLElement>('.index-nav')
   const coworking = document.getElementById('coworking')
 
-  // Survol de n'importe quel dot → classe .is-dot-hover (délégation ; l'event
-  // remonte jusqu'au nav malgré son pointer-events:none). Le CSS repositionne
-  // alors l'item --start à sa place d'origine.
+  // Survol d'une entrée → classe .is-dot-hover (délégation ; l'event remonte jusqu'au
+  // nav malgré son pointer-events:none). Le CSS repositionne alors l'item --start.
+  // On teste .index-nav__item (et non .index-nav__dot) : au repos le label est
+  // display:none donc la boîte de l'item ≈ le dot seul (déclenchement de fait « sur le
+  // point »), mais une fois le label affiché la classe TIENT jusque sur le label —
+  // sinon elle tombait au passage dot→label et le label redisparaissait avant le clic.
   nav?.addEventListener('mouseover', (e) => {
-    if ((e.target as HTMLElement).closest?.('.index-nav__dot')) nav.classList.add('is-dot-hover')
+    if ((e.target as HTMLElement).closest?.('.index-nav__item')) nav.classList.add('is-dot-hover')
   })
   nav?.addEventListener('mouseout', (e) => {
-    if (!(e.target as HTMLElement).closest?.('.index-nav__dot')) return
+    if (!(e.target as HTMLElement).closest?.('.index-nav__item')) return
     const related = e.relatedTarget as HTMLElement | null
-    if (!related?.closest?.('.index-nav__dot')) nav.classList.remove('is-dot-hover')
+    if (!related?.closest?.('.index-nav__item')) nav.classList.remove('is-dot-hover')
   })
 
   function updateNavPosition() {

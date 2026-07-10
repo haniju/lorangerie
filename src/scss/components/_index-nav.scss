@@ -355,10 +355,13 @@ $index-switch: 56rem;
     transform: none;
   }
 
-  // 2) Survol du dot d'une entrée → SEUL son label apparaît, posé sur son dot.
-  //    Frère adjacent (dot avant label dans le DOM) = ciblage par-entrée, sans :has.
-  //    Scopé .index-nav → spécificité 0,4,0 > le masquage display:none (0,3,0).
-  .index-nav__dot:hover + .index-nav__label { // @hover-reveal
+  // 2) Survol d'une entrée → SEUL son label apparaît, posé sur son dot.
+  //    On cible l'item (l'<a>) et non le dot : au repos le label est display:none,
+  //    donc la boîte de l'item ≈ 0 (dot absolu, hors flux) → seul le dot est survolable
+  //    (le déclencheur reste « le point »). Dès que le label s'affiche, la boîte grandit
+  //    et englobe dot+gap+label → la zone de hover s'étend, on peut atteindre et CLIQUER
+  //    le label sans perdre le survol. Scopé .index-nav → 0,4,0 > masquage 0,3,0.
+  .index-nav__item:hover .index-nav__label { // @hover-reveal
     display: inline-flex;
     transform: none;
   }
