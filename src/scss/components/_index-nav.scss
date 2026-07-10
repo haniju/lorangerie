@@ -40,19 +40,20 @@ $index-switch: 56rem;
   height: 35px;
 }
 
-  .index-nav__item--start {
-    height: 55px;
+.index-nav__item--start {
+  height: 55px;
 
-    .index-nav__dot {
-      height: 55px;
-    }
+  .index-nav__dot {
+    height: 55px;
   }
+}
 
 // ici ça ne doit s'appliquer que quand on hover sur un point
 .is-dot-hover {
   .index-nav__dot {
     height: 45px;
   }
+
   .index-nav__item--actif,
   .index-nav__item--start {
     height: 55px;
@@ -99,9 +100,14 @@ $index-switch: 56rem;
   gap: var(--space-30);
 
   .index-nav__label {
-    padding: var(--space-7) var(--space-30) var(--space-10);
+    padding: var(--space-7) var(--space-10) var(--space-10);
     border-radius: var(--corner-big); // 80px
-    font-size: 2.25rem; // 36px — title/h1/section_focus_desktop
+    font-size: 1.625rem; 
+
+    @media (min-width: $index-switch) {
+      font-size: 2.25rem; // 36px — title/h1/section_focus_desktop        
+      padding: var(--space-7) var(--space-30) var(--space-10);
+    }
   }
 }
 
@@ -237,7 +243,7 @@ $index-switch: 56rem;
   // Y = même formule que .index-nav { top }
   // X = --pad-grid depuis le bord viewport, corrigé du décalage de centrage du container au-delà de 1550px
   position: sticky;
-  top: var(--space-10);
+  top: var(--index-nav-gap); // même écart que le rail (relatif à main, décalé de nav-height)
   margin-left: 0px;
   // Hors du flux vertical — ne pousse pas le contenu de la section
   //margin-bottom: -55px;
@@ -281,7 +287,7 @@ $index-switch: 56rem;
 
 .index-nav {
   position: fixed;
-  top: calc(var(--nav-height) + var(--space-10));
+  top: calc(var(--nav-height) + var(--index-nav-gap)); // écart réglable (défaut --space-10)
   left: max(0px, calc((100vw - var(--content-cap)) / 2));
   z-index: 10;
   pointer-events: none;
@@ -350,7 +356,10 @@ $index-switch: 56rem;
   .index-nav__item--bellow .index-nav__label,
   .index-nav__item--collapse-after .index-nav__label {
     transform: translateY(var(--label-to-first, 0px));
-  }
+    @media (min-width: $index-switch) {
+      transform: translateY(var(--label-to-first, 0px));
+    }
+}
 
   // Survol de n'importe quel dot (classe posée par JS) → chaque étiquette revient
   // à sa position d'origine (transform: none = alignée sur son propre dot) ET

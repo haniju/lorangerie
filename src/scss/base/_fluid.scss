@@ -33,6 +33,10 @@
   /* ── Cadre ── */
   --content-cap: 96.875rem; // 1550px, contenu plafonné
 
+  // Écart vertical de l'index-nav (rail + deco) sous la navbar. Static 10px.
+  // Point de réglage unique : baisser pour rapprocher l'index du haut du viewport.
+  --index-nav-gap: var(--space-10);
+
   /* ── Fluide : quantités à 2 bornes (clamp 440→1280) ── */
   --pad-grid: clamp(1.25rem, -0.0595rem + 4.7619vw, 3.75rem); // 20→60px
   --step-display: clamp(2.5rem, 1.8452rem + 2.381vw, 3.75rem); // 40→60px
