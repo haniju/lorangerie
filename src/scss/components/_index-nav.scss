@@ -395,6 +395,18 @@ $index-switch: 56rem;
     transform: none;
   }
 
+  // Pressed on release — au clic (desktop) comme au tap rapide (mobile, :active
+  // se déclenche nativement dès qu'un ontouchstart est présent sur l'élément,
+  // cf. initIndexNavTouch). Généralisé à tout le rail vivant, pas seulement la
+  // démo DS --collapsed (`:hover .index-nav__label:active` plus haut, gelée).
+  // Le hold-drag mobile (--touch-drag, posé par le JS) reste géré séparément
+  // ci-dessus par la règle globale statut=bellow/pressed.
+  .index-nav__item:active .index-nav__label {
+    background: var(--action-index-pressed);
+    color: var(--action-index-texte-pressed);
+    text-decoration: underline;
+  }
+
   // ── Axe VISIBILITY — visible seulement en start / bellow.
   // before / actif / after : hidden (le stade actif pré-positionne à 10px sans
   // se montrer → aucun saut quand start le révèle).
