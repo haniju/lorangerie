@@ -27,9 +27,13 @@ $index-switch: 56rem;
   align-items: center;
   justify-content: center;
 
-  width: 35px;
+  width: 20px;
   height: 35px;
   background-color: pink;
+
+  @media (min-width: $index-switch) {
+    width: 35px;
+  }
 }
 
 .index-nav__label {
@@ -40,7 +44,10 @@ $index-switch: 56rem;
 .is-dot-hover {
   .index-nav__dot {
     height: 45px;
-  };
+  }
+
+  ;
+
   .index-nav__item--actif,
   .index-nav__item--start {
     height: 55px;
@@ -283,7 +290,7 @@ $index-switch: 56rem;
     padding: 0;
     display: flex;
     flex-direction: column;
-    gap: var(--space-20);
+    //gap: var(--space-20);
     width: max-content; // se réduit au contenu (pas d'étalement pleine largeur)
 
     @media (min-width: $index-switch) {
@@ -310,9 +317,12 @@ $index-switch: 56rem;
 
     .index-nav__dot {
       position: absolute;
-      left: calc(var(--pad-grid) / 2 - var(--dot-size) / 2 - var(--space-7)); // @dot-pad — retranche le padding pour recentrer le rond
       top: 50%;
       transform: translateY(-50%);
+
+      @media (min-width: $index-switch) {
+        left: calc(var(--pad-grid) / 2 - var(--dot-size) / 2 - var(--space-7)); // @dot-pad — retranche le padding pour recentrer le rond
+      }
     }
   }
 
