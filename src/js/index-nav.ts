@@ -56,7 +56,7 @@ export function initIndexNavScrollspy() {
   const sectionEntries = items.map((item) => ({
     id: item.dataset.section!,
     item,
-    dot: item.querySelector<HTMLElement>('.index-nav__dot'),
+    dot: item.querySelector<HTMLElement>('.index-nav__dot-core'), // @dot-pad — le rond visuel (pas l'enveloppe paddée) pour le trigger --actif
     decoLabel: document.querySelector<HTMLElement>(`[data-label-for="${item.dataset.section}"]`),
     sentinel: document.querySelector<HTMLElement>(`[data-sentinel-for="${item.dataset.section}"]`),
   }))

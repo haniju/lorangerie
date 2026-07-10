@@ -18,20 +18,20 @@ $index-switch: 56rem;
   gap: var(--space-10);
 }
 
+// Enveloppe paddée : cible du hover (closest('.index-nav__dot')) + espace autour
+// du rond. Le visuel est dans .index-nav__dot-core (mesuré par le JS pour le trigger).
 .index-nav__dot {
   flex-shrink: 0;
   position: relative;
+  display: inline-flex;
+  padding: var(--space-7); // @dot-pad
+}
+
+.index-nav__dot-core {
   width: var(--dot-size);
   height: var(--dot-size);
   border-radius: 50%;
   background: var(--dot-color);
-
-  // Zone de hit invisible — facilite le survol du petit point
-  &::before {
-    content: '';
-    position: absolute;
-    inset: -0.5rem;
-  }
 }
 
 .index-nav__label {
@@ -277,7 +277,7 @@ $index-switch: 56rem;
 
     .index-nav__dot {
       position: absolute;
-      left: calc(var(--pad-grid) / 2 - var(--dot-size) / 2);
+      left: calc(var(--pad-grid) / 2 - var(--dot-size) / 2 - var(--space-7)); // @dot-pad — retranche le padding pour recentrer le rond
       top: 50%;
       transform: translateY(-50%);
     }
