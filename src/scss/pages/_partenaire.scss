@@ -65,16 +65,12 @@ h2 {
   width: auto;
 }
 
-.partenaire__btn-label {
-  font-family: var(--font-body);
-  font-style: italic;
-  font-size: 0.875rem;
-  color: var(--text-warm-dark);
+.partenaire .btn-group {
   margin-top: var(--space-40);
   margin-bottom: var(--space-10);
 }
 
-.partenaire__btn-group {
+.partenaire .btn-group {
   width: max-content;
   align-self: flex-end;
 }

@@ -61,11 +61,11 @@ $hero-switch: 56rem;
   font-weight: 500;
   line-height: 1.35;
   color: var(--text-warm-dark);
-  padding-left: var(--grid-col-mobile-1);
+  margin-left: var(--space-30);
 
   @media (min-width: $hero-switch) {
-    max-width: var(--grid-col-desktop-2);
-    padding-left: var(--space-50);
+    width: var(--grid-col-desktop-2);
+    margin-left: var(--space-50);
   }
 }
 
@@ -100,13 +100,12 @@ $hero-switch: 56rem;
   font-size: 0.9375rem; // 15px — font/text/regular
   line-height: 1.47; // font/line-height/compact (22px)
   margin-top: calc(var(--space-30) * -1); // léger chevauchement sous l'illustration
-  transform: rotate(9.09deg) skewX(0.35deg);
+  margin-right: var(--space-10); // léger chevauchement sous l'illustration
+  transform: rotate(9.09deg) skewX(0.35deg) translateY(calc(var(--space-40)*-1));
   transform-origin: left center;
   max-width: var(--grid-col-mobile-4);
-  //align-self: flex-end;
-  position: absolute;
-  right: 0;
-  bottom: calc(var(--space-10)* -1);
+  align-self:flex-end;
+  //bottom: calc(var(--space-10)* -1);
 
   @media (min-width: $hero-switch) {
     position: absolute;
@@ -114,5 +113,6 @@ $hero-switch: 56rem;
     bottom: var(--space-20);
     max-width: var(--grid-col-desktop-3);
     margin-top: 0;
+    transform: rotate(9.09deg) skewX(0.35deg);
   }
 }

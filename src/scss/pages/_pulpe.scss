@@ -22,6 +22,7 @@ $pulpe-switch: 56rem;
   width: var(--grid-col-mobile-4);
   display: flex;
   flex-direction: column;
+  gap: var(--space-30);
 }
 
 .pulpe__titre {
@@ -42,15 +43,6 @@ $pulpe-switch: 56rem;
   font-size: 1rem;
   color: var(--text-warm-dark);
   line-height: 1.6;
-}
-
-.pulpe__btn-label {
-  font-family: var(--font-body);
-  font-style: italic;
-  font-size: 0.875rem;
-  color: var(--text-warm-dark);
-  margin-top: var(--space-30);
-  margin-bottom: var(--space-10);
 }
 
 // ── col-media (unwrappé en mobile via display:contents) ──────────────────────
@@ -118,10 +110,6 @@ $pulpe-switch: 56rem;
     order: 1;
     width: var(--grid-col-desktop-3);
     flex-shrink: 0;
-  }
-
-  .pulpe__group-texte {
-    margin-bottom: var(--space-20);
   }
 
   // col-media : wrapper restauré, position relative pour les enfants absolus

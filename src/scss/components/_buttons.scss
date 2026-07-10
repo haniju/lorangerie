@@ -21,6 +21,11 @@
 }
 
 // ─── bouton/primary ─────────────────────────────────────────
+.btn-group {
+  display: flex;
+  flex-direction: column;
+}
+
 .btn--primary {
   @extend %btn-base;
   padding: var(--space-10) var(--space-70);
@@ -150,4 +155,16 @@ $btn-switch: 56rem;
   flex-shrink: 0;
   width: 1.5rem;  // 24px
   height: 1.5rem;
+}
+
+// ─── label au-dessus d'un bouton primary (accroche italique) ────────────────
+// Commun à pulpe, partenaire, fonctionnement. NB : tarifs__btn-label s'en
+// écarte (font-heading + step-0 fluide + text-cold-dark) — laissé spécifique.
+.btn-label {
+  margin: 0;
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: 0.875rem;
+  margin-bottom: var(--space-10);
+  color: var(--text-cold-dark);
 }
