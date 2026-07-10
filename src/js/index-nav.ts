@@ -89,22 +89,29 @@ export function initIndexNavScrollspy() {
       : false
   }
 
+  // La deco d'une section a « croisé son miroir » = son item atteint --actif
+  // (decoTop passe au-dessus du dot de sa propre entrée dans le rail).
+  function isActif(entry: (typeof sectionEntries)[number]) {
+    if (!entry.decoLabel || !entry.dot) return false
+    return entry.decoLabel.getBoundingClientRect().top <= entry.dot.getBoundingClientRect().top + 1
+  }
+
   function stageOf(i: number): Stage {
     const entry = sectionEntries[i]
     const next = sectionEntries[i + 1]
 
-    // collapse-after : dès que la section suivante passe en --start.
-    if (next && isStart(next)) return Stage.After
+    // collapse-after : dès que la section suivante croise son propre dot (--actif),
+    // et non plus seulement quand elle se colle (--start) — trigger avancé dans la
+    // timeline pour que la section 1 disparaisse plus tôt.
+    if (next && isActif(next)) return Stage.After
     // bellow : sentinelle de la section franchie.
     if (passed(entry)) return Stage.Bellow
 
     // Pas encore franchi : coworking (sans deco) démarre actif → start.
     if (!entry.decoLabel || !entry.dot) return Stage.Start
 
-    const decoTop = entry.decoLabel.getBoundingClientRect().top
-    const dotTop  = entry.dot.getBoundingClientRect().top
-    if (isStart(entry))        return Stage.Start   // collé à la ligne du rail
-    if (decoTop <= dotTop + 1) return Stage.Actif   // a atteint son miroir
+    if (isStart(entry)) return Stage.Start   // collé à la ligne du rail
+    if (isActif(entry)) return Stage.Actif   // a atteint son miroir
     return Stage.Before
   }
 

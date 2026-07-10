@@ -173,7 +173,14 @@ sur tous les états ; seule sa **couleur** varie (`sapin-60` en actif/start/bell
 | `actif` | grand | petit · sapin-60 | hidden | 10px du top | deco atteint son dot miroir (`decoTop ≤ dotTop`) |
 | `start` | grand | petit · sapin-60 | **visible** | 10px du top | deco collé à la ligne du rail (`decoTop ≤ stickyTop`) |
 | `bellow` | petit | petit · sapin-60 | **visible** | 10px du top | sentinelle de **sa** section franchie |
-| `collapse-after` | petit | petit · normal | hidden | 10px du top | l'item de la section **suivante** passe en `start` (deco suivante collée) |
+| `collapse-after` | petit | petit · normal | hidden | 10px du top | l'item de la section **suivante** passe en `actif` (deco suivante croise **son propre** dot) |
+
+> Trigger `collapse-after` avancé (2026-07) : auparavant câblé sur `isStart(next)` (deco suivante
+> **collée** à la ligne du rail). Basculé sur `isActif(next)` (deco suivante **croise son propre
+> dot miroir**, `decoTop ≤ dotTop`) — événement plus précoce dans la timeline. Extrait en fonction
+> dédiée `isActif()` (miroir de `isStart()`) dans `index-nav.ts`. `collapse-after` étant prioritaire
+> dans `stageOf`, ce trigger peut désormais court-circuiter `bellow` pour une section courte (l'item
+> saute avant que sa propre sentinelle ne se déclenche) — comportement voulu, pas un bug.
 
 > Refactor dots (2026-07) : (1) `--collapse-before` passé en petite taille de label (comme `--bellow`) ;
 > (2) taille du dot uniformisée (petite partout) — supprime le décalage horizontal dû au `left`
