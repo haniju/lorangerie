@@ -133,7 +133,8 @@ $index-switch: 56rem;
     // Survol du dot → label révélé en initial
     &:hover .index-nav__label,
     &:focus-visible .index-nav__label {
-      opacity: 1;
+      //opacity: 1;
+      display:flex;
       transform: translateY(-50%) translateX(0);
       pointer-events: auto;
     }
@@ -303,10 +304,13 @@ $index-switch: 56rem;
     transform: translateY(var(--label-to-first, 0px));
   }
 
-  // Survol de n'importe quel dot (classe posée par JS) → l'item de la section
-  // courante (--start) revient à sa position initiale (aligné sur son propre dot).
-  &.is-dot-hover .index-nav__item--start .index-nav__label {
-    transform: none;
+  // Survol de n'importe quel dot (classe posée par JS) → chaque étiquette revient
+  // à sa position d'origine (transform: none = alignée sur son propre dot) ET
+  // s'affiche en simultané (display), révélant les états masqués (before/actif/after).
+  // inline-flex = état « montré » conservé. Spécificité 0,4,0 > le masquage 0,3,0.
+  &.is-dot-hover .index-nav__item .index-nav__label { // @hover-reveal
+    transform: none; // @hover-reveal — repositionnement sur le dot (start + bellow + autres)
+    display: inline-flex; // @hover-reveal — reveal simultané des états masqués
   }
 
   // ── Axe VISIBILITY — visible seulement en start / bellow.
@@ -315,7 +319,8 @@ $index-switch: 56rem;
   .index-nav__item--collapse-before .index-nav__label,
   .index-nav__item--actif .index-nav__label,
   .index-nav__item--collapse-after .index-nav__label {
-    visibility: hidden;
+    //visibility: hidden;
+    display:none;
     pointer-events: none;
   }
 }
