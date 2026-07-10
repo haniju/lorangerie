@@ -10,6 +10,17 @@
 
 $index-switch: 56rem;
 
+// Écart vertical de l'index-nav (rail + deco) sous la navbar.
+// Point de réglage unique, partagé rail + deco (défini sur :root car la deco n'est
+// pas descendante de .index-nav). Mobile-first : base = mobile, override desktop.
+:root {
+  --index-nav-gap: var(--space-7); // mobile
+
+  @media (min-width: $index-switch) {
+    --index-nav-gap: var(--space-10); // desktop — ajuste ici
+  }
+}
+
 .index-nav__item {
   --dot-size: 0.875rem; // 14px — défaut (bellow / collapsed desktop)
   --dot-color: var(--text-cold-dark);
@@ -27,6 +38,13 @@ $index-switch: 56rem;
 .index-nav__item--collapse-after,
 .index-nav__item--bellow {
   height: calc(35px + 10px);
+}
+
+.index-nav__item--collapse-before,
+.index-nav__item--collapse-after {
+  height: calc(15px + 10px);
+
+  &:hover{height: calc(35px + 10px);}
 }
 
 .index-nav__dot {
@@ -89,7 +107,7 @@ $index-switch: 56rem;
   gap: var(--space-30);
 
   .index-nav__label {
-    padding: var(--space-7) var(--space-10) var(--space-10);
+    padding: var(--space-7) var(--space-20) var(--space-7) var(--space-20);
     border-radius: var(--corner-big); // 80px
     font-size: 1.625rem;
 
@@ -348,10 +366,12 @@ $index-switch: 56rem;
 
   // @hover-reveal — DEUX mécanismes distincts :
   //
-  // 1) Survol de N'IMPORTE QUEL dot (classe .is-dot-hover posée par JS) → l'item
-  //    AFFICHÉ (--start) revient à sa position d'origine, sur son propre dot.
-  //    Repositionnement seul : pas de reveal des autres.
-  &.is-dot-hover .index-nav__item--start .index-nav__label { // @hover-reveal
+  // 1) Survol de N'IMPORTE QUEL dot (classe .is-dot-hover posée par JS) → les items
+  //    AFFICHÉS (--start ET --bellow, les seuls non display:none) reviennent à leur
+  //    position d'origine, sur leur propre dot. Repositionnement seul (pas de reveal).
+  &.is-dot-hover .index-nav__item--start .index-nav__label,
+  &.is-dot-hover .index-nav__item--bellow .index-nav__label {
+    // @hover-reveal
     transform: none;
   }
 
@@ -361,7 +381,8 @@ $index-switch: 56rem;
   //    (le déclencheur reste « le point »). Dès que le label s'affiche, la boîte grandit
   //    et englobe dot+gap+label → la zone de hover s'étend, on peut atteindre et CLIQUER
   //    le label sans perdre le survol. Scopé .index-nav → 0,4,0 > masquage 0,3,0.
-  .index-nav__item:hover .index-nav__label { // @hover-reveal
+  .index-nav__item:hover .index-nav__label {
+    // @hover-reveal
     display: inline-flex;
     transform: none;
   }
