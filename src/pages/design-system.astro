@@ -55,7 +55,27 @@ const loremHighlight =
     </p>
 
     <h3 class="ds__subsection-title">Desktop</h3>
+    <p class="ds__note">
+      Ordre chronologique du scrollspy (<code>PLAN-ACTION.md</code>) :
+      <code>collapse-before → actif → start → bellow → collapse-after</code>, suivi du miroir
+      <code>.index-nav__deco</code> et de la variante <code>--collapsed</code> conservée pour la démo
+      hover/touch (non branchée sur le rail vivant — voir note plus bas).
+    </p>
     <div class="ds__group ds__group--index">
+      <div class="ds__item">
+        <span class="index-nav__item index-nav__item--collapse-before">
+          <span class="index-nav__dot" aria-hidden="true"><span class="index-nav__dot-core"></span></span>
+          <span class="index-nav__label">Notre fonctionnement</span>
+        </span>
+        <code>--collapse-before</code>
+      </div>
+      <div class="ds__item">
+        <span class="index-nav__item index-nav__item--actif">
+          <span class="index-nav__dot" aria-hidden="true"><span class="index-nav__dot-core"></span></span>
+          <span class="index-nav__label">Notre fonctionnement</span>
+        </span>
+        <code>--actif</code>
+      </div>
       <div class="ds__item">
         <span class="index-nav__item index-nav__item--start">
           <span class="index-nav__dot" aria-hidden="true"><span class="index-nav__dot-core"></span></span>
@@ -85,6 +105,19 @@ const loremHighlight =
         <code>--bellow · pressed</code>
       </div>
       <div class="ds__item">
+        <span class="index-nav__item index-nav__item--collapse-after">
+          <span class="index-nav__dot" aria-hidden="true"><span class="index-nav__dot-core"></span></span>
+          <span class="index-nav__label">Notre fonctionnement</span>
+        </span>
+        <code>--collapse-after</code>
+      </div>
+      <div class="ds__item">
+        <div class="ds__deco-demo">
+          <h2 class="index-nav__deco">Notre espace</h2>
+        </div>
+        <code>.index-nav__deco (miroir de section)</code>
+      </div>
+      <div class="ds__item">
         <span class="index-nav__item index-nav__item--collapsed" tabindex="0">
           <span class="index-nav__dot" aria-hidden="true"><span class="index-nav__dot-core"></span></span>
           <span class="index-nav__label">Notre fonctionnement</span>
@@ -92,9 +125,29 @@ const loremHighlight =
         <code>--collapsed · survol → étiquette</code>
       </div>
     </div>
+    <p class="ds__note ds__note--warning">
+      <code>is-dot-hover</code> (survol d'un point → révèle actuellement toutes les étiquettes en même
+      temps) est en cours d'affinage pour ne cibler que le point survolé — note détaillée dans
+      <code>PLAN-ACTION.md</code> § « Reste à implémenter ».
+    </p>
 
     <h3 class="ds__subsection-title">Mobile</h3>
+    <p class="ds__note">Même ordre chronologique, échelle mobile (<code>--mobile</code>).</p>
     <div class="ds__group ds__group--index">
+      <div class="ds__item">
+        <span class="index-nav__item index-nav__item--mobile index-nav__item--collapse-before">
+          <span class="index-nav__dot" aria-hidden="true"><span class="index-nav__dot-core"></span></span>
+          <span class="index-nav__label">Notre fonctionnement</span>
+        </span>
+        <code>--mobile --collapse-before</code>
+      </div>
+      <div class="ds__item">
+        <span class="index-nav__item index-nav__item--mobile index-nav__item--actif">
+          <span class="index-nav__dot" aria-hidden="true"><span class="index-nav__dot-core"></span></span>
+          <span class="index-nav__label">Notre fonctionnement</span>
+        </span>
+        <code>--mobile --actif</code>
+      </div>
       <div class="ds__item">
         <span class="index-nav__item index-nav__item--mobile index-nav__item--start">
           <span class="index-nav__dot" aria-hidden="true"><span class="index-nav__dot-core"></span></span>
@@ -117,6 +170,19 @@ const loremHighlight =
         <code>--mobile --bellow · touch-and-drag</code>
       </div>
       <div class="ds__item">
+        <span class="index-nav__item index-nav__item--mobile index-nav__item--collapse-after">
+          <span class="index-nav__dot" aria-hidden="true"><span class="index-nav__dot-core"></span></span>
+          <span class="index-nav__label">Notre fonctionnement</span>
+        </span>
+        <code>--mobile --collapse-after</code>
+      </div>
+      <div class="ds__item">
+        <div class="ds__deco-demo">
+          <h2 class="index-nav__deco">Notre espace</h2>
+        </div>
+        <code>.index-nav__deco (26px sous 56rem/896px — media query, pas de classe)</code>
+      </div>
+      <div class="ds__item">
         <span class="index-nav__item index-nav__item--mobile index-nav__item--collapsed" tabindex="0">
           <span class="index-nav__dot" aria-hidden="true"><span class="index-nav__dot-core"></span></span>
           <span class="index-nav__label">Notre fonctionnement</span>
@@ -124,6 +190,10 @@ const loremHighlight =
         <code>--collapsed · touch &amp; hold → étiquette</code>
       </div>
     </div>
+    <p class="ds__note ds__note--warning">
+      Touch-and-hold sur <code>--collapsed</code> non branché sur le rail vivant (dead code sur
+      <code>index.astro</code>) — chantier détaillé dans <code>PLAN-ACTION.md</code> § « Reste à implémenter ».
+    </p>
 
     <h3 class="ds__subsection-title">Rail complet — Desktop</h3>
     <p class="ds__note">
@@ -326,6 +396,18 @@ const loremHighlight =
     max-width: 60ch;
     margin-bottom: var(--space-30);
     font-size: var(--step--1);
+    color: var(--sapin-60);
+  }
+
+  // Chantiers en cours signalés dans PLAN-ACTION.md — non alarmant, juste un repère visuel.
+  .ds__note--warning {
+    border-left: 2px solid var(--sapin-60);
+    padding-left: var(--space-10);
+  }
+
+  .ds__index-caption {
+    margin-top: var(--space-20);
+    font-size: var(--step--2);
     color: var(--sapin-60);
   }
 

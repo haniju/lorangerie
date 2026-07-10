@@ -18,6 +18,25 @@ $index-switch: 56rem;
   gap: var(--space-10);
 }
 
+.index-nav__item--actif,
+.index-nav__item--start {
+  height: calc(55px + 10px);
+}
+
+.index-nav__item--collapse-before,
+.index-nav__item--collapse-after,
+.index-nav__item--bellow {
+  height: calc(35px + 10px);
+}
+
+.index-nav__dot {
+  height: 100%;
+}
+
+.index-nav__label {
+  height: calc(100% - 10px);
+}
+
 // Enveloppe paddée : cible du hover (closest('.index-nav__dot')) + espace autour
 // du rond. Le visuel est dans .index-nav__dot-core (mesuré par le JS pour le trigger).
 .index-nav__dot {
@@ -28,39 +47,9 @@ $index-switch: 56rem;
   justify-content: center;
 
   width: 20px;
-  height: 35px;
-  background-color: pink;
 
   @media (min-width: $index-switch) {
     width: 35px;
-  }
-}
-
-.index-nav__label {
-  height: 35px;
-}
-
-.index-nav__item--start {
-  height: 55px;
-
-  .index-nav__dot {
-    height: 55px;
-  }
-}
-
-// ici ça ne doit s'appliquer que quand on hover sur un point
-.is-dot-hover {
-  .index-nav__dot {
-    height: 45px;
-  }
-
-  .index-nav__item--actif,
-  .index-nav__item--start {
-    height: 55px;
-
-    .index-nav__dot {
-      height: 55px;
-    }
   }
 }
 
@@ -102,7 +91,7 @@ $index-switch: 56rem;
   .index-nav__label {
     padding: var(--space-7) var(--space-10) var(--space-10);
     border-radius: var(--corner-big); // 80px
-    font-size: 1.625rem; 
+    font-size: 1.625rem;
 
     @media (min-width: $index-switch) {
       font-size: 2.25rem; // 36px — title/h1/section_focus_desktop        
@@ -180,7 +169,6 @@ $index-switch: 56rem;
     // Survol du dot → label révélé en initial
     &:hover .index-nav__label,
     &:focus-visible .index-nav__label {
-      //opacity: 1;
       display: flex;
       transform: translateY(-50%) translateX(0);
       pointer-events: auto;
@@ -225,7 +213,6 @@ $index-switch: 56rem;
 // ════════════════════════════════════════════════════════════════════
 
 .index-nav__deco {
-  height: 55px;
   width: max-content;
   display: inline-flex;
   align-items: center;
@@ -245,8 +232,6 @@ $index-switch: 56rem;
   position: sticky;
   top: var(--index-nav-gap); // même écart que le rail (relatif à main, décalé de nav-height)
   margin-left: 0px;
-  // Hors du flux vertical — ne pousse pas le contenu de la section
-  //margin-bottom: -55px;
 
   &.index-nav__deco--hidden {
     visibility: hidden;
@@ -301,7 +286,6 @@ $index-switch: 56rem;
     padding: 0;
     display: flex;
     flex-direction: column;
-    //gap: var(--space-20);
     width: max-content; // se réduit au contenu (pas d'étalement pleine largeur)
 
     @media (min-width: $index-switch) {
@@ -356,19 +340,27 @@ $index-switch: 56rem;
   .index-nav__item--bellow .index-nav__label,
   .index-nav__item--collapse-after .index-nav__label {
     transform: translateY(var(--label-to-first, 0px));
+
     @media (min-width: $index-switch) {
       transform: translateY(var(--label-to-first, 0px));
     }
-}
+  }
 
-  // Survol de n'importe quel dot (classe posée par JS) → chaque étiquette revient
-  // à sa position d'origine (transform: none = alignée sur son propre dot) ET
-  // s'affiche en simultané (display), révélant les états masqués (before/actif/after).
-  // inline-flex = état « montré » conservé. Spécificité 0,4,0 > le masquage 0,3,0.
-  &.is-dot-hover .index-nav__item .index-nav__label {
-    // @hover-reveal
-    transform: none; // @hover-reveal — repositionnement sur le dot (start + bellow + autres)
-    display: inline-flex; // @hover-reveal — reveal simultané des états masqués
+  // @hover-reveal — DEUX mécanismes distincts :
+  //
+  // 1) Survol de N'IMPORTE QUEL dot (classe .is-dot-hover posée par JS) → l'item
+  //    AFFICHÉ (--start) revient à sa position d'origine, sur son propre dot.
+  //    Repositionnement seul : pas de reveal des autres.
+  &.is-dot-hover .index-nav__item--start .index-nav__label { // @hover-reveal
+    transform: none;
+  }
+
+  // 2) Survol du dot d'une entrée → SEUL son label apparaît, posé sur son dot.
+  //    Frère adjacent (dot avant label dans le DOM) = ciblage par-entrée, sans :has.
+  //    Scopé .index-nav → spécificité 0,4,0 > le masquage display:none (0,3,0).
+  .index-nav__dot:hover + .index-nav__label { // @hover-reveal
+    display: inline-flex;
+    transform: none;
   }
 
   // ── Axe VISIBILITY — visible seulement en start / bellow.
@@ -410,6 +402,18 @@ $index-switch: 56rem;
   color: var(--text-warm-dark);
   opacity: 0.4;
   margin-bottom: var(--space-40);
+}
+
+// Conteneur statique pour démo .index-nav__deco (normalement position: sticky, calé au scroll).
+.ds__deco-demo {
+  position: relative;
+  padding: var(--space-20);
+  background: var(--background-sand-light, #faf8f5);
+  border-radius: var(--corner-small);
+
+  .index-nav__deco {
+    position: static;
+  }
 }
 
 // ─── display = mobile (échelle réduite) ─────────────────────────

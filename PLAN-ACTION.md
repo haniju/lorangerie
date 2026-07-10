@@ -202,6 +202,66 @@ doivent matcher `data-section` — corrigé `tarif`→`tarifs`, `partenaire`→`
 - R9 : hover sur la colonne → tous les dots grands + gap augmenté.
 - Interactions `--collapsed` (hover/touch-hold) : conservées pour la démo DS, non branchées sur
   le rail vivant qui est désormais piloté au scroll.
+- **Mobile — touch-and-hold à rétablir** (voir note ci-dessous).
+- **`is-dot-hover` — affiner pour cibler un seul point** (voir note ci-dessous).
+
+> **Note pour l'ingénieur — Mobile touch-and-hold (dette, 2026-07)**
+>
+> `initIndexNavTouch()` (`src/js/index-nav.ts:149`) cible `.index-nav__item--collapsed`
+> pour le hold 300 ms → révélation du label + `is-label-pressed` au glissement sur le
+> label. Cette classe **n'est plus posée par le scrollspy vivant** depuis le refactor à
+> 5 stades (`collapse-before / actif / start / bellow / collapse-after`, tableau
+> ci-dessus) : le JS de touch tourne donc dans le vide sur `index.astro`. Seule la démo
+> Design System, qui pose `--collapsed` en dur sur du markup statique, l'exerce encore —
+> d'où l'écart constaté entre le DS et le rail réel.
+>
+> À faire :
+> 1. Décider quel(s) état(s) du rail vivant doivent recevoir le hold tactile —
+>    probablement `collapse-before` et `collapse-after` (seuls états où le label est
+>    invisible hors interaction ; `start`/`bellow` sont déjà visibles en permanence donc
+>    pas concernés).
+> 2. Adapter `initIndexNavTouch` pour cibler ces classes réelles au lieu de `--collapsed`
+>    (ou généraliser le sélecteur à tout `.index-nav__item` dont le label est masqué).
+> 3. Vérifier le contrat R12/R13 : hold 300 ms → label visible, glissement vers un autre
+>    point → transfert du hold, glissement sur le label → `pressed`, relâchement sur
+>    label déplié → navigation (smooth scroll). **R13 n'est implémenté nulle part**
+>    (ni desktop ni mobile) — à construire en même temps que ce chantier.
+> 4. Rejouer le scroll-lock (`preventDefault` sur `touchmove` non-passif pendant le hold)
+>    une fois le ciblage corrigé — actuellement inoffensif mais inactif faute de match.
+> 5. Si l'état choisi en 1. porte un autre nom de classe que `--collapsed`, retirer (ou
+>    documenter comme legacy DS-only) les styles `.index-nav__item--collapsed` dans
+>    `_index-nav.scss` pour éviter un second jeu de règles mortes.
+
+> **Note pour l'ingénieur — Affiner `is-dot-hover` (cibler un seul point, 2026-07)**
+>
+> Comportement actuel (`_index-nav.scss:368`, `IndexNav.astro:45`) : au survol de
+> **n'importe quel** dot, la classe `.is-dot-hover` est posée sur `.index-nav` entier,
+> ce qui révèle **toutes** les étiquettes en même temps (`transform:none` +
+> `display:inline-flex` sur `.index-nav__item .index-nav__label`, sans distinction de
+> l'item survolé) et repositionne tout le monde à sa place d'origine simultanément.
+>
+> Cible R9/R10 : au survol de la colonne, tous les points grandissent (gap augmenté),
+> **mais seule l'étiquette du point précisément survolé** doit devenir visible (les
+> autres restent masquées si leur stade est avant/après `start`/`bellow`) ; l'item
+> survolé doit revenir à sa position propre pendant ce hover, sans déplacer les autres.
+>
+> Pistes d'implémentation :
+> 1. L'écoute est déjà en place au niveau du `<nav>` (délégation `mouseover`/`mouseout`
+>    sur `.index-nav__dot`, `IndexNav.astro:45-52`) — remplacer la classe globale
+>    `is-dot-hover` par une classe posée sur l'`.index-nav__item` survolé uniquement
+>    (`closest('.index-nav__item')` au lieu de `nav.classList.add`).
+> 2. Simplifie le CSS : plus besoin de `.is-dot-hover .index-nav__item .index-nav__label`,
+>    juste `.index-nav__item.is-hovered .index-nav__label { transform: none; display: inline-flex; }`.
+> 3. Vérifier que ça ne casse pas les items déjà en `start`/`bellow` (visibles en
+>    permanence) : le hover ne doit rien changer pour eux à part le repositionnement
+>    (`transform: none`) le temps du survol.
+> 4. Repositionnement "à sa place" = court-circuiter `--label-to-first` pour l'item
+>    survolé (offset ramené à `0px`, ou l'item ignore la variable tant qu'il est
+>    `.is-hovered`), pendant que les autres gardent leur empilement normal.
+> 5. Le gap augmenté au survol de la colonne (R9) reste un axe séparé — probablement une
+>    classe posée sur `.index-nav` au `mouseenter`/`mouseleave` de `.index-nav__list`
+>    (survol de la colonne, pas du dot précis) : à ne pas confondre avec ce hover ciblé
+>    par point.
 
 ---
 
