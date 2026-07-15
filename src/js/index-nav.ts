@@ -69,7 +69,7 @@ export function initIndexNavScrollspy() {
   const LABEL_TOP_INSET = 5
 
   function calcLabelOffsets() {
-    const firstTop = items[0].getBoundingClientRect().top - LABEL_TOP_INSET
+    const firstTop = items[0].getBoundingClientRect().top
     items.forEach((item) => {
       const offset = firstTop - item.getBoundingClientRect().top
       item.style.setProperty('--label-to-first', `${offset}px`)
@@ -136,7 +136,12 @@ export function initIndexNavScrollspy() {
 
     if (crossedSentinel(entry.sentinelBellow)) return Stage.Bellow // T5
     if (crossedSentinel(entry.sentinelStart)) return Stage.Start   // T4
-    if (isActif(entry)) return Stage.Actif                          // T2
+    // Item 0 : rien ne le précède (coworking suit directement le hero) — pas de
+    // vraie fenêtre "avant" à traverser. Sans ce plancher, il reste en
+    // collapse-before (25px) jusqu'à ce que son propre T2 se déclenche, ce qui
+    // produit un saut de hauteur (25→65px) qui décale les points suivants au
+    // moment même où le rail entre à l'écran. Actif dès l'apparition à la place.
+    if (i === 0 || isActif(entry)) return Stage.Actif               // T2
     return Stage.Before
   }
 

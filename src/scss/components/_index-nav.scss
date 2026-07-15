@@ -92,8 +92,13 @@ $index-switch: 56rem;
 
 .index-nav__label {
   height: calc(100% - 10px);
+  background-color: rgb(150, 130, 238) !important;
 }
 
+.index-nav__deco {
+    height: calc(65px - 10px);
+    background-color: pink !important;
+}
 // Enveloppe paddée : cible du hover (closest('.index-nav__dot')) + espace autour
 // du rond. Le visuel est dans .index-nav__dot-core (purement visuel désormais —
 // T2 mesure le top de l'item lui-même, pas le dot, cf. index-nav.ts / isActif).
@@ -322,6 +327,7 @@ $index-switch: 56rem;
   // X = --pad-grid depuis le bord viewport, corrigé du décalage de centrage du container au-delà de 1550px
   position: sticky;
   top: var(--index-nav-gap); // même écart que le rail (relatif à main, décalé de nav-height)
+  margin-block: 5px;
   margin-left: 0px;
 
   &.index-nav__deco--hidden {
