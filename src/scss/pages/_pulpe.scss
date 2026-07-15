@@ -98,7 +98,10 @@ $pulpe-switch: 56rem;
 // ── proposition (flow normal en mobile) ──────────────────────────────────────
 .pulpe__proposition {
   order: 1;
-  width: var(--grid-col-mobile-3);
+  margin-bottom: calc(var(--space-50) * -1);
+  left: calc(var(--space-50) * -1);
+  z-index: 2;
+  width: var(--grid-col-mobile-4);
   margin-top: calc(var(--space-10) * -1);
   // DM Sans Bold Italic comme dans Figma (override Ortica du composant de base)
   font-family: var(--font-body);
