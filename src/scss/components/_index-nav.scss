@@ -55,6 +55,13 @@ $index-switch: 56rem;
 
 .index-nav__item--bellow {
   height: calc(35px + 10px);
+  
+  .index-nav__label {
+      font-size: 1rem; // 16px — title/h1/section_below
+    padding: var(--space-7) var(--space-20); // défaut = bellow
+    border-radius: var(--corner-medium); // 25px
+
+  }
 }
 
 // collapse-before / collapse-after : ne sont plus listés dans la règle bellow
@@ -65,7 +72,9 @@ $index-switch: 56rem;
 .index-nav__item--collapse-after {
   height: calc(15px + 10px);
 
-  &:hover{height: calc(35px + 10px);}
+  &:hover {
+    height: calc(35px + 10px);
+  }
 }
 
 .index-nav__dot {
@@ -108,9 +117,6 @@ $index-switch: 56rem;
   line-height: 1;
   white-space: nowrap;
   letter-spacing: normal;
-  font-size: 1rem; // 16px — title/h1/section_below
-  padding: var(--space-7) var(--space-20); // défaut = bellow
-  border-radius: var(--corner-medium); // 25px
   background: var(--action-index-initial);
   color: var(--action-index-texte-initial);
 }
@@ -230,18 +236,11 @@ $index-switch: 56rem;
   }
 
   // ── Mobile : touch-and-hold (JS → .is-touch-held) ──
-  // .is-touch-held   = doigt maintenu → label visible en initial
-  // .is-label-pressed = doigt glissé sur le label → pressed
+  // .is-touch-held = doigt maintenu → label visible en initial
   &.is-touch-held .index-nav__label {
     opacity: 1;
     transform: translateY(-50%) translateX(0);
     pointer-events: auto;
-  }
-
-  &.is-label-pressed .index-nav__label {
-    background: var(--action-index-pressed);
-    color: var(--action-index-texte-pressed);
-    text-decoration: underline;
   }
 }
 
@@ -269,9 +268,20 @@ $index-switch: 56rem;
   pointer-events: none;
 }
 
-[data-sentinel-start]  { top: var(--index-start-offset, 200px); }
-[data-sentinel-bellow] { top: var(--index-bellow-offset, 300px); } // 20 + 50 cumulé
-[data-sentinel-after]  { top: calc(var(--index-after-offset, 175px)*-1); } // T1, remplace crossedNavBottom
+[data-sentinel-start] {
+  top: var(--index-start-offset, 200px);
+}
+
+[data-sentinel-bellow] {
+  top: var(--index-bellow-offset, 300px);
+}
+
+// 20 + 50 cumulé
+[data-sentinel-after] {
+  top: calc(var(--index-after-offset, 175px)*-1);
+}
+
+// T1, remplace crossedNavBottom
 
 // ════════════════════════════════════════════════════════════════════
 // LABEL DÉCORATIF DE SECTION — .index-nav__deco
@@ -311,16 +321,7 @@ $index-switch: 56rem;
     transition: font-size 220ms ease, padding 220ms ease, border-radius 220ms ease;
   }
 
-  // ── état bellow : réduit (miroir de .index-nav__item--bellow .index-nav__label)
-  &.index-nav__deco--bellow {
-    font-size: 1rem; // 16px
-    padding: var(--space-7) var(--space-20);
-    border-radius: var(--corner-medium); // 25px
-  }
-
-  // ── mobile (la valeur bellow n'a pas besoin d'être répétée ici : la règle
-  // .index-nav__deco--bellow ci-dessus a une spécificité plus forte que ce
-  // bloc @media et s'applique déjà à toutes les largeurs)
+  // ── mobile
   @media (max-width: #{$index-switch}) {
     font-size: 1.625rem; // 26px
   }
