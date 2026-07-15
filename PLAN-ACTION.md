@@ -241,6 +241,31 @@ compris), conservé par défense.
 **Empilement** : les étiquettes sont dockées au même endroit ; l'ordre de peinture = ordre DOM,
 donc l'étiquette N+1 recouvre la N (règle « la 2 au-dessus de la 1 »). Aucun `z-index` nécessaire.
 
+> **Positionnement horizontal du rail — fix scrollbar (résolu, 2026-07)**
+>
+> Un décalage horizontal persistant entre `.index-nav__label` et `.index-nav__deco` (visible sur
+> écran large avec une scrollbar réelle, pas reproductible en scrollbar overlay/headless) venait
+> de deux bases de calcul différentes pour un même alignement visuel :
+> - `.u-container` (donc `.index-nav__deco`, enfant de section) se centre via `margin-inline: auto`
+>   + `width: 100%`, **relatif à `<main>`** — dont la largeur de contenu disponible est amputée par
+>   SA PROPRE scrollbar (`overflow-y: auto`).
+> - `.index-nav` (`position: fixed`) se centre via `calc((100vw - content-cap) / 2)` — `100vw`
+>   ignore totalement cette scrollbar (elle n'existe qu'à l'intérieur de `main`, pas au niveau
+>   document : `html`/`body` sont en `overflow: hidden`).
+>
+> Les deux formules ne divergent que lorsque la fenêtre dépasse `--content-cap` (1550px, seuil où
+> le terme de centrage devient actif des deux côtés) — l'écart vaut alors la moitié de la largeur
+> de la scrollbar. `position: fixed` étant structurellement ancré au viewport (jamais à `main`),
+> aucune formule CSS pure basée sur `100vw`/`%` ne peut reproduire exactement le centrage de
+> `.u-container` tant qu'une scrollbar réelle prend de la place.
+>
+> **Fix** : mesure JS plutôt que formule CSS. `IndexNav.astro` → `updateNavLeft()` lit
+> `coworking.getBoundingClientRect().left` (`#coworking` porte déjà `.u-container`) et pose le
+> résultat en `--index-nav-left` sur `.index-nav`, appelée à l'init et sur `resize`.
+> `_index-nav.scss` : `.index-nav { left: var(--index-nav-left, ancienne-formule-100vw) }` —
+> l'ancienne formule reste en fallback avant que le JS ne prenne la main. Vérifié à 1440/1800/2200px
+> et sur redimensionnement : alignement exact, aucune dépendance à la largeur de la scrollbar.
+
 **Reste à implémenter**
 - Mobile : appliquer les tailles `--mobile` via media query dans le rail (pas via classe JS).
 - R9 : hover sur la colonne → tous les dots grands + gap augmenté (reste séparé du hover par-dot

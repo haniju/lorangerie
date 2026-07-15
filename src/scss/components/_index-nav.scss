@@ -332,14 +332,21 @@ $index-switch: 56rem;
 // block = toute la page.
 // Dot centré dans la marge gauche via left absolu depuis le bord page.
 // Label en flux aligné avec le contenu via padding-left: --pad-grid.
-// left = même marge que les sections (.u-container) : au-delà de --content-cap
-// le contenu se centre, donc on ajoute le décalage de centrage au bord viewport.
+// left = bord gauche RÉEL de .u-container, mesuré en JS (--index-nav-left,
+// IndexNav.astro) plutôt que recalculé ici via 100vw. .index-nav est
+// position:fixed → son containing block est le viewport, alors que .u-container
+// se centre (margin-inline:auto) par rapport à <main>, dont la largeur de
+// contenu est amputée de SA PROPRE scrollbar (overflow-y:auto) — scrollbar que
+// 100vw ignore totalement (elle n'existe pas au niveau document, html/body
+// étant en overflow:hidden). Les deux formules divergeraient donc dès que la
+// fenêtre dépasse --content-cap. Le fallback ci-dessous (avant que le JS ne
+// prenne la main) reste l'ancienne formule, approximative mais raisonnable.
 // ════════════════════════════════════════════════════════════════════
 
 .index-nav {
   position: fixed;
   top: calc(var(--nav-height) + var(--index-nav-gap)); // écart réglable (défaut --space-10)
-  left: max(0px, calc((100vw - var(--content-cap)) / 2));
+  left: var(--index-nav-left, max(0px, calc((100vw - var(--content-cap)) / 2)));
   z-index: 10;
   pointer-events: none;
   // translateY piloté par JS en suivant le top de #coworking.

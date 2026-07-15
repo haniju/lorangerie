@@ -65,4 +65,21 @@ const translate = Math.max(0, coworkingTop - navTop)
   const scroller = document.querySelector('main') ?? window
   scroller.addEventListener('scroll', updateNavPosition, { passive: true })
   updateNavPosition()
+
+  // Cale --index-nav-left sur le bord gauche RÉEL de .u-container (mesuré via
+  // #coworking, qui porte aussi cette classe) plutôt que de le recalculer en CSS
+  // via 100vw. .index-nav est position:fixed → son containing block est le
+  // viewport, alors que .u-container se centre (margin-inline:auto) par rapport
+  // à <main>, dont la largeur de contenu est réduite par SA PROPRE scrollbar
+  // (overflow-y:auto). 100vw ignore cette scrollbar (elle n'est pas au niveau
+  // document, html/body étant en overflow:hidden) → les deux formules divergent
+  // dès que la fenêtre dépasse --content-cap, d'un écart = moitié de la largeur
+  // de la scrollbar. Mesurer la vraie position élimine le problème à la racine.
+  function updateNavLeft() {
+    if (!nav || !coworking) return
+    nav.style.setProperty('--index-nav-left', `${coworking.getBoundingClientRect().left}px`)
+  }
+
+  window.addEventListener('resize', updateNavLeft, { passive: true })
+  updateNavLeft()
 </script>
