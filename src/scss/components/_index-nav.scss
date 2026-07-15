@@ -326,7 +326,7 @@ $index-switch: 56rem;
   // Y = même formule que .index-nav { top }
   // X = --pad-grid depuis le bord viewport, corrigé du décalage de centrage du container au-delà de 1550px
   position: sticky;
-  top: var(--index-nav-gap); // même écart que le rail (relatif à main, décalé de nav-height)
+  top: calc(var(--index-nav-gap) + 5px); // même écart que le rail (relatif à main, décalé de nav-height)
   margin-block: 5px;
   margin-left: 0px;
 
