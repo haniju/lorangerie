@@ -266,6 +266,24 @@ donc l'étiquette N+1 recouvre la N (règle « la 2 au-dessus de la 1 »). Aucun
 > l'ancienne formule reste en fallback avant que le JS ne prenne la main. Vérifié à 1440/1800/2200px
 > et sur redimensionnement : alignement exact, aucune dépendance à la largeur de la scrollbar.
 
+> **Positionnement vertical du label docké — fix inset de centrage (résolu, 2026-07)**
+>
+> `--label-to-first` (offset `translateY` qui docke le label de l'item N sur la position de
+> l'item 1) atterrissait systématiquement 5px trop bas. Cause : chaque hauteur d'item
+> (`_index-nav.scss`, `height: calc(Npx + 10px)`) ajoute 10px de plus que la hauteur réelle du
+> label — centré via `align-items: center`, le label se retrouve donc à 10px/2 = 5px sous le haut
+> de SON PROPRE item, uniformément quel que soit l'état (start/bellow partagent la même
+> convention `+10px`). L'ancrage (`items[0].getBoundingClientRect().top`) mesure le haut BRUT de
+> la boîte du premier item (son label peut être caché, non mesurable) — sans retrancher cet inset,
+> l'inset du label CIBLE s'ajoutait après le docking au lieu de s'annuler avec un inset équivalent
+> côté ancrage.
+>
+> **Fix** (`src/js/index-nav.ts`, `calcLabelOffsets`) : `firstTop = items[0]...top -
+> LABEL_TOP_INSET` (constante `5`, dérivée de la convention `+10px` partagée par toutes les
+> hauteurs d'item). Vérifié en direct : le label docké atterrit désormais exactement au haut de
+> la boîte de l'item 1 (avant : 5px plus bas), en `--start` comme en `--bellow`, sur plusieurs
+> sections.
+
 **Reste à implémenter**
 - Mobile : appliquer les tailles `--mobile` via media query dans le rail (pas via classe JS).
 - R9 : hover sur la colonne → tous les dots grands + gap augmenté (reste séparé du hover par-dot

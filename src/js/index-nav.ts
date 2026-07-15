@@ -56,8 +56,20 @@ export function initIndexNavScrollspy() {
   // Les hauteurs du rail changent au fil du scroll (grande ↔ petite selon l'état),
   // donc cet offset n'est PAS invariant : on le recalcule à chaque frame, après avoir
   // appliqué les classes d'état (le transform du label n'affecte pas la boîte de l'item mesurée).
+  //
+  // LABEL_TOP_INSET (5px) — chaque hauteur d'item (`_index-nav.scss`,
+  // `height: calc(Npx + 10px)`) ajoute 10px de plus que la hauteur réelle du label ;
+  // centré via `align-items: center`, le label se retrouve donc systématiquement à
+  // 10px/2 = 5px sous le haut de SON PROPRE item, quel que soit l'état (start/bellow
+  // suivent la même convention +10px). La cible du docking est le haut BRUT de la
+  // boîte de items[0] (son label peut être caché, non mesurable — on ne peut ancrer
+  // que sur sa boîte) : sans retrancher cet inset, le label docké atterrit 5px plus
+  // bas que ce haut de boîte (l'inset de son PROPRE centrage s'ajoute après coup, au
+  // lieu de s'annuler avec un inset équivalent côté ancrage).
+  const LABEL_TOP_INSET = 5
+
   function calcLabelOffsets() {
-    const firstTop = items[0].getBoundingClientRect().top
+    const firstTop = items[0].getBoundingClientRect().top - LABEL_TOP_INSET
     items.forEach((item) => {
       const offset = firstTop - item.getBoundingClientRect().top
       item.style.setProperty('--label-to-first', `${offset}px`)
