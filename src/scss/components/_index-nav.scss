@@ -276,6 +276,14 @@ $index-switch: 56rem;
   }
 }
 
+// Logo Pulpe inline dans le deco (remplace le mot "Pulpe") — hauteur en em
+// pour suivre le font-size du deco (36px desktop / 26px mobile).
+.index-nav__deco-logo {
+  height: 0.7em;
+  width: auto;
+  margin-left: 0.3em;
+}
+
 // ════════════════════════════════════════════════════════════════════
 // RAIL NAV — composant vivant (.index-nav)
 // Position sticky — naturellement hors viewport pendant le hero (DOM
