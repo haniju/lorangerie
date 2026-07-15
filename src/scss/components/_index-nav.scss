@@ -10,6 +10,15 @@
 
 $index-switch: 56rem;
 
+// Inset vertical entre la boîte d'un item/deco et le texte du label qu'il
+// contient — produit par le centrage flex de .index-nav__item sur un label
+// dont la hauteur est réduite de 2x cette valeur (cf. .index-nav__label,
+// height: calc(100% - #{$item-label-margin * 2})). .index-nav__deco n'a pas
+// ce parent centreur : son `top` sticky compense l'inset manuellement (+1x
+// cette valeur) pour que son texte atterrisse à la même ligne que le label
+// docké (cf. LABEL_TOP_INSET, index-nav.ts).
+$item-label-margin: 5px;
+
 // Écart vertical de l'index-nav (rail + deco) sous la navbar.
 // Point de réglage unique, partagé rail + deco (défini sur :root car la deco n'est
 // pas descendante de .index-nav). Mobile-first : base = mobile, override desktop.
@@ -91,12 +100,12 @@ $index-switch: 56rem;
 }
 
 .index-nav__label {
-  height: calc(100% - 10px);
+  height: calc(100% - #{$item-label-margin * 2});
   background-color: rgb(150, 130, 238) !important;
 }
 
 .index-nav__deco {
-    height: calc(65px - 10px);
+    height: calc(65px - #{$item-label-margin * 2});
     background-color: pink !important;
 }
 // Enveloppe paddée : cible du hover (closest('.index-nav__dot')) + espace autour
@@ -326,7 +335,7 @@ $index-switch: 56rem;
   // Y = même formule que .index-nav { top }
   // X = --pad-grid depuis le bord viewport, corrigé du décalage de centrage du container au-delà de 1550px
   position: sticky;
-  top: calc(var(--index-nav-gap) + 5px); // même écart que le rail (relatif à main, décalé de nav-height)
+  top: calc(var(--index-nav-gap) + #{$item-label-margin}); // même écart que le rail (relatif à main, décalé de nav-height)
   margin-block: 5px;
   margin-left: 0px;
 
