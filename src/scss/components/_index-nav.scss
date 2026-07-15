@@ -19,6 +19,25 @@ $index-switch: 56rem;
   @media (min-width: $index-switch) {
     --index-nav-gap: var(--space-10); // desktop — ajuste ici
   }
+
+  // Position d'ancrage partagée par .index-nav { top } ET scroll-margin-top des
+  // <section> (cf. bloc scroll-margin plus bas) — un seul point de réglage pour
+  // que le clic sur un item d'index-nav et le scroll naturel s'accordent sur la
+  // même ligne (celle où le deco est "docké" = trigger 3 de la spec).
+  --index-scroll-anchor: calc(var(--nav-height) + var(--index-nav-gap));
+}
+
+// ── Point d'atterrissage au clic / deep-link ──────────────────────────
+// Sans ceci, un clic sur un item du rail (ou un lien #id externe) atterrit au
+// haut BRUT de la section, sans lien avec la ligne de docking du rail — le deco
+// pourrait apparaître déjà partiellement scrollé, ou au contraire trop haut.
+// scroll-margin-top est respecté nativement par l'ancrage <a href="#id"> ET par
+// scrollIntoView() (cf. initIndexNavTouch, index-nav.ts) — un seul réglage CSS
+// couvre desktop (lien natif) et mobile (JS) sans dupliquer l'offset.
+// ⚠️ Suppose que le deco est au tout début de la section (pas de padding/marge
+// avant lui) — sinon, retrancher cet écart de --index-scroll-anchor ci-dessous.
+.u-section {
+  scroll-margin-top: var(--index-scroll-anchor);
 }
 
 .index-nav__item {
@@ -34,12 +53,14 @@ $index-switch: 56rem;
   height: calc(55px + 10px);
 }
 
-.index-nav__item--collapse-before,
-.index-nav__item--collapse-after,
 .index-nav__item--bellow {
   height: calc(35px + 10px);
 }
 
+// collapse-before / collapse-after : ne sont plus listés dans la règle bellow
+// ci-dessus. Leur hauteur y était de toute façon systématiquement écrasée par
+// celle-ci (même spécificité, bloc plus tardif dans la cascade) — les lister
+// deux fois ne faisait que rendre le résultat dépendant de l'ordre des blocs.
 .index-nav__item--collapse-before,
 .index-nav__item--collapse-after {
   height: calc(15px + 10px);
@@ -56,7 +77,8 @@ $index-switch: 56rem;
 }
 
 // Enveloppe paddée : cible du hover (closest('.index-nav__dot')) + espace autour
-// du rond. Le visuel est dans .index-nav__dot-core (mesuré par le JS pour le trigger).
+// du rond. Le visuel est dans .index-nav__dot-core (purement visuel désormais —
+// T2 mesure le top de l'item lui-même, pas le dot, cf. index-nav.ts / isActif).
 .index-nav__dot {
   flex-shrink: 0;
   position: relative;
@@ -223,6 +245,34 @@ $index-switch: 56rem;
 }
 
 // ════════════════════════════════════════════════════════════════════
+// SENTINELS — repères T4/T5 de la spec, matérialisés en DOM
+// À poser dans chaque .astro de section, dans le même wrapper `position:relative`
+// que .index-nav__deco (ou sur <section> elle-même si son bord haut coïncide
+// avec le deco — cf. échange sur le wrapper). Offsets mesurés depuis le deco,
+// donc INDÉPENDANTS du scroll — seule leur position par rapport à la ligne du
+// rail (stickyTopPx, lue en JS) détermine le déclenchement.
+//
+//   [data-sentinel-start]  : T4 — "+20px après T3" de la spec
+//   [data-sentinel-bellow] : T5 — "+50px après T4", donc cumulé = 70px après T3
+//
+// Valeurs cumulées volontairement (bellow > start toujours, puisque comparées
+// à la MÊME ligne stickyTopPx) — ne pas les rendre indépendantes l'une de l'autre.
+// ════════════════════════════════════════════════════════════════════
+
+.index-sentinel {
+  position: absolute;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+[data-sentinel-start]  { top: var(--index-start-offset, 200px); }
+[data-sentinel-bellow] { top: var(--index-bellow-offset, 300px); } // 20 + 50 cumulé
+[data-sentinel-after]  { top: calc(var(--index-after-offset, 175px)*-1); } // T1, remplace crossedNavBottom
+
+// ════════════════════════════════════════════════════════════════════
 // LABEL DÉCORATIF DE SECTION — .index-nav__deco
 // Miroir visuel de .index-nav__label : même typographie, même fond pill,
 // pas d'interactions. Positionné sticky dans sa section pour "voyager"
@@ -266,13 +316,11 @@ $index-switch: 56rem;
     border-radius: var(--corner-medium); // 25px
   }
 
-  // ── mobile
+  // ── mobile (la valeur bellow n'a pas besoin d'être répétée ici : la règle
+  // .index-nav__deco--bellow ci-dessus a une spécificité plus forte que ce
+  // bloc @media et s'applique déjà à toutes les largeurs)
   @media (max-width: #{$index-switch}) {
     font-size: 1.625rem; // 26px
-
-    &.index-nav__deco--bellow {
-      font-size: 1rem;
-    }
   }
 }
 
@@ -357,11 +405,8 @@ $index-switch: 56rem;
   .index-nav__item--start .index-nav__label,
   .index-nav__item--bellow .index-nav__label,
   .index-nav__item--collapse-after .index-nav__label {
+    // valeur identique en desktop qu'en mobile — pas besoin de la répéter dans un @media
     transform: translateY(var(--label-to-first, 0px));
-
-    @media (min-width: $index-switch) {
-      transform: translateY(var(--label-to-first, 0px));
-    }
   }
 
   // @hover-reveal — DEUX mécanismes distincts :
@@ -413,7 +458,6 @@ $index-switch: 56rem;
   .index-nav__item--collapse-before .index-nav__label,
   .index-nav__item--actif .index-nav__label,
   .index-nav__item--collapse-after .index-nav__label {
-    //visibility: hidden;
     display: none;
     pointer-events: none;
   }
