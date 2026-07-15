@@ -107,6 +107,7 @@ $index-switch: 56rem;
   font-weight: 400;
   line-height: 1;
   white-space: nowrap;
+  letter-spacing: normal;
   font-size: 1rem; // 16px — title/h1/section_below
   padding: var(--space-7) var(--space-20); // défaut = bellow
   border-radius: var(--corner-medium); // 25px
@@ -287,6 +288,7 @@ $index-switch: 56rem;
   font-family: var(--font-heading);
   font-weight: 400;
   line-height: 1;
+  letter-spacing: normal;
   white-space: nowrap;
   font-size: 2.25rem; // 36px — état start (défaut)
   padding: var(--space-7) var(--space-30) var(--space-10);
