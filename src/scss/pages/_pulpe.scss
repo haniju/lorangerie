@@ -50,7 +50,9 @@ $pulpe-switch: 56rem;
   color: var(--text-cold-dark);
   margin-bottom: var(--space-10);
 
-  & + & { margin-top: var(--space-30); }
+  &+& {
+    margin-top: var(--space-30);
+  }
 }
 
 .pulpe_presentation {
@@ -71,9 +73,9 @@ $pulpe-switch: 56rem;
 
 // ── carousel (crossfade) ─────────────────────────────────────────────────────
 .pulpe__carousel {
-  order: 1;
+  order: 2;
   position: relative;
-  width: calc(var(--grid-col-mobile-5) - var(--space-20));
+  width: var(--grid-col-mobile-5);
   height: 16rem;
   border-radius: var(--corner-small);
   overflow: hidden;
@@ -88,12 +90,14 @@ $pulpe-switch: 56rem;
   opacity: 0;
   transition: opacity 0.9s ease-in-out;
 
-  &.is-active { opacity: 1; }
+  &.is-active {
+    opacity: 1;
+  }
 }
 
 // ── proposition (flow normal en mobile) ──────────────────────────────────────
 .pulpe__proposition {
-  order: 3;
+  order: 1;
   width: var(--grid-col-mobile-3);
   margin-top: calc(var(--space-10) * -1);
   // DM Sans Bold Italic comme dans Figma (override Ortica du composant de base)
@@ -163,15 +167,19 @@ $pulpe-switch: 56rem;
 
   // carousel : remplit tout le col-media (hauteur = hauteur des textes)
   .pulpe__carousel {
+    order: 1;
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
     border-radius: var(--corner-small);
+    width: calc(var(--grid-col-mobile-5) - var(--space-20));
   }
 
   // proposition : chevauchement top-left sur le carousel
   .pulpe__proposition {
+    order: 3;
+    background-color: yellow;
     position: absolute;
     top: calc(var(--space-50) * -1);
     left: calc(var(--space-50) * -1);

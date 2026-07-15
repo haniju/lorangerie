@@ -45,8 +45,8 @@ $overlap: var(--space-20); // recouvrement entre les 3 blocs
 .fonctionnement__liste {
   position: relative;
   z-index: 1;
-  width: var(--grid-col-mobile-5);
-  margin-left: var(--space-20);
+  width: var(--grid-col-mobile-4);
+  margin-left: var(--grid-col-mobile-1);
   margin-top: calc(#{$overlap} * -1);
 }
 
