@@ -288,7 +288,9 @@ $index-switch: 56rem;
 // Miroir visuel de .index-nav__label : même typographie, même fond pill,
 // pas d'interactions. Positionné sticky dans sa section pour "voyager"
 // vers le rail et pousser l'étiquette précédente vers le haut.
-// Position x calée via --index-nav-label-left (set par JS à l'init).
+// Position x : héritée du flux normal de la <section> (padding-inline de
+// .u-container) — aucun calage JS nécessaire ici, contrairement à .index-nav
+// (position:fixed, cf. bloc RAIL NAV plus bas).
 // ════════════════════════════════════════════════════════════════════
 
 .index-nav__deco {
