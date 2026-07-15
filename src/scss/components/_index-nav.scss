@@ -56,11 +56,15 @@ $item-label-margin: 5px;
 }
 
 .index-nav__item {
-  --dot-size: 0.875rem; // 14px — défaut (bellow / collapsed desktop)
+  --dot-size: 0.7rem; // mobile
   --dot-color: var(--text-cold-dark);
   display: inline-flex;
   align-items: center;
   gap: var(--space-10);
+
+  @media (min-width: $index-switch) {
+    --dot-size: 0.875rem; // 14px — desktop (bellow / collapsed)
+  }
 }
 
 .index-nav__item--actif,
@@ -326,7 +330,7 @@ $item-label-margin: 5px;
   letter-spacing: normal;
   white-space: nowrap;
   font-size: 2.25rem; // 36px — état start (défaut)
-  padding: var(--space-7) var(--space-30) var(--space-10);
+  padding: var(--space-7) var(--space-20) var(--space-7) var(--space-20);
   border-radius: var(--corner-big); // 80px
   background: var(--action-index-initial);
   color: var(--action-index-texte-initial);
@@ -347,6 +351,9 @@ $item-label-margin: 5px;
     transition: font-size 220ms ease, padding 220ms ease, border-radius 220ms ease;
   }
 
+  @media (min-width: $index-switch) {
+    padding: var(--space-7) var(--space-30) var(--space-10);
+  }
   // ── mobile
   @media (max-width: #{$index-switch}) {
     font-size: 1.625rem; // 26px
