@@ -13,6 +13,7 @@ $overlap: var(--space-20); // recouvrement entre les 3 blocs
   display: flex;
   flex-direction: column;
 }
+
 .fonctionnement__grid {
   display: flex;
   flex-direction: column;
@@ -58,7 +59,7 @@ $overlap: var(--space-20); // recouvrement entre les 3 blocs
   gap: var(--space-20);
   margin-top: var(--space-30);
   width: var(--grid-col-mobile-5);
-  margin-left: var(--space-20);
+  //margin-left: var(--space-20);
 }
 
 .fonctionnement__btn {
@@ -75,6 +76,7 @@ $overlap: var(--space-20); // recouvrement entre les 3 blocs
   .u-container.fonctionnement {
     //margin-inline : unset;
   }
+
   .fonctionnement__grid {
     padding-left: var(--grid-col-desktop-2);
     max-width: 58rem;
@@ -94,9 +96,11 @@ $overlap: var(--space-20); // recouvrement entre les 3 blocs
     align-items: flex-start;
     margin-left: var(--grid-col-desktop-3);
     margin-top: calc(var(--space-30)*-1);
-  }
+    width: var(--grid-col-desktop-2);
 
-  .fonctionnement__btn {
-    width: auto;
+    .btn-group,
+    .btn-primary {
+      width: 100%;
+    }
   }
 }
