@@ -13,7 +13,8 @@ const tarifs = mode["tarifs_"]
 
 <section class="tarifs u-container u-section" id="tarifs">
   <h2 class="index-nav__deco" data-label-for="tarifs">{t["index_"]["tarif"]["$value"]}</h2>
-
+  <span class="index-sentinel" data-sentinel-start data-section-ref="tarifs" aria-hidden="true"></span>
+  <span class="index-sentinel" data-sentinel-bellow data-section-ref="tarifs" aria-hidden="true"></span>
 
   <div class="proposition proposition--none proposition--section-intro">
     <p class="proposition__text">{tarifs["infos"]["$value"]}</p>
@@ -57,7 +58,7 @@ const tarifs = mode["tarifs_"]
         </div>
       </article>
 
-      <article class="forfait forfait--communautaire" data-sentinel-for="tarifs">
+      <article class="forfait forfait--communautaire">
         <div class="forfait__header">
           <h3 class="forfait__titre">{tarifs["copulpeur_"]["copulpeur"]["$value"]}</h3>
         </div>

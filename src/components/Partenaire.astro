@@ -28,6 +28,8 @@ const logosSoutien = [
 
 <section class="partenaire u-container u-section" id="partenaires">
   <h2 class="index-nav__deco" data-label-for="partenaires">{t['index_']['partenaire']['$value']}</h2>
+  <span class="index-sentinel" data-sentinel-start data-section-ref="partenaires" aria-hidden="true"></span>
+  <span class="index-sentinel" data-sentinel-bellow data-section-ref="partenaires" aria-hidden="true"></span>
 
   <div class="partenaire__grid">
     <!-- col1 : lieu créé par + logo Pulpe -->
@@ -37,7 +39,7 @@ const logosSoutien = [
     </div>
 
     <!-- col2 : soutenue par + logos partenaires -->
-    <div class="partenaire__col-soutien" data-sentinel-for="partenaires">
+    <div class="partenaire__col-soutien">
       <p class="partenaire__legende">{partenaire['label2']['$value']}</p>
       <div class="partenaire__logos">
         {logosSoutien.map(({ src, alt }) => (
