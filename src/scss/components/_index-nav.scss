@@ -40,6 +40,12 @@ $index-switch: 56rem;
   scroll-margin-top: var(--index-scroll-anchor);
 }
 
+// Coworking suit directement le hero (pas de section au-dessus) : pas besoin du
+// padding-top standard de .u-section. Garde le padding-bottom existant.
+.coworking {
+  padding-block: 0 var(--space-xl-2xl);
+}
+
 .index-nav__item {
   --dot-size: 0.875rem; // 14px — défaut (bellow / collapsed desktop)
   --dot-color: var(--text-cold-dark);
@@ -55,12 +61,15 @@ $index-switch: 56rem;
 
 .index-nav__item--bellow {
   height: calc(35px + 10px);
-  
+}
+
+.index-nav__item--bellow, 
+.index-nav__item--collapse-before,
+.index-nav__item--collapse-after{
   .index-nav__label {
-      font-size: 1rem; // 16px — title/h1/section_below
+    font-size: 1rem; // 16px — title/h1/section_below
     padding: var(--space-7) var(--space-20); // défaut = bellow
     border-radius: var(--corner-medium); // 25px
-
   }
 }
 
