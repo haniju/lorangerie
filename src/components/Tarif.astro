@@ -53,7 +53,9 @@ const tarifs = mode["tarifs_"]
           </div>
           <p class="forfait__desc">{tarifs["investi_"]["info"]["$value"]}</p>
           <p class="forfait__desc-titre">{tarifs["investi_"]["desc_titre"]["$value"]}</p>
-          <p class="forfait__details">{tarifs["investi_"]["contribution"]["$value"]}</p>
+          <ul class="forfait__details">
+            {tarifs["investi_"]["contribution"]["$value"].map((item: string) => <li>{item}</li>)}
+          </ul>
         </div>
       </article>
 
@@ -68,7 +70,9 @@ const tarifs = mode["tarifs_"]
           </div>
           <p class="forfait__desc">{tarifs["copulpeur_"]["info"]["$value"]}</p>
           <p class="forfait__desc-titre">{tarifs["copulpeur_"]["desc_titre"]["$value"]}</p>
-          <p class="forfait__details">{tarifs["copulpeur_"]["contribution"]["$value"]}</p>
+          <ul class="forfait__details">
+            {tarifs["copulpeur_"]["contribution"]["$value"].map((item: string) => <li>{item}</li>)}
+          </ul>
         </div>
       </article>
     </div>

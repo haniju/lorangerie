@@ -322,14 +322,19 @@
                   "ALL_SCOPES"
                 ],
                 "$type": "string",
-                "$value": "Contribution active au conseil des usagers de L’Orangerie (2h/mois)"
+                "$value": "Contribution active au conseil des usagers de L’Orangerie (2h/mois). Les usagers et usagères de l’Orangerie se réunissent une fois par mois dans l’intention d’améliorer l’environnement de travail partagé et les liens que nous y tissons. Plusieurs types de contributions sont possibles :"
               },
               "contribution": {
                 "$scopes": [
                   "ALL_SCOPES"
                 ],
                 "$type": "string",
-                "$value": "Concrètement, ça veut dire quoi ? Les usagers et usagères de l’Orangerie se réunissent une fois par mois dans l’intention d’améliorer l’environnement de travail partagé et les liens que nous y tissons. En découle une multitude de contributions ou d’actions possibles : rédaction d’un tutoriel pour l’imprimante, achat de thé, nettoyage de la machine à café, organiser un temps d’entraide entre coworkers, etc."
+                "$value": [
+                  "Rédaction d’un tutoriel pour l’imprimante",
+                  "Achat de thé, nettoyage de la machine à café,",
+                  "Organiser un temps d’entraide entre coworkers,",
+                  "etc."
+                ]
               }
             },
             "copulpeur_": {
@@ -359,14 +364,19 @@
                   "ALL_SCOPES"
                 ],
                 "$type": "string",
-                "$value": "Contribution active au conseil des usagers de L’Orangerie (2h/mois). Participation bénévole aux activités de PULPE (2h/mois)"
+                "$value": "Contribution active au conseil des usagers de L’Orangerie (2h/mois) et Participation bénévole aux activités de PULPE (2h/mois) :"
               },
               "contribution": {
                 "$scopes": [
                   "ALL_SCOPES"
                 ],
                 "$type": "string",
-                "$value": "Concrètement, ça veut dire quoi ? Fais briller tes compétences dans une commission qui t’inspire : découvre le plaisir que ressent tout barman de l’autre côté du comptoir en buvette, ·\tbook des artistes de renommée intercommunale ou internationale pour la programmation, ou encore si tu prèfères, la rédaction de publications vitaminées."
+                "$value": [
+                  "Découvre le plaisir que ressent tout barman de l’autre côté du comptoir en buvette,",
+                  "Book des artistes de renommée intercommunale ou internationale pour la programmation,",
+                  "Rédige des publications vitaminées",
+                  "etc."
+                ]
               },
               "btnprimary": {
                 "$scopes": [

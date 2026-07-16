@@ -76,12 +76,21 @@
 
 .forfait__details {
   margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-7);
   font-family: var(--font-body);
   font-weight: 300; // Light
   font-size: 0.9375rem; // 15px
-  line-height: 1.47; // 22px — font/line-height/compact
+  line-height: 1.47;
   color: var(--text-cold-dark);
   font-variation-settings: 'opsz' 14;
+
+  li::before {
+    content: '— ';
+  }
 }
 
 // ─── niveau = communautaire ─────────────────────────────────────
