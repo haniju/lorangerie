@@ -1,6 +1,8 @@
 // Boutons — rampe complète construite depuis Figma. Cf. SITE-PLAN.md.
 // primary / secondary / fab / lien-cliquable / nav-primary / nav-secondary.
 // (bouton/charte & bouton/primary_back = morts, ignorés.)
+$bouton-switch: 56rem;
+
 
 %btn-base {
   display: inline-flex;
@@ -28,19 +30,35 @@
 
 .btn--primary {
   @extend %btn-base;
-  padding: var(--space-10) var(--space-70);
+  padding: var(--space-10) var(--space-10);
   background: var(--action-button-primary-initial);
   color: var(--action-button-primary-texte-label);
   border-radius: var(--corner-small);
   letter-spacing: 1px; // font/label/letter-spacing
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.08); // button-shadow
+  height: 50px;
+  width: 100%;
 
-  &:hover  { background: var(--action-button-primary-hover);  color: var(--action-button-primary-texte-hover); }
-  &:active { background: var(--action-button-primary-pressed); color: var(--action-button-primary-texte-pressed); }
+  &:hover {
+    background: var(--action-button-primary-hover);
+    color: var(--action-button-primary-texte-hover);
+  }
+
+  &:active {
+    background: var(--action-button-primary-pressed);
+    color: var(--action-button-primary-texte-pressed);
+  }
+
   &:disabled {
     background: var(--action-button-primary-disabled);
     color: var(--action-button-primary-texte-disabled);
     cursor: not-allowed;
+  }
+
+  @media (min-width: $bouton-switch) {
+    padding: var(--space-10) var(--space-70);
+    height: 40px;
+    width: max-content;
   }
 }
 
@@ -53,14 +71,31 @@
   border-radius: var(--corner-small);
   letter-spacing: 1px;
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.08);
+  height: 45px;
+  width: 100%;
 
-  &:hover  { background: var(--action-button-secondary-hover);  color: var(--action-button-secondary-texte-hover); }
-  &:active { background: var(--action-button-secondary-pressed); color: var(--action-button-secondary-texte-pressed); }
+  &:hover {
+    background: var(--action-button-secondary-hover);
+    color: var(--action-button-secondary-texte-hover);
+  }
+
+  &:active {
+    background: var(--action-button-secondary-pressed);
+    color: var(--action-button-secondary-texte-pressed);
+  }
+
   &:disabled {
     background: var(--action-button-secondary-disabled);
     color: var(--action-button-secondary-texte-disabled);
     cursor: not-allowed;
   }
+
+  @media (min-width: $bouton-switch) {
+    padding: var(--space-10) var(--space-70);
+    height: 40px;
+    width: max-content;
+  }
+
 }
 
 // ─── bouton/fab (rond « + ») ────────────────────────────────
@@ -73,8 +108,17 @@
   border-radius: 1.875rem; // 30px (initial) — plus rond
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.08);
 
-  &:hover  { background: var(--action-button-primary-hover);   border-radius: 1.25rem; } // 20px
-  &:active { background: var(--action-button-primary-pressed); border-radius: 1.25rem; }
+  &:hover {
+    background: var(--action-button-primary-hover);
+    border-radius: 1.25rem;
+  }
+
+  // 20px
+  &:active {
+    background: var(--action-button-primary-pressed);
+    border-radius: 1.25rem;
+  }
+
   &:disabled {
     background: var(--action-button-primary-disabled);
     color: var(--action-button-primary-texte-disabled);
@@ -84,10 +128,14 @@
 }
 
 .btn--fab__icon {
-  width: 2.5rem;  // 40px
+  width: 2.5rem; // 40px
   height: 2.5rem;
 
-  path { fill: currentColor; } // override du #000 de l'asset
+  path {
+    fill: currentColor;
+  }
+
+  // override du #000 de l'asset
 }
 
 // ─── bouton/lien-cliquable ──────────────────────────────────
@@ -102,8 +150,13 @@
   border: 0;
   transition: color var(--duration-fast) var(--ease-out);
 
-  &:hover  { color: var(--action-index-texte-hover); }
-  &:active { color: var(--action-index-texte-pressed); }
+  &:hover {
+    color: var(--action-index-texte-hover);
+  }
+
+  &:active {
+    color: var(--action-index-texte-pressed);
+  }
 }
 
 // ─── bouton/nav-primary ─────────────────────────────────────
@@ -119,6 +172,7 @@
     background: var(--action-nav-nav-primary-hover);
     color: var(--action-nav-nav-primary-texte-hover);
   }
+
   &:active {
     background: var(--action-nav-nav-primary-pressed);
     color: var(--action-nav-nav-primary-texte-pressed);
@@ -144,16 +198,22 @@ $btn-switch: 56rem;
   background: var(--action-nav-nav-secondary-initial);
   color: var(--action-nav-nav-secondary-texte-initial);
 
-  &:hover  { background: var(--action-nav-nav-secondary-hover); }
-  &:active { background: var(--action-nav-nav-secondary-pressed); }
-    @media (min-width: $btn-switch) {
-      padding-inline: var(--space-40) var(--space-34);
-    }
+  &:hover {
+    background: var(--action-nav-nav-secondary-hover);
+  }
+
+  &:active {
+    background: var(--action-nav-nav-secondary-pressed);
+  }
+
+  @media (min-width: $btn-switch) {
+    padding-inline: var(--space-40) var(--space-34);
+  }
 }
 
 .btn--nav-secondary__picto {
   flex-shrink: 0;
-  width: 1.5rem;  // 24px
+  width: 1.5rem; // 24px
   height: 1.5rem;
 }
 
