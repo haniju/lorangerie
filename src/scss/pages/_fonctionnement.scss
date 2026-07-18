@@ -78,7 +78,7 @@ $overlap: var(--space-20); // recouvrement entre les 3 blocs
   }
 
   .fonctionnement__grid {
-    padding-left: var(--grid-col-desktop-2);
+    padding-left: var(--grid-col-desktop-1);
     max-width: 58rem;
     margin-inline: 0px;
   }
@@ -94,9 +94,9 @@ $overlap: var(--space-20); // recouvrement entre les 3 blocs
 
   .fonctionnement__boutons {
     align-items: flex-start;
-    margin-left: var(--grid-col-desktop-3);
+    margin-left: calc(var(--grid-col-desktop-3) - var(--space-90));
     margin-top: calc(var(--space-30)*-1);
-    width: var(--grid-col-desktop-2);
+    width: var(--grid-col-desktop-3);
 
     .btn-group,
     .btn-primary {
