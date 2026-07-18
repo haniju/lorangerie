@@ -55,6 +55,7 @@ $bento-gap: var(--space-10);
 .bento__tiers {
   flex: 0 1 33%;
   min-width: 0;
+  margin-bottom: CALC(-1 * var(--space-152));
 }
 
 .bento__deux-tiers {
