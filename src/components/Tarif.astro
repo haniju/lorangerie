@@ -52,9 +52,10 @@ const tarifs = mode["tarifs_"]
             <span class="forfait__montant">{tarifs["investi_"]["tarif"]["$value"]}</span>
           </div>
           <p class="forfait__desc">{tarifs["investi_"]["info"]["$value"]}</p>
-          <p class="forfait__desc-titre">{tarifs["investi_"]["desc_titre"]["$value"]}</p>
+          <p class="forfait__sous-titre">{tarifs["investi_"]["sous_titre_1"]["$value"]}</p>
+          <p class="forfait__description">{tarifs["investi_"]["description_1"]["$value"]}</p>
           <ul class="forfait__details">
-            {tarifs["investi_"]["contribution"]["$value"].map((item: string) => <li>{item}</li>)}
+            {tarifs["investi_"]["liste_1"]["$value"].map((item: string) => <li>{item}</li>)}
           </ul>
         </div>
       </article>
@@ -69,9 +70,16 @@ const tarifs = mode["tarifs_"]
             <span class="forfait__montant">{tarifs["copulpeur_"]["tarif"]["$value"]}</span>
           </div>
           <p class="forfait__desc">{tarifs["copulpeur_"]["info"]["$value"]}</p>
-          <p class="forfait__desc-titre">{tarifs["copulpeur_"]["desc_titre"]["$value"]}</p>
+          <p class="forfait__sous-titre">{tarifs["copulpeur_"]["sous_titre_1"]["$value"]}</p>
+          {tarifs["copulpeur_"]["afficher_description_1"]["$value"] && (
+            <p class="forfait__description">{tarifs["copulpeur_"]["description_1"]["$value"]}</p>
+          )}
+          <p class="forfait__sous-titre">{tarifs["copulpeur_"]["sous_titre_2"]["$value"]}</p>
+          {tarifs["copulpeur_"]["afficher_description_2"]["$value"] && (
+            <p class="forfait__description">{tarifs["copulpeur_"]["description_2"]["$value"]}</p>
+          )}
           <ul class="forfait__details">
-            {tarifs["copulpeur_"]["contribution"]["$value"].map((item: string) => <li>{item}</li>)}
+            {tarifs["copulpeur_"]["liste_2"]["$value"].map((item: string) => <li>{item}</li>)}
           </ul>
         </div>
       </article>
