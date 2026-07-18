@@ -53,13 +53,13 @@ $bento-gap: var(--space-10);
 // Système de largeurs (flex) : un tiers (33 %) / deux tiers (77 %).
 // 1ʳᵉ ligne : photo 33 % + plan 77 % ; dernière ligne : réunion 77 % + col droite 33 %.
 .bento__tiers {
-  flex: 0 1 33%;
+  width: var(--grid-col-desktop-3);
   min-width: 0;
   margin-bottom: CALC(-1 * var(--space-152));
 }
 
 .bento__deux-tiers {
-  flex: 0 1 77%;
+  width: var(--grid-col-desktop-4);
   min-width: 0;
 }
 
@@ -108,7 +108,7 @@ $bento-gap: var(--space-10);
 .bento__coordinatrice {
   position: relative;
   display: flex;
-  gap: var(--space-10);
+  gap: $bento-gap;
   align-items: center;
   padding: var(--space-20) var(--space-20);
   border-radius: var(--corner-small);
