@@ -34,6 +34,10 @@ $tarif-switch: 56rem;
   @media (min-width: $tarif-switch) {
     width: var(--grid-col-desktop-2);
     flex-shrink: 0;
+
+    .btn-group {
+      margin-left: calc(-1 * var(--grid-col-desktop-1));
+    }
   }
 }
 

@@ -11,8 +11,14 @@ $partenaire-switch: 56rem;
   --logo-height: max(5.625rem, calc(5.625rem / 80 * min(100vw, var(--content-cap))));
 }
 
-h2 {
-  margin-bottom : var(--space-40);
+.partenaire {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: var(--space-90);
+
+  h2 {
+    margin-bottom: var(--space-90);
+  }
 }
 
 .partenaire__grid {
@@ -24,10 +30,12 @@ h2 {
 .partenaire__col-createur {
   align-items: center;
 
-  p {align-self: flex-start;}
+  p {
+    align-self: flex-start;
+  }
 }
 
-.partenaire__col-soutien  {
+.partenaire__col-soutien {
   flex-wrap: wrap;
 }
 
@@ -71,9 +79,10 @@ h2 {
 }
 
 .partenaire .btn-group {
-  width: max-content;
+  width: var(--grid-col-desktop-3);
   align-self: flex-end;
 }
+
 // ════════════════════════════════════════════════════════════════════════════════
 // DESKTOP (≥ 56rem)
 // ════════════════════════════════════════════════════════════════════════════════

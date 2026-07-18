@@ -58,7 +58,7 @@ $bouton-switch: 56rem;
   @media (min-width: $bouton-switch) {
     padding: var(--space-10) var(--space-70);
     height: 40px;
-    width: max-content;
+    width: 100%;
   }
 }
 

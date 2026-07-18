@@ -28,6 +28,7 @@ $hero-switch: 56rem;
 
   @media (min-width: $hero-switch) {
     height: 100%;
+    margin-top: var(--space-208);
   }
 
 }

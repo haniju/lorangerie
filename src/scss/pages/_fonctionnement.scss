@@ -9,7 +9,7 @@ $fonct-switch: 56rem;
 $overlap: var(--space-20); // recouvrement entre les 3 blocs
 
 .fonctionnement {
-  gap: var(--space-152);
+  gap: var(--space-10);
   display: flex;
   flex-direction: column;
 }
@@ -75,6 +75,10 @@ $overlap: var(--space-20); // recouvrement entre les 3 blocs
 @media (min-width: $fonct-switch) {
   .u-container.fonctionnement {
     //margin-inline : unset;
+  }
+
+  .fonctionnement {
+    gap: var(--space-152);
   }
 
   .fonctionnement__grid {

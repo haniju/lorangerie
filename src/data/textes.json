@@ -322,7 +322,7 @@
                   "ALL_SCOPES"
                 ],
                 "$type": "string",
-                "$value": "Contribution active au conseil des usagers de L’Orangerie (2h/mois)"
+                "$value": "Contribution active de 2h/mois au conseil des usagers de L’Orangerie"
               },
               "description_1": {
                 "$scopes": [
@@ -371,7 +371,7 @@
                   "ALL_SCOPES"
                 ],
                 "$type": "string",
-                "$value": "Contribution active au conseil des usagers de L’Orangerie (2h/mois)"
+                "$value": "Contribution active de 2h/mois au conseil des usagers de L’Orangerie"
               },
               "description_1": {
                 "$scopes": [
@@ -392,7 +392,7 @@
                   "ALL_SCOPES"
                 ],
                 "$type": "string",
-                "$value": "Participation bénévole aux activités de PULPE (2h/mois)"
+                "$value": "Participation bénévole de 2h/mois aux activités de PULPE"
               },
               "description_2": {
                 "$scopes": [
