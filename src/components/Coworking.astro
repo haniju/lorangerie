@@ -79,7 +79,7 @@ const widths = [400, 700, 1000]
     <!-- bloc plan : illustration + rangée d'encarts texte scrollable -->
     <div class="bento-mobile__plan">
       <img class="bento-mobile__plan-img" src={planUrl} alt="Plan des espaces de l’Orangerie : salles Framboise et Kiwi, salle de réunion, café, WC" loading="lazy" />
-      <div class="bento-mobile__scroller bento-mobile__textes">
+      <div class="u-scroll-area bento-mobile__textes">
         <p class="bento-mobile__text-card">{openSpace}</p>
         <p class="bento-mobile__text-card">{salleReunion}</p>
         <p class="bento-mobile__text-card">{copieur}</p>
@@ -87,7 +87,7 @@ const widths = [400, 700, 1000]
     </div>
 
     <!-- rangée photos « salles » (alignées en bas) -->
-    <div class="bento-mobile__scroller bento-mobile__photos bento-mobile__photos--bottom">
+    <div class="u-scroll-area bento-mobile__photos bento-mobile__photos--bottom">
       <Image class="bento-mobile__photo" src={framboise1} alt="L’open space Framboise" widths={widths} sizes={sizes} />
       <Image class="bento-mobile__photo" src={framboise2} alt="Un poste de travail dans la salle Framboise" widths={widths} sizes={sizes} />
       <Image class="bento-mobile__photo" src={kiwi1} alt="L’open space Kiwi" widths={widths} sizes={sizes} />
@@ -95,7 +95,7 @@ const widths = [400, 700, 1000]
     </div>
 
     <!-- rangée photos « réunion » (alignées en haut) -->
-    <div class="bento-mobile__scroller bento-mobile__photos bento-mobile__photos--top">
+    <div class="u-scroll-area bento-mobile__photos bento-mobile__photos--top">
       <Image class="bento-mobile__photo" src={reunion} alt="La salle de réunion" widths={widths} sizes={sizes} />
       <Image class="bento-mobile__photo" src={photocopies} alt="L’espace copieur multifonction" widths={widths} sizes={sizes} />
     </div>

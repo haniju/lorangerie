@@ -17,12 +17,22 @@ $bento-gap: var(--space-10);
 // ── bascule desktop ⇄ mobile ──
 // Le `display` est piloté ici uniquement (la règle .bento-mobile plus bas ne
 // redéfinit PAS display, sinon elle l'emporterait par ordre source à ≥56rem).
-.bento--desktop { display: none; }
-.bento-mobile { display: flex; }
+.bento--desktop {
+  display: none;
+}
+
+.bento-mobile {
+  display: flex;
+}
 
 @media (min-width: $bento-switch) {
-  .bento--desktop { display: flex; }
-  .bento-mobile { display: none; }
+  .bento--desktop {
+    display: flex;
+  }
+
+  .bento-mobile {
+    display: none;
+  }
 }
 
 .bento__row {
@@ -42,8 +52,15 @@ $bento-gap: var(--space-10);
 
 // Système de largeurs (flex) : un tiers (33 %) / deux tiers (77 %).
 // 1ʳᵉ ligne : photo 33 % + plan 77 % ; dernière ligne : réunion 77 % + col droite 33 %.
-.bento__tiers      { flex: 0 1 33%; min-width: 0; }
-.bento__deux-tiers { flex: 0 1 77%; min-width: 0; }
+.bento__tiers {
+  flex: 0 1 33%;
+  min-width: 0;
+}
+
+.bento__deux-tiers {
+  flex: 0 1 77%;
+  min-width: 0;
+}
 
 // ── première ligne : photo (33 %) + plan (77 %) ──
 .bento__plan {
@@ -70,12 +87,12 @@ $bento-gap: var(--space-10);
   padding: var(--space-30);
   font-family: var(--font-body);
   font-size: 0.9375rem; // 15px — font/text/regular
-  line-height: 1.47;    // font/line-height/compact
+  line-height: 1.47; // font/line-height/compact
   color: var(--text-warm-dark);
 }
 
 // ── milieu : 2 open spaces ──
-.bento__row--milieu > .bento__photo {
+.bento__row--milieu>.bento__photo {
   flex: 1;
 }
 
@@ -90,24 +107,31 @@ $bento-gap: var(--space-10);
 .bento__coordinatrice {
   position: relative;
   display: flex;
-  gap: var(--space-30);
+  gap: var(--space-10);
   align-items: center;
   padding: var(--space-20) var(--space-20);
   border-radius: var(--corner-small);
-  background: linear-gradient(
-    to bottom,
-    rgba(252, 238, 229, 0) 0%,
-    var(--sable-05) 27%,
-    #fed7be 100%
-  );
+  background: linear-gradient(to bottom,
+      rgba(252, 238, 229, 0) 0%,
+      var(--sable-05) 27%,
+      #fed7be 100%);
+
+  @media (min-width: $bento-switch) {
+    gap: var(--space-30);
+  }
 }
 
 .bento__coordinatrice-shape {
   flex: none;
-  width: var(--space-152);  // ~93px
-  height: var(--space-152);  // ~104px
+  width: var(--space-90);
+  height: var(--space-152); // ~104px
   object-fit: cover;
   border-radius: var(--corner-big) var(--corner-big) 0 0; // arrondi haut (forme Figma) — sert de masque à la photo
+
+  @media (min-width: $bento-switch) {
+    width: var(--space-152); // ~93px
+    height: var(--space-152); // ~104px
+  }
 }
 
 .bento__coordinatrice-text {
@@ -134,21 +158,7 @@ $bento-gap: var(--space-10);
 // hauteur commune des rangées photos (Figma : 300px @ 440) — plafonnée
 $bento-mobile-row-h: clamp(15rem, 62vw, 20rem);
 
-// rangée à défilement horizontal : scroll-snap doux, scrollbar masquée
-.bento-mobile__scroller {
-  display: flex;
-  gap: $bento-gap;
-  overflow-x: auto;
-  scroll-snap-type: x proximity;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none; // Firefox
-  &::-webkit-scrollbar { display: none; } // Chromium/Safari
-
-  // débord fluide de la marge du conteneur (padding gauche 20px Figma)
-  padding-inline: var(--space-20) var(--space-10);
-
-  > * { scroll-snap-align: start; }
-}
+// rangées à défilement horizontal : voir .u-scroll-area (utilities/_grid.scss)
 
 // ── bloc plan : illustration centrée + encarts texte scrollables ──
 .bento-mobile__plan {
@@ -187,8 +197,16 @@ $bento-mobile-row-h: clamp(15rem, 62vw, 20rem);
   height: $bento-mobile-row-h;
 }
 
-.bento-mobile__photos--bottom { align-items: flex-end; } // salles (Figma items-end)
-.bento-mobile__photos--top { align-items: flex-start; } // réunion (Figma items-start)
+.bento-mobile__photos--bottom {
+  align-items: flex-end;
+}
+
+// salles (Figma items-end)
+.bento-mobile__photos--top {
+  align-items: flex-start;
+}
+
+// réunion (Figma items-start)
 
 .bento-mobile__photo {
   flex: none;
