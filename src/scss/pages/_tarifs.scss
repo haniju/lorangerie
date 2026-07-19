@@ -34,6 +34,10 @@ $tarif-switch: 56rem;
   @media (min-width: $tarif-switch) {
     width: var(--grid-col-desktop-2);
     flex-shrink: 0;
+
+    .btn-group {
+      margin-left: calc(-1 * var(--grid-col-desktop-1));
+    }
   }
 }
 
@@ -46,21 +50,8 @@ $tarif-switch: 56rem;
 }
 
 // b. Bloc communautaires
+// scroll horizontal mobile : voir .u-scroll-area (utilities/_grid.scss)
 .tarifs__communautaires {
-  display: flex;
-  flex-direction: row; // côte à côte en mobile (scroll horizontal)
-  gap: var(--space-20);
-
-  // scroll horizontal natif en mobile
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
-
-  // déborde jusqu'au bord droit de l'écran : on annule le padding-right du container
-  // et on laisse le contenu calé sur la marge gauche (héritée du flux)
-  margin-right: calc(-1 * var(--pad-grid));
-  padding-right: var(--pad-grid); // dernière carte ne colle pas au bord
-
   .forfait {
     flex-shrink: 0;
     width: var(--grid-col-mobile-4);
@@ -68,11 +59,15 @@ $tarif-switch: 56rem;
   }
 
   @media (min-width: $tarif-switch) {
+    display: flex;
     flex-direction: column;
-    overflow-x: visible;
-    margin-right: 0;
-    padding-right: 0;
+    gap: var(--space-20);
     width: var(--grid-col-desktop-4);
+    overflow-x: visible;
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0;
+    padding-right: 0;
 
     .forfait {
       width: 100%;
@@ -110,6 +105,7 @@ $tarif-switch: 56rem;
   flex-direction: column;
   align-items: center;
   gap: var(--space-30);
+  min-height: 32rem; // absorbe les rotations et l'overlap
 
   @media (min-width: $tarif-switch) {
     min-height: 25rem; // absorbe les rotations et l'overlap
@@ -118,7 +114,8 @@ $tarif-switch: 56rem;
 
 // Wrapper de rotation pour chaque carte
 .tarifs__prop {
-  width: var(--grid-col-mobile-3);
+  width: var(--grid-col-mobile-4);
+  position: absolute;
 
   @media (min-width: $tarif-switch) {
     position: absolute;
@@ -127,6 +124,9 @@ $tarif-switch: 56rem;
 }
 
 .tarifs__prop--1 {
+  top: var(--space-50);
+  transform: rotate(-10.64deg) translate(calc(var(--grid-col-desktop-1)*-.7));
+
   @media (min-width: $tarif-switch) {
     top: var(--space-50);
     transform: rotate(-10.64deg) translate(calc(var(--grid-col-desktop-1)*-.7));
@@ -134,6 +134,9 @@ $tarif-switch: 56rem;
 }
 
 .tarifs__prop--2 {
+  top: var(--space-272);
+  transform: rotate(8.9deg) translate(calc(var(--grid-col-desktop-1)*.7));
+
   @media (min-width: $tarif-switch) {
     top: var(--space-208);
     transform: rotate(8.9deg) translate(calc(var(--grid-col-desktop-1)*.7));

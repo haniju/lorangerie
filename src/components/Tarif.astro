@@ -43,7 +43,7 @@ const tarifs = mode["tarifs_"]
     </div>
 
     <!-- b. Coworker Investi + Copulpeur.euse — forfaits communautaires -->
-    <div class="tarifs__communautaires">
+    <div class="u-scroll-area tarifs__communautaires">
       <article class="forfait forfait--communautaire">
         <div class="forfait__header">
           <h3 class="forfait__titre">{tarifs["investi_"]["titre"]["$value"]}</h3>
@@ -54,8 +54,11 @@ const tarifs = mode["tarifs_"]
             <span class="forfait__montant">{tarifs["investi_"]["tarif"]["$value"]}</span>
           </div>
           <p class="forfait__desc">{tarifs["investi_"]["info"]["$value"]}</p>
-          <p class="forfait__desc-titre">{tarifs["investi_"]["desc_titre"]["$value"]}</p>
-          <p class="forfait__details">{tarifs["investi_"]["contribution"]["$value"]}</p>
+          <p class="forfait__sous-titre">{tarifs["investi_"]["sous_titre_1"]["$value"]}</p>
+          <p class="forfait__description">{tarifs["investi_"]["description_1"]["$value"]}</p>
+          <ul class="forfait__details">
+            {tarifs["investi_"]["liste_1"]["$value"].map((item: string) => <li>{item}</li>)}
+          </ul>
         </div>
       </article>
 
@@ -69,8 +72,17 @@ const tarifs = mode["tarifs_"]
             <span class="forfait__montant">{tarifs["copulpeur_"]["tarif"]["$value"]}</span>
           </div>
           <p class="forfait__desc">{tarifs["copulpeur_"]["info"]["$value"]}</p>
-          <p class="forfait__desc-titre">{tarifs["copulpeur_"]["desc_titre"]["$value"]}</p>
-          <p class="forfait__details">{tarifs["copulpeur_"]["contribution"]["$value"]}</p>
+          <p class="forfait__sous-titre">{tarifs["copulpeur_"]["sous_titre_1"]["$value"]}</p>
+          {tarifs["copulpeur_"]["afficher_description_1"]["$value"] && (
+            <p class="forfait__description">{tarifs["copulpeur_"]["description_1"]["$value"]}</p>
+          )}
+          <p class="forfait__sous-titre">{tarifs["copulpeur_"]["sous_titre_2"]["$value"]}</p>
+          {tarifs["copulpeur_"]["afficher_description_2"]["$value"] && (
+            <p class="forfait__description">{tarifs["copulpeur_"]["description_2"]["$value"]}</p>
+          )}
+          <ul class="forfait__details">
+            {tarifs["copulpeur_"]["liste_2"]["$value"].map((item: string) => <li>{item}</li>)}
+          </ul>
         </div>
       </article>
     </div>

@@ -360,6 +360,14 @@ $item-label-margin: 5px;
   }
 }
 
+// Logo Pulpe inline dans le deco (remplace le mot "Pulpe") — hauteur en em
+// pour suivre le font-size du deco (36px desktop / 26px mobile).
+.index-nav__deco-logo {
+  height: 150%;
+  width: auto;
+  margin-left: 0.3em;
+}
+
 // ════════════════════════════════════════════════════════════════════
 // RAIL NAV — composant vivant (.index-nav)
 // Position sticky — naturellement hors viewport pendant le hero (DOM
@@ -383,7 +391,7 @@ $item-label-margin: 5px;
   position: fixed;
   top: calc(var(--nav-height) + var(--index-nav-gap)); // écart réglable (défaut --space-10)
   left: var(--index-nav-left, max(0px, calc((100vw - var(--content-cap)) / 2)));
-  z-index: 10;
+  z-index: 8; // sous la navbar mobile ouverte (cf. affinage navbar mobile, _navbar.scss)
   pointer-events: none;
   // translateY piloté par JS en suivant le top de #coworking.
   // Valeur initiale hors écran; JS prend la main immédiatement.

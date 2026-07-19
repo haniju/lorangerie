@@ -7,6 +7,7 @@
 // Mobile : display:contents sur col-media → order : carousel(1) · textes(2) · proposition(3).
 
 import pulpeGroupe from '../assets/images/pulpe_groupe.jpg'
+import pulpeLogoUrl from '../assets/logos/pulpe.svg?url'
 import concert    from '../assets/images/pulpe/concert.jpg'
 import foot       from '../assets/images/pulpe/foot.jpg'
 import potager    from '../assets/images/pulpe/potager.jpg'
@@ -27,11 +28,11 @@ const photos = [
 ---
 
 <section class="pulpe u-container u-section" id="pulpe">
-  <h2 class="index-nav__deco" data-label-for="pulpe">À propos de</h2>
+  <h2 class="index-nav__deco" data-label-for="pulpe">à propos de <img class="index-nav__deco-logo" src={pulpeLogoUrl} alt="Pulpe" /></h2>
   <span class="index-sentinel" data-sentinel-start data-section-ref="pulpe" aria-hidden="true"></span>
   <span class="index-sentinel" data-sentinel-bellow data-section-ref="pulpe" aria-hidden="true"></span>
   <span class="index-sentinel" data-sentinel-after data-section-ref="pulpe" aria-hidden="true"></span>
-  
+
   <div class="proposition proposition--none proposition--section-intro pulpe__intro">
     <p class="proposition__text">
       L'Orangerie s'inscrit dans un projet plus grand. Le projet de Pulpe et son bâtiment
@@ -43,27 +44,29 @@ const photos = [
   <div class="pulpe__grid pulpe_presentation">
     <!-- col1 : textes + bouton -->
     <div class="pulpe__col-textes">
-      <div class="pulpe__group-texte">
-        <h3 class="pulpe__titre">Historique de Pulpe</h3>
-        <p class="pulpe__texte">
-          Partant d'un constat de manque de locaux professionnels accessibles, d'une envie
-          de travailler à plusieurs, de mutualiser des outils et des espaces et de proposer
-          une offre socioculturelle de proximité aux habitant.e.s, un collectif composé
-          d'entrepreneur.e.s, d'associations et d'habitant.e.s du territoire se forme en
-          2021. En juin 2022, l'association PULPE est créée avec le projet d'ouvrir un lieu
-          partagé (ou tiers-lieu) à Malestroit (56).
-        </p>
-      </div>
-      <div class="pulpe__group-texte">
-        <h3 class="pulpe__titre">Pulpe aujourd'hui</h3>
-        <p class="pulpe__texte">
-          C'est en novembre 2024 que la ville de Malestroit (56) met à disposition le
-          bâtiment Faubourg Sainte-Anne et permet au projet de poser ses valises. Ce dernier
-          accueille aujourd'hui l'espace valorisation de la ressourcerie de Malestroit
-          (Rouages) et un espace de convivialité où se déroulent régulièrement concerts,
-          ateliers, goûters, temps de rencontres et de vie associative. En 2025, 67
-          événements ont été organisés au sein du lieu partagé.
-        </p>
+      <div class="u-scroll-area wrapper">
+        <div class="pulpe__group-texte">
+          <h3 class="pulpe__titre">Historique de Pulpe</h3>
+          <p class="pulpe__texte">
+            Partant d'un constat de manque de locaux professionnels accessibles, d'une envie
+            de travailler à plusieurs, de mutualiser des outils et des espaces et de proposer
+            une offre socioculturelle de proximité aux habitant.e.s, un collectif composé
+            d'entrepreneur.e.s, d'associations et d'habitant.e.s du territoire se forme en
+            2021. En juin 2022, l'association PULPE est créée avec le projet d'ouvrir un lieu
+            partagé (ou tiers-lieu) à Malestroit (56).
+          </p>
+        </div>
+        <div class="pulpe__group-texte">
+          <h3 class="pulpe__titre">Pulpe aujourd'hui</h3>
+          <p class="pulpe__texte">
+            C'est en novembre 2024 que la ville de Malestroit (56) met à disposition le
+            bâtiment Faubourg Sainte-Anne et permet au projet de poser ses valises. Ce dernier
+            accueille aujourd'hui l'espace valorisation de la ressourcerie de Malestroit
+            (Rouages) et un espace de convivialité où se déroulent régulièrement concerts,
+            ateliers, goûters, temps de rencontres et de vie associative. En 2025, 67
+            événements ont été organisés au sein du lieu partagé.
+          </p>
+        </div>
       </div>
       <div class="btn-group">
         <p class="btn-label">Envie de nous rejoindre&nbsp;?</p>

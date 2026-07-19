@@ -9,10 +9,11 @@ $fonct-switch: 56rem;
 $overlap: var(--space-20); // recouvrement entre les 3 blocs
 
 .fonctionnement {
-  gap: var(--space-152);
+  gap: var(--space-10);
   display: flex;
   flex-direction: column;
 }
+
 .fonctionnement__grid {
   display: flex;
   flex-direction: column;
@@ -27,7 +28,7 @@ $overlap: var(--space-20); // recouvrement entre les 3 blocs
   color: var(--text-warm-dark);
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.08);
   position: relative;
-  width: var(--grid-col-mobile-3);
+  width: var(--grid-col-mobile-4);
 }
 
 .fonctionnement__prop--1 {
@@ -45,8 +46,8 @@ $overlap: var(--space-20); // recouvrement entre les 3 blocs
 .fonctionnement__liste {
   position: relative;
   z-index: 1;
-  width: var(--grid-col-mobile-5);
-  margin-left: var(--space-20);
+  width: var(--grid-col-mobile-4);
+  margin-left: var(--grid-col-mobile-1);
   margin-top: calc(#{$overlap} * -1);
 }
 
@@ -58,7 +59,7 @@ $overlap: var(--space-20); // recouvrement entre les 3 blocs
   gap: var(--space-20);
   margin-top: var(--space-30);
   width: var(--grid-col-mobile-5);
-  margin-left: var(--space-20);
+  //margin-left: var(--space-20);
 }
 
 .fonctionnement__btn {
@@ -75,8 +76,13 @@ $overlap: var(--space-20); // recouvrement entre les 3 blocs
   .u-container.fonctionnement {
     //margin-inline : unset;
   }
+
+  .fonctionnement {
+    gap: var(--space-152);
+  }
+
   .fonctionnement__grid {
-    padding-left: var(--grid-col-desktop-2);
+    padding-left: var(--grid-col-desktop-1);
     max-width: 58rem;
     margin-inline: 0px;
   }
@@ -92,11 +98,13 @@ $overlap: var(--space-20); // recouvrement entre les 3 blocs
 
   .fonctionnement__boutons {
     align-items: flex-start;
-    margin-left: var(--grid-col-desktop-3);
+    margin-left: calc(var(--grid-col-desktop-3) - var(--space-90));
     margin-top: calc(var(--space-30)*-1);
-  }
+    width: var(--grid-col-desktop-3);
 
-  .fonctionnement__btn {
-    width: auto;
+    .btn-group,
+    .btn-primary {
+      width: 100%;
+    }
   }
 }

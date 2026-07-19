@@ -18,11 +18,19 @@ $pulpe-switch: 56rem;
 
 // ── col-textes ───────────────────────────────────────────────────────────────
 .pulpe__col-textes {
-  order: 2;
-  width: var(--grid-col-mobile-4);
+  order: 3;
   display: flex;
   flex-direction: column;
   gap: var(--space-30);
+
+  // wrapper des 2 group-texte : scroll horizontal mobile, voir .u-scroll-area
+  // (utilities/_grid.scss)
+}
+
+.pulpe__group-texte {
+  flex-shrink: 0;
+  width: var(--grid-col-mobile-4);
+  scroll-snap-align: start;
 }
 
 .pulpe__titre {
@@ -31,7 +39,9 @@ $pulpe-switch: 56rem;
   color: var(--text-cold-dark);
   margin-bottom: var(--space-10);
 
-  & + & { margin-top: var(--space-30); }
+  &+& {
+    margin-top: var(--space-30);
+  }
 }
 
 .pulpe_presentation {
@@ -52,9 +62,9 @@ $pulpe-switch: 56rem;
 
 // ── carousel (crossfade) ─────────────────────────────────────────────────────
 .pulpe__carousel {
-  order: 1;
+  order: 2;
   position: relative;
-  width: calc(var(--grid-col-mobile-5) - var(--space-20));
+  width: var(--grid-col-mobile-5);
   height: 16rem;
   border-radius: var(--corner-small);
   overflow: hidden;
@@ -69,13 +79,18 @@ $pulpe-switch: 56rem;
   opacity: 0;
   transition: opacity 0.9s ease-in-out;
 
-  &.is-active { opacity: 1; }
+  &.is-active {
+    opacity: 1;
+  }
 }
 
 // ── proposition (flow normal en mobile) ──────────────────────────────────────
 .pulpe__proposition {
-  order: 3;
-  width: var(--grid-col-mobile-3);
+  order: 1;
+  margin-bottom: calc(var(--space-50) * -1);
+  left: calc(var(--space-50) * -1);
+  z-index: 2;
+  width: var(--grid-col-mobile-4);
   margin-top: calc(var(--space-10) * -1);
   // DM Sans Bold Italic comme dans Figma (override Ortica du composant de base)
   font-family: var(--font-body);
@@ -110,6 +125,22 @@ $pulpe-switch: 56rem;
     order: 1;
     width: var(--grid-col-desktop-3);
     flex-shrink: 0;
+    flex-direction: column;
+
+    .wrapper {
+      flex-direction: column;
+      gap: var(--space-30);
+      width: 100%;
+      overflow-x: visible;
+      margin-left: 0;
+      margin-right: 0;
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
+
+  .pulpe__group-texte {
+    width: 100%;
   }
 
   // col-media : wrapper restauré, position relative pour les enfants absolus
@@ -131,6 +162,7 @@ $pulpe-switch: 56rem;
 
   // carousel : remplit tout le col-media (hauteur = hauteur des textes)
   .pulpe__carousel {
+    order: 1;
     position: absolute;
     inset: 0;
     width: 100%;
@@ -140,6 +172,8 @@ $pulpe-switch: 56rem;
 
   // proposition : chevauchement top-left sur le carousel
   .pulpe__proposition {
+    order: 3;
+    background-color: yellow;
     position: absolute;
     top: calc(var(--space-50) * -1);
     left: calc(var(--space-50) * -1);

@@ -3,18 +3,20 @@
 // Positionné entre Hero et les sections dans index.astro.
 // Labels hardcodés — à connecter à textes.json une fois figma-to-content.js en place.
 
+import pulpeLogoUrl from '../assets/logos/pulpe.svg?url'
+
 const sections = [
   { id: 'coworking',      label: 'Notre espace' },
   { id: 'fonctionnement', label: 'Notre fonctionnement' },
   { id: 'tarifs',         label: 'Nos tarifs' },
-  { id: 'pulpe',          label: 'Pulpe' },
+  { id: 'pulpe',          label: 'à propos de', logo: pulpeLogoUrl },
   { id: 'partenaires',    label: 'Nos partenaires' },
 ]
 ---
 
 <nav class="index-nav" aria-label="Navigation des sections">
   <ul class="index-nav__list" role="list">
-    {sections.map(({ id, label }, i) => (
+    {sections.map(({ id, label, logo }, i) => (
       <li>
         <a
           href={`#${id}`}
@@ -22,7 +24,10 @@ const sections = [
           data-section={id}
         >
           <span class="index-nav__dot" aria-hidden="true"><span class="index-nav__dot-core"></span></span>
-          <span class="index-nav__label">{label}</span>
+          <span class="index-nav__label">
+            {label}
+            {logo && <img class="index-nav__deco-logo" src={logo} alt="Pulpe" />}
+          </span>
         </a>
       </li>
     ))}

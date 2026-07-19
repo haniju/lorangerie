@@ -1,6 +1,7 @@
 // atome/forfait (Figma 176:2508) — carte tarif. 2 niveaux :
 // grand public (défaut, bordure/entête sable) / communautaire (bordure/entête pêche).
 // Picto = assets/pictos/orangerie.svg (local). Prix/desc/details en DM Sans.
+$forfait-switch: 56rem;
 
 .forfait {
   display: flex;
@@ -29,8 +30,13 @@
 .forfait__body {
   display: flex;
   flex-direction: column;
-  gap: var(--space-20);
-  padding: var(--space-30);
+  gap: var(--space-10);
+  padding: var(--space-20);
+
+  @media (min-width: $forfait-switch) {
+    gap: var(--space-20);
+    padding: var(--space-30);
+  }
 }
 
 .forfait__prix {
@@ -64,10 +70,21 @@
   font-variation-settings: 'opsz' 14;
 }
 
-.forfait__desc-titre {
+.forfait__sous-titre {
   margin: 0;
   font-family: var(--font-body);
   font-weight: 700; // Bold
+  font-size: 0.9375rem; // 15px
+  line-height: 1.47; // 22px — font/line-height/compact
+  color: var(--text-cold-dark);
+  font-variation-settings: 'opsz' 14;
+  text-decoration: underline;
+}
+
+.forfait__description {
+  margin: 0;
+  font-family: var(--font-body);
+  font-weight: 300; // Light
   font-size: 0.9375rem; // 15px
   line-height: 1.47; // 22px — font/line-height/compact
   color: var(--text-cold-dark);
@@ -76,12 +93,21 @@
 
 .forfait__details {
   margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-7);
   font-family: var(--font-body);
   font-weight: 300; // Light
   font-size: 0.9375rem; // 15px
-  line-height: 1.47; // 22px — font/line-height/compact
+  line-height: 1.47;
   color: var(--text-cold-dark);
   font-variation-settings: 'opsz' 14;
+
+  li::before {
+    content: '— ';
+  }
 }
 
 // ─── niveau = communautaire ─────────────────────────────────────
@@ -95,7 +121,8 @@
   .forfait__titre,
   .forfait__montant,
   .forfait__desc,
-  .forfait__desc-titre,
+  .forfait__sous-titre,
+  .forfait__description,
   .forfait__details {
     color: var(--text-warm-dark);
   }

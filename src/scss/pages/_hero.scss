@@ -28,6 +28,7 @@ $hero-switch: 56rem;
 
   @media (min-width: $hero-switch) {
     height: 100%;
+    margin-top: var(--space-208);
   }
 
 }
@@ -35,16 +36,20 @@ $hero-switch: 56rem;
 // logotype — l'inclinaison est portée par le bloc .display (pivot = le bloc).
 // Figma : rotate -9.09° skewX 0.35°.
 .hero__logotype {
+  width: var(--grid-col-desktop-3);
+
   .display {
     transform: rotate(-9.09deg) skewX(0.35deg);
     transform-origin: left center;
+    width: var(--grid-col-desktop-3);
+    font-size: 5.2cqi;
   }
 
   // Mobile : le logo occupe ~60% de la largeur d'écran (bloc = 60vw), le texte
   // s'ajuste au bloc via des container-query units → proportionnel, robuste
   // indépendamment des métriques d'iCiel Cadena.
   @media (max-width: 55.999rem) {
-    width: 60vw;
+    width: var(--grid-col-mobile-4);
     container-type: inline-size;
 
     .display {

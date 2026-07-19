@@ -2,15 +2,23 @@
 // sable avec un gros arrondi haut-gauche (100px), le reste en small (8px).
 // Chaque ligne = picto flèche (assets/pictos/simple.svg, local) + texte DM Sans 15/22.
 
+$tbl-switch: 56rem;
+
 .text-box-liste {
   display: flex;
   flex-direction: column;
-  gap: var(--space-20);
+  gap: var(--space-10);
   // pt/pl 50, pr/pb 30 (spacing/padding)
-  padding: var(--space-50) var(--space-30) var(--space-50) var(--space-50);
+  padding: var(--space-50) var(--space-30) var(--space-50) var(--space-20);
   background: var(--sable-14);
   // gros arrondi haut-gauche (100px, one-off hors échelle corners), reste small (8px)
-  border-radius: 6.25rem var(--corner-small) var(--corner-small) var(--corner-small);
+  border-radius: var(--corner-big) var(--corner-small) var(--corner-small) var(--corner-small);
+
+  @media (min-width: $tbl-switch) {
+    gap: var(--space-20);
+    padding: var(--space-50) var(--space-30) var(--space-50) var(--space-50);
+    border-radius: 6.25rem var(--corner-small) var(--corner-small) var(--corner-small);
+  }
 }
 
 .text-box-liste__item {
@@ -21,9 +29,12 @@
 
 .text-box-liste__arrow {
   flex-shrink: 0;
-  width: 1.75rem; // 28px
+  width: 1rem; // 28px
   height: auto;
   margin-top: 0.125rem; // cale la flèche sur la 1re ligne de texte
+  @media (min-width: $tbl-switch) {
+    width: 1.75rem; // 28px  
+  }
 }
 
 .text-box-liste__text {
