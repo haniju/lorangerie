@@ -24,24 +24,6 @@ export function requestIndexNavChase(id: string) {
   chaseLastOffset = Infinity
 }
 
-// ─── Navigation partagée desktop + mobile ─────────────────────────────────
-// Cible le DECO de la section (`[data-label-for]`), pas la <section> elle-même
-// (`document.getElementById`) : le deco est en tout début de flux uniquement
-// pour coworking (padding-top:0) — les quatre autres sections ont un
-// padding-top standard (`.u-section`, --space-xl-2xl) avant lui, donc viser
-// la section atterrit systématiquement ~80px trop haut (cf. scroll-margin-top
-// sur .index-nav__deco, _index-nav.scss, qui referme cet écart proprement).
-// Fallback sur la section si un deco venait à manquer (cf. warning plus haut).
-export function navigate(el: HTMLElement) {
-  const id = el.dataset.section
-  if (!id) return
-  const target = document.querySelector<HTMLElement>(`[data-label-for="${id}"]`) ?? document.getElementById(id)
-  if (!target) return
-  requestIndexNavChase(id)
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' })
-}
-
 // ─── Scrollspy — machine à états dérivée du scroll ───────────────────────────
 // Cinq stades (retour à la spec d'origine — le raccourci à 4 stades testé sur
 // la branche `index` supprimait la fenêtre invisible entre T2 et T4, qui est ce
@@ -274,8 +256,19 @@ export function initIndexNavTouch(root: ParentNode = document) {
     el.classList.add('is-touch-held')
   }
 
-  // R13 — navigation (smooth scroll) au relâchement du hold sur l'étiquette
-  // dépliée. navigate() (en tête de fichier) est partagée avec le clic desktop.
+  // R13 — navigation (smooth scroll) au relâchement du hold sur l'étiquette dépliée.
+  // scrollIntoView({block:'start'}) respecte scroll-margin-top (cf. SCSS,
+  // .u-section) — l'atterrissage tombe donc automatiquement sur la
+  // ligne de docking (T3), sans offset à dupliquer ici.
+  const navigate = (el: HTMLElement) => {
+    const id = el.dataset.section
+    const target = id ? document.getElementById(id) : null
+    if (!target) return
+    if (id) requestIndexNavChase(id)
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' })
+  }
+
   const reset = () => {
     if (timer) { clearTimeout(timer); timer = null }
     const pressed = activeEl?.classList.contains('index-nav__item--touch-drag') ? activeEl : null
