@@ -33,7 +33,16 @@ $item-label-margin: 5px;
   // (ou un deep-link #id) — indépendant de la ligne de docking du rail
   // (--index-nav-gap), qui ne bouge plus au clic : le rail reste fixe, seule
   // la position d'atterrissage du scroll est réglée ici.
-  --index-deco-viewport-target: 30vh;
+  //
+  // ⚠️ Doit rester nettement AU-DESSUS de la ligne de docking (stickyTopPx +
+  // $item-label-margin, ~85px) : si le scroll-margin-top calculé ci-dessous
+  // pousse la section trop haut (au point que le deco, en flux normal,
+  // franchisse le seuil sticky avant même la fin du scroll), le sticky clampe
+  // le deco à SA position dockée — le pill atterrit alors collé aux dots et
+  // chevauche le texte au lieu de laisser sa place normale (bug constaté en
+  // réutilisant --index-after-offset, calibré pour un tout autre usage : le
+  // déclenchement T1 du scrollspy, pas l'atterrissage au clic).
+  --index-deco-viewport-target: 27vh;
 }
 
 // ── Point d'atterrissage au clic / deep-link ──────────────────────────
