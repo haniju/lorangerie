@@ -42,7 +42,10 @@ $item-label-margin: 5px;
   // chevauche le texte au lieu de laisser sa place normale (bug constaté en
   // réutilisant --index-after-offset, calibré pour un tout autre usage : le
   // déclenchement T1 du scrollspy, pas l'atterrissage au clic).
-  --index-deco-viewport-target: 27vh;
+  // 37vh reproduit ~337px d'atterrissage à 1717×909 (le réglage validé à l'œil) —
+  // recalculé depuis cette valeur plutôt que choisi au hasard : voir dérivation
+  // ci-dessous (.u-section).
+  --index-deco-viewport-target: 37vh;
 }
 
 // ── Point d'atterrissage au clic / deep-link ──────────────────────────
