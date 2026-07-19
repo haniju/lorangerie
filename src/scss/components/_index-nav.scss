@@ -29,29 +29,38 @@ $item-label-margin: 5px;
     --index-nav-gap: var(--space-10); // desktop — ajuste ici
   }
 
-  // Position d'ancrage partagée par .index-nav { top } ET scroll-margin-top des
-  // <section> (cf. bloc scroll-margin plus bas) — un seul point de réglage pour
-  // que le clic sur un item d'index-nav et le scroll naturel s'accordent sur la
-  // même ligne (celle où le deco est "docké" = trigger 3 de la spec).
-  --index-scroll-anchor: calc(var(--nav-height) + var(--index-nav-gap));
+  // Où le deco doit apparaître dans le viewport au clic sur un item du rail
+  // (ou un deep-link #id) — indépendant de la ligne de docking du rail
+  // (--index-nav-gap), qui ne bouge plus au clic : le rail reste fixe, seule
+  // la position d'atterrissage du scroll est réglée ici.
+  --index-deco-viewport-target: 30vh;
 }
 
 // ── Point d'atterrissage au clic / deep-link ──────────────────────────
-// Sans ceci, un clic sur un item du rail (ou un lien #id externe) atterrit au
-// haut BRUT de la section, sans lien avec la ligne de docking du rail — le deco
-// pourrait apparaître déjà partiellement scrollé, ou au contraire trop haut.
-// scroll-margin-top est respecté nativement par l'ancrage <a href="#id"> ET par
-// scrollIntoView() (cf. initIndexNavTouch, index-nav.ts) — un seul réglage CSS
-// couvre desktop (lien natif) et mobile (JS) sans dupliquer l'offset.
-// ⚠️ Suppose que le deco est au tout début de la section (pas de padding/marge
-// avant lui) — sinon, retrancher cet écart de --index-scroll-anchor ci-dessous.
+// On cible la <section> (stable), jamais .index-nav__deco directement : le
+// deco est position:sticky, donc sa bounding box dépend de l'historique de
+// scroll — une fois qu'on a dépassé sa section, il reste "collé" en bas de
+// son conteneur, et scrollIntoView()/scroll-margin-top sur un élément sticky
+// vise alors CETTE position collée, pas son point de départ. Résultat observé :
+// le scroll atterrissait à la fin de la section au lieu du début. Cibler la
+// section (jamais sticky, position stable quel que soit l'historique de
+// scroll) élimine le problème quel que soit le sens du clic.
+//
+// scroll-margin-top est mesuré depuis le scrollport de `main` (pas le
+// viewport : `main` a déjà `margin-top: var(--nav-height)`, cf. _reset.scss).
+// Le deco est lui-même à padding-top (--space-xl-2xl) + margin-top
+// ($item-label-margin) du haut de sa section — pour qu'il atterrisse à
+// --index-deco-viewport-target du haut du VIEWPORT, il faut donc retrancher
+// ces trois écarts de la cible :
+//   scroll-margin-top = target - nav-height - padding-top - margin-top(deco)
 .u-section {
-  scroll-margin-top: var(--index-scroll-anchor);
+  scroll-margin-top: calc(var(--index-deco-viewport-target) - var(--nav-height) - var(--space-xl-2xl) - #{$item-label-margin});
 }
 
-// Coworking suit directement le hero (pas de section au-dessus) : pas besoin du
-// padding-top standard de .u-section. Garde le padding-bottom existant.
+// Coworking suit directement le hero (pas de section au-dessus) : pas de
+// padding-top standard de .u-section à retrancher (padding-block:0 ci-dessous).
 .coworking {
+  scroll-margin-top: calc(var(--index-deco-viewport-target) - var(--nav-height) - #{$item-label-margin});
   padding-block: 0 var(--space-xl-2xl);
 }
 
@@ -393,16 +402,9 @@ $item-label-margin: 5px;
   left: var(--index-nav-left, max(0px, calc((100vw - var(--content-cap)) / 2)));
   z-index: 8; // sous la navbar mobile ouverte (cf. affinage navbar mobile, _navbar.scss)
   pointer-events: none;
-  // translateY = deux apports JS combinés, chacun indépendant :
-  //   --index-nav-y      : entrée depuis le hero, suit le top de #coworking
-  //                        (cf. updateNavPosition, IndexNav.astro). Fallback
-  //                        100vh = hors écran tant que le JS n'a pas pris la main.
-  //   --index-nav-chase-y : descente temporaire au clic sur un item, pour rejoindre
-  //                        le deco de la section ciblée (cf. requestIndexNavChase,
-  //                        index-nav.ts) — recalculée à chaque frame de scroll,
-  //                        donc parfaitement synchronisée avec le scroll natif/JS
-  //                        qui l'accompagne. Retombe à 0 dès que le deco docke.
-  transform: translateY(calc(var(--index-nav-y, 100vh) + var(--index-nav-chase-y, 0px)));
+  // translateY piloté par JS en suivant le top de #coworking.
+  // Valeur initiale hors écran; JS prend la main immédiatement.
+  transform: translateY(100vh);
 
   &__list {
     list-style: none;

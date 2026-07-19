@@ -31,8 +31,7 @@ main {
   // scroll-behavior sur html (ci-dessus) est sans effet : main, pas html, est
   // le vrai conteneur de scroll (html est en overflow:hidden). Sans ceci, les
   // ancres <a href="#id"> sautent instantanément — aucune fenêtre d'animation
-  // pour le scrollspy (index-nav.ts) ni pour le chase du rail (_index-nav.scss,
-  // requestIndexNavChase) qui en dépendent.
+  // pour le scrollspy (index-nav.ts) qui en dépend.
   @media (prefers-reduced-motion: no-preference) {
     scroll-behavior: smooth;
   }

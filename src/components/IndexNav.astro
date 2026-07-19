@@ -35,7 +35,7 @@ const sections = [
 </nav>
 
 <script>
-  import { initIndexNavTouch, initIndexNavScrollspy, requestIndexNavChase } from '../js/index-nav.ts'
+  import { initIndexNavTouch, initIndexNavScrollspy } from '../js/index-nav.ts'
   initIndexNavTouch()
   initIndexNavScrollspy()
 
@@ -43,15 +43,6 @@ const sections = [
   // Quand coworking remonte jusqu'à la position sticky du nav, translateY = 0 → nav calé.
   const nav = document.querySelector<HTMLElement>('.index-nav')
   const coworking = document.getElementById('coworking')
-
-  // Clic desktop (lien natif) → même déclencheur de chase que le tap mobile
-  // (initIndexNavTouch appelle requestIndexNavChase directement, cf. index-nav.ts).
-  // On ne preventDefault pas : le lien #id navigue normalement, requestIndexNavChase
-  // se contente d'armer le calcul de --index-nav-chase-y sur les scrolls suivants.
-  nav?.addEventListener('click', (e) => {
-    const link = (e.target as HTMLElement).closest<HTMLElement>('.index-nav__item')
-    if (link?.dataset.section) requestIndexNavChase(link.dataset.section)
-  })
 
   // Survol d'une entrée → classe .is-dot-hover (délégation ; l'event remonte jusqu'au
   // nav malgré son pointer-events:none). Le CSS repositionne alors l'item --start.
@@ -73,7 +64,7 @@ const sections = [
     const coworkingTop = coworking.getBoundingClientRect().top
     const navTop = parseFloat(getComputedStyle(nav).top)
     const translate = Math.max(0, coworkingTop - navTop)
-    nav.style.setProperty('--index-nav-y', `${translate}px`)
+    nav.style.transform = `translateY(${translate}px)`
   }
 
   const scroller = document.querySelector('main') ?? window
