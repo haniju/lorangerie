@@ -216,8 +216,18 @@ export function initIndexNavTouch(root: ParentNode = document) {
   // retombe alors sous le contrôle normal de la state machine (STAGE_CLASS), qui le
   // masque (avant --start) ou le révèle déjà docké (--start atteint) selon le cas :
   // aucune classe supplémentaire à nettoyer nous-mêmes au passage du sentinel-start.
-  const SETTLE_DELAY = 150
+  //
+  // Détection de fin de scroll par polling rAF (scrollTop stable sur N frames),
+  // PAS par debounce sur l'event 'scroll' : ce dernier dépend de la cadence à
+  // laquelle le navigateur choisit de émettre l'event pendant un scroll natif
+  // fluide (smooth), qui n'est pas garantie — un scroll déjà terminé avant que
+  // le premier event n'arrive, ou des events trop espacés, laissaient
+  // --nav-pending posé indéfiniment (jusqu'au prochain scroll MANUEL de
+  // l'utilisateur, qui relançait enfin le debounce). Le polling mesure la
+  // position réelle à chaque frame, indépendamment de l'event.
+  const STABLE_FRAMES = 10 // ~160ms à 60fps sans changement de scrollTop
   const HIDE_DELAY = 200
+  const MAX_FRAMES = 300 // ~5s — filet de sécurité si le scroll ne se stabilise jamais
 
   const navigate = (el: HTMLElement) => {
     const id = el.dataset.section
@@ -226,16 +236,23 @@ export function initIndexNavTouch(root: ParentNode = document) {
 
     el.classList.add('index-nav__item--nav-pending')
 
-    let settleTimer: ReturnType<typeof setTimeout> | null = null
-    const onScroll = () => {
-      if (settleTimer) clearTimeout(settleTimer)
-      settleTimer = setTimeout(() => {
-        main?.removeEventListener('scroll', onScroll)
-        el.classList.remove('index-nav__item--nav-pending')
-      }, SETTLE_DELAY + HIDE_DELAY)
+    let stableFrames = 0
+    let lastScrollTop = -1
+    let frames = 0
+    function poll() {
+      const current = main?.scrollTop ?? 0
+      if (Math.abs(current - lastScrollTop) < 0.5) stableFrames++
+      else stableFrames = 0
+      lastScrollTop = current
+      frames++
+
+      if (stableFrames >= STABLE_FRAMES || frames >= MAX_FRAMES) {
+        setTimeout(() => el.classList.remove('index-nav__item--nav-pending'), HIDE_DELAY)
+      } else {
+        requestAnimationFrame(poll)
+      }
     }
-    main?.addEventListener('scroll', onScroll, { passive: true })
-    onScroll() // arme le minuteur tout de suite, au cas où le scroll serait déjà nul (cible déjà à destination)
+    requestAnimationFrame(poll)
 
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' })
