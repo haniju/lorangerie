@@ -35,7 +35,7 @@ const sections = [
 </nav>
 
 <script>
-  import { initIndexNavTouch, initIndexNavScrollspy, requestIndexNavChase } from '../js/index-nav.ts'
+  import { initIndexNavTouch, initIndexNavScrollspy, navigate } from '../js/index-nav.ts'
   initIndexNavTouch()
   initIndexNavScrollspy()
 
@@ -44,13 +44,17 @@ const sections = [
   const nav = document.querySelector<HTMLElement>('.index-nav')
   const coworking = document.getElementById('coworking')
 
-  // Clic desktop (lien natif) → même déclencheur de chase que le tap mobile
-  // (initIndexNavTouch appelle requestIndexNavChase directement, cf. index-nav.ts).
-  // On ne preventDefault pas : le lien #id navigue normalement, requestIndexNavChase
-  // se contente d'armer le calcul de --index-nav-chase-y sur les scrolls suivants.
+  // Clic desktop → même navigate() que le tap mobile (cible le deco, pas la
+  // <section>, cf. index-nav.ts). On laisse passer le clic natif (nouvel
+  // onglet, clic milieu, ctrl/cmd/shift+clic, clic droit) : preventDefault
+  // seulement sur un clic gauche simple, où on prend la main pour scroller
+  // nous-mêmes vers la bonne cible.
   nav?.addEventListener('click', (e) => {
     const link = (e.target as HTMLElement).closest<HTMLElement>('.index-nav__item')
-    if (link?.dataset.section) requestIndexNavChase(link.dataset.section)
+    if (!link?.dataset.section) return
+    if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return
+    e.preventDefault()
+    navigate(link)
   })
 
   // Survol d'une entrée → classe .is-dot-hover (délégation ; l'event remonte jusqu'au

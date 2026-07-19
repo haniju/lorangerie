@@ -28,25 +28,34 @@ $item-label-margin: 5px;
   @media (min-width: $index-switch) {
     --index-nav-gap: var(--space-10); // desktop — ajuste ici
   }
-
-  // Position d'ancrage partagée par .index-nav { top } ET scroll-margin-top des
-  // <section> (cf. bloc scroll-margin plus bas) — un seul point de réglage pour
-  // que le clic sur un item d'index-nav et le scroll naturel s'accordent sur la
-  // même ligne (celle où le deco est "docké" = trigger 3 de la spec).
-  --index-scroll-anchor: calc(var(--nav-height) + var(--index-nav-gap));
 }
 
 // ── Point d'atterrissage au clic / deep-link ──────────────────────────
-// Sans ceci, un clic sur un item du rail (ou un lien #id externe) atterrit au
-// haut BRUT de la section, sans lien avec la ligne de docking du rail — le deco
-// pourrait apparaître déjà partiellement scrollé, ou au contraire trop haut.
-// scroll-margin-top est respecté nativement par l'ancrage <a href="#id"> ET par
-// scrollIntoView() (cf. initIndexNavTouch, index-nav.ts) — un seul réglage CSS
-// couvre desktop (lien natif) et mobile (JS) sans dupliquer l'offset.
-// ⚠️ Suppose que le deco est au tout début de la section (pas de padding/marge
-// avant lui) — sinon, retrancher cet écart de --index-scroll-anchor ci-dessous.
+// scroll-margin-top est mesuré depuis le scrollport du plus proche ancêtre
+// scrollable — ici `main`, pas le viewport : `main` a déjà `margin-top:
+// var(--nav-height)` (_reset.scss), donc son scrollport commence DÉJÀ sous la
+// navbar. La valeur ci-dessous n'a donc besoin que de --index-nav-gap (l'écart
+// rail/navbar), PAS de --nav-height en plus — l'ajouter le compterait deux fois
+// et ferait atterrir ~nav-height trop bas (bug constaté : ancre à 150px au lieu
+// de 80px visé).
+//
+// .index-nav__deco récupère la MÊME valeur, mais c'est elle la vraie cible de
+// navigate() (index-nav.ts) — pas la <section> elle-même. Cibler la section
+// suppose que le deco est au tout début de son flux (vrai seulement pour
+// coworking, padding-top:0) ; les 4 autres sections ont un padding-top standard
+// (.u-section, --space-xl-2xl) avant leur deco, donc cibler la section les
+// ferait systématiquement atterrir ~80px trop haut. Cibler le deco directement
+// élimine le problème sans avoir à connaître le padding de chaque section.
+//
+// .u-section garde son propre scroll-margin-top pour les pages sans deco
+// (FAQ, CGV, mentions légales…) où un lien #id classique doit quand même
+// atterrir sous la navbar plutôt que pile dessous.
 .u-section {
-  scroll-margin-top: var(--index-scroll-anchor);
+  scroll-margin-top: var(--index-nav-gap);
+}
+
+.index-nav__deco {
+  scroll-margin-top: var(--index-nav-gap);
 }
 
 // Coworking suit directement le hero (pas de section au-dessus) : pas besoin du
