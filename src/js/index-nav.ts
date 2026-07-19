@@ -6,6 +6,24 @@
 
 const HOLD_DELAY = 300
 
+// ─── Chase du rail au clic ────────────────────────────────────────────────
+// Descente temporaire du rail (.index-nav) vers le deco de la section ciblée
+// par un clic — desktop (lien natif, cf. IndexNav.astro) ou mobile (navigate()
+// ci-dessous). Armée ici, consommée à chaque frame de scroll dans
+// updateScrollspy (cf. plus bas) : jamais de transition CSS chronométrée à
+// part, donc verrouillée sur le scroll réel quel qu'en soit le moteur (ancre
+// native, scrollIntoView smooth ou reduced-motion).
+let chaseTargetId: string | null = null
+// Distance (deco → ligne de docking) mesurée à la frame précédente — sert à
+// détecter si la cible se rapproche ou s'éloigne (cf. updateChase). Réarmée à
+// l'infini à chaque nouvelle cible pour ne jamais rejeter la toute première mesure.
+let chaseLastOffset = Infinity
+
+export function requestIndexNavChase(id: string) {
+  chaseTargetId = id
+  chaseLastOffset = Infinity
+}
+
 // ─── Scrollspy — machine à états dérivée du scroll ───────────────────────────
 // Cinq stades (retour à la spec d'origine — le raccourci à 4 stades testé sur
 // la branche `index` supprimait la fenêtre invisible entre T2 et T4, qui est ce
@@ -145,6 +163,42 @@ export function initIndexNavScrollspy() {
     return Stage.Before
   }
 
+  // ── Chase (cf. requestIndexNavChase, en tête de fichier) — consommée ici à
+  // chaque frame de scroll : tant qu'une cible est armée, descend le rail vers
+  // le deco de cette section (offset = distance actuelle deco → ligne de
+  // docking), et relâche dès que le deco a rejoint cette ligne. Purement
+  // dérivé de la géométrie live, comme le reste du scrollspy — aucune durée à
+  // caler, ça reste synchronisé quel que soit le scroll qui l'accompagne.
+  //
+  // Abandon si la distance augmente au lieu de diminuer (ex. l'utilisateur
+  // scroll vers le haut, à l'encontre du clic, avant que le deco n'ait
+  // rejoint sa ligne) — sinon le rail suivrait une distance qui grandit sans
+  // borne et finirait hors écran. Tolérance de 2px pour absorber le bruit de
+  // mesure d'une frame à l'autre sans rejeter une vraie convergence.
+  function updateChase() {
+    if (!nav || !chaseTargetId) return
+
+    const target = sectionEntries.find((entry) => entry.id === chaseTargetId)
+    if (!target?.decoLabel) {
+      chaseTargetId = null
+      nav.style.setProperty('--index-nav-chase-y', '0px')
+      return
+    }
+
+    const offset = Math.max(0, target.decoLabel.getBoundingClientRect().top - stickyTopPx)
+
+    if (offset > chaseLastOffset + 2) {
+      chaseTargetId = null
+      nav.style.setProperty('--index-nav-chase-y', '0px')
+      return
+    }
+    chaseLastOffset = offset
+
+    nav.style.setProperty('--index-nav-chase-y', `${offset}px`)
+
+    if (offset <= 0.5) chaseTargetId = null
+  }
+
   function updateScrollspy() {
     const stages = sectionEntries.map((_, i) => stageOf(i))
 
@@ -169,6 +223,7 @@ export function initIndexNavScrollspy() {
 
     // Après application des états (donc des hauteurs courantes) : recale les offsets.
     calcLabelOffsets()
+    updateChase()
   }
 
   main.addEventListener('scroll', updateScrollspy, { passive: true })
@@ -209,6 +264,7 @@ export function initIndexNavTouch(root: ParentNode = document) {
     const id = el.dataset.section
     const target = id ? document.getElementById(id) : null
     if (!target) return
+    if (id) requestIndexNavChase(id)
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' })
   }

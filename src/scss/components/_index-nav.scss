@@ -393,9 +393,16 @@ $item-label-margin: 5px;
   left: var(--index-nav-left, max(0px, calc((100vw - var(--content-cap)) / 2)));
   z-index: 8; // sous la navbar mobile ouverte (cf. affinage navbar mobile, _navbar.scss)
   pointer-events: none;
-  // translateY piloté par JS en suivant le top de #coworking.
-  // Valeur initiale hors écran; JS prend la main immédiatement.
-  transform: translateY(100vh);
+  // translateY = deux apports JS combinés, chacun indépendant :
+  //   --index-nav-y      : entrée depuis le hero, suit le top de #coworking
+  //                        (cf. updateNavPosition, IndexNav.astro). Fallback
+  //                        100vh = hors écran tant que le JS n'a pas pris la main.
+  //   --index-nav-chase-y : descente temporaire au clic sur un item, pour rejoindre
+  //                        le deco de la section ciblée (cf. requestIndexNavChase,
+  //                        index-nav.ts) — recalculée à chaque frame de scroll,
+  //                        donc parfaitement synchronisée avec le scroll natif/JS
+  //                        qui l'accompagne. Retombe à 0 dès que le deco docke.
+  transform: translateY(calc(var(--index-nav-y, 100vh) + var(--index-nav-chase-y, 0px)));
 
   &__list {
     list-style: none;
