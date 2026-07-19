@@ -507,9 +507,18 @@ $item-label-margin: 5px;
   // Mobile — équivalent touch du hover ci-dessus (R12, posé par initIndexNavTouch,
   // src/js/index-nav.ts). Même mécanisme de spécificité : (0,3,0) > (0,2,0) du
   // masquage --collapse-before/--collapse-after ci-dessous, donc gagne sans ordre à gérer.
-  .index-nav__item.is-touch-held .index-nav__label {
+  //
+  // pointer-events:auto est nécessaire ici — sans lui, le label révélé hérite du
+  // pointer-events:none du masquage --collapse-before (ci-dessous), qui ne porte
+  // que sur `display`/`transform`, pas sur pointer-events. Résultat : le label
+  // est VISIBLE mais pas hit-testable — document.elementFromPoint (touchmove,
+  // ci-dessous) retombe alors sur l'item parent, jamais le label, donc le
+  // glissement-vers-le-label (--touch-drag) ne se déclenche jamais.
+  .index-nav__item.is-touch-held .index-nav__label,
+  .index-nav__item.index-nav__item--nav-pending .index-nav__label {
     display: inline-flex;
     transform: none;
+    pointer-events: auto;
   }
 
   // Pressed on release — au clic (desktop) comme au tap rapide (mobile, :active

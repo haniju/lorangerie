@@ -186,6 +186,8 @@ export function initIndexNavTouch(root: ParentNode = document) {
   const items = Array.from(root.querySelectorAll<HTMLElement>('.index-nav__item'))
   if (!items.length) return
 
+  const main = document.querySelector<HTMLElement>('main')
+
   let activeEl: HTMLElement | null = null
   let timer: ReturnType<typeof setTimeout> | null = null
 
@@ -205,10 +207,36 @@ export function initIndexNavTouch(root: ParentNode = document) {
   // scrollIntoView({block:'start'}) respecte scroll-margin-top (cf. SCSS,
   // .u-section) — l'atterrissage tombe donc automatiquement sur la
   // ligne de docking (T3), sans offset à dupliquer ici.
+  //
+  // Le label reste révélé (--nav-pending) pendant tout le trajet du scroll — sans
+  // ça, clearActive() (appelé juste avant, dans reset()) retire déjà is-touch-held,
+  // et le label disparaîtrait instantanément au lâcher du doigt, avant même que la
+  // section ait fini d'arriver. --nav-pending reprend le relais pour la durée du
+  // scroll, puis s'efface quelques ms après que celui-ci s'est stabilisé — l'item
+  // retombe alors sous le contrôle normal de la state machine (STAGE_CLASS), qui le
+  // masque (avant --start) ou le révèle déjà docké (--start atteint) selon le cas :
+  // aucune classe supplémentaire à nettoyer nous-mêmes au passage du sentinel-start.
+  const SETTLE_DELAY = 150
+  const HIDE_DELAY = 200
+
   const navigate = (el: HTMLElement) => {
     const id = el.dataset.section
     const target = id ? document.getElementById(id) : null
     if (!target) return
+
+    el.classList.add('index-nav__item--nav-pending')
+
+    let settleTimer: ReturnType<typeof setTimeout> | null = null
+    const onScroll = () => {
+      if (settleTimer) clearTimeout(settleTimer)
+      settleTimer = setTimeout(() => {
+        main?.removeEventListener('scroll', onScroll)
+        el.classList.remove('index-nav__item--nav-pending')
+      }, SETTLE_DELAY + HIDE_DELAY)
+    }
+    main?.addEventListener('scroll', onScroll, { passive: true })
+    onScroll() // arme le minuteur tout de suite, au cas où le scroll serait déjà nul (cible déjà à destination)
+
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' })
   }
