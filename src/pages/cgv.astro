@@ -51,7 +51,7 @@ const { meta, presentation, tableauRecapitulatif, pointsAttention } = cgv
         <div class="doc__list">
           {tableauRecapitulatif.map((bloc) => (
             <section class="doc__bloc" id={bloc.id}>
-              <h2 class="doc__bloc-titre">{bloc.theme}</h2>
+              <h2 class="doc__bloc-titre index-nav__deco">{bloc.theme}</h2>
               {bloc.points.map((point) => <p class="doc__bloc-texte">{point}</p>)}
             </section>
           ))}

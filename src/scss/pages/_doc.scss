@@ -63,9 +63,7 @@ $doc-switch: 56rem;
 
 // ─── sommaire ───────────────────────────────────────────────────
 .doc__index {
-  position: sticky;
-  top: calc(var(--nav-height) + var(--space-20));
-  z-index: 5;
+  position: relative;
   width: var(--grid-col-mobile-5);
 
   @media (min-width: $doc-switch) {
