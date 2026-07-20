@@ -499,10 +499,12 @@ $item-label-margin: 5px;
   //    (le déclencheur reste « le point »). Dès que le label s'affiche, la boîte grandit
   //    et englobe dot+gap+label → la zone de hover s'étend, on peut atteindre et CLIQUER
   //    le label sans perdre le survol. Scopé .index-nav → 0,4,0 > masquage 0,3,0.
-  .index-nav__item:hover .index-nav__label {
-    // @hover-reveal
-    display: inline-flex;
-    transform: none;
+  @media (hover: hover) {
+    .index-nav__item:hover .index-nav__label {
+      // @hover-reveal
+      display: inline-flex;
+      transform: none;
+    }
   }
 
   // Mobile — équivalent touch du hover ci-dessus (R12, posé par initIndexNavTouch,

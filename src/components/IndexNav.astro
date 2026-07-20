@@ -50,10 +50,18 @@ const sections = [
   // display:none donc la boîte de l'item ≈ le dot seul (déclenchement de fait « sur le
   // point »), mais une fois le label affiché la classe TIENT jusque sur le label —
   // sinon elle tombait au passage dot→label et le label redisparaissait avant le clic.
-  nav?.addEventListener('mouseover', (e) => {
+  // pointerover/pointerout + pointerType : mouseover/mouseout se déclenchent aussi
+  // en synthétique après un tap tactile (compat historique), sans mouseout fiable
+  // ensuite (pas de curseur qui bouge) — is-dot-hover restait alors collé sur
+  // <nav> après le premier tap. pointerType distingue l'interaction réelle
+  // (contrairement à @media (hover:hover), qui ne teste que la capacité de
+  // l'appareil et ne suffirait pas sur un hybride souris+tactile).
+  nav?.addEventListener('pointerover', (e) => {
+    if (e.pointerType !== 'mouse') return
     if ((e.target as HTMLElement).closest?.('.index-nav__item')) nav.classList.add('is-dot-hover')
   })
-  nav?.addEventListener('mouseout', (e) => {
+  nav?.addEventListener('pointerout', (e) => {
+    if (e.pointerType !== 'mouse') return
     if (!(e.target as HTMLElement).closest?.('.index-nav__item')) return
     const related = e.relatedTarget as HTMLElement | null
     if (!related?.closest?.('.index-nav__item')) nav.classList.remove('is-dot-hover')
