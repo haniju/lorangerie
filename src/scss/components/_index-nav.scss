@@ -77,7 +77,7 @@ $item-label-margin: 5px;
 }
 
 .index-nav__item {
-  --dot-size: 0.7rem; // mobile
+  --dot-size: 0.5rem; // mobile
   --dot-color: var(--text-cold-dark);
   display: inline-flex;
   align-items: center;
@@ -126,12 +126,10 @@ $item-label-margin: 5px;
 
 .index-nav__label {
   height: calc(100% - #{$item-label-margin * 2});
-  background-color: rgb(150, 130, 238) !important;
 }
 
 .index-nav__deco {
     height: calc(65px - #{$item-label-margin * 2});
-    background-color: pink !important;
 }
 // Enveloppe paddée : cible du hover (closest('.index-nav__dot')) + espace autour
 // du rond. Le visuel est dans .index-nav__dot-core (purement visuel désormais —
@@ -327,6 +325,9 @@ $item-label-margin: 5px;
 // 20 + 50 cumulé
 [data-sentinel-after] {
   top: calc(var(--index-after-offset, 175px)*-1);
+  @media (min-width: $index-switch) {
+    top: calc(var(--index-after-offset, 175px)*-1);
+  }
 }
 
 // T1, remplace crossedNavBottom
