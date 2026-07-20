@@ -23,9 +23,9 @@ const { meta, presentation, tableauRecapitulatif, pointsAttention } = cgv
       <nav class="doc__index" aria-label="Sommaire des CGV">
         <ul class="doc__index-list">
           {tableauRecapitulatif.map((bloc) => (
-            <li><a class="doc__index-link" href={`#${bloc.id}`}>{bloc.theme}</a></li>
+            <li><a class="doc__index-link btn--lien" href={`#${bloc.id}`}>{bloc.theme}</a></li>
           ))}
-          <li><a class="doc__index-link" href="#points-attention">Points d’attention</a></li>
+          <li><a class="doc__index-link btn--lien" href="#points-attention">Points d’attention</a></li>
         </ul>
       </nav>
 
@@ -58,7 +58,7 @@ const { meta, presentation, tableauRecapitulatif, pointsAttention } = cgv
         </div>
 
         <section class="doc__bloc" id="points-attention">
-          <h2 class="doc__bloc-titre">Points d’attention</h2>
+          <h2 class="doc__bloc-titre index-nav__deco">Points d’attention</h2>
           {pointsAttention.map((point) => <p class="doc__bloc-texte">{point}</p>)}
         </section>
       </div>

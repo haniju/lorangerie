@@ -35,7 +35,7 @@ const categories = faq.meta.categoriesOrder
                     aria-controls={`faq-answer-${q.id}`}
                   >
                     <span class="faq-card__question">{q.question}</span>
-                    <span class="faq-card__icon" aria-hidden="true"></span>
+                    <span class="faq-card__icon btn--fab" aria-hidden="true"></span>
                   </button>
                   <div class="faq-card__body" id={`faq-answer-${q.id}`} hidden>
                     {q.answer.split('\n\n').map((paragraphe) => (

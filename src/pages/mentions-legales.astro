@@ -28,7 +28,7 @@ const miseAJour = estGabarit(meta.derniereMiseAJour) ? null : meta.derniereMiseA
       <nav class="doc__index" aria-label="Sommaire des mentions légales">
         <ul class="doc__index-list">
           {sections.map((section) => (
-            <li><a class="doc__index-link" href={`#${section.id}`}>{section.titre}</a></li>
+            <li><a class="doc__index-link .doc__index-link" href={`#${section.id}`}>{section.titre}</a></li>
           ))}
         </ul>
       </nav>
@@ -37,7 +37,7 @@ const miseAJour = estGabarit(meta.derniereMiseAJour) ? null : meta.derniereMiseA
         <div class="doc__list">
           {sections.map((section) => (
             <section class="doc__bloc" id={section.id}>
-              <h2 class="doc__bloc-titre">{section.titre}</h2>
+              <h2 class="doc__bloc-titre index-nav__deco">{section.titre}</h2>
               {section.paragraphes.map((paragraphe) => (
                 <p class="doc__bloc-texte">{paragraphe}</p>
               ))}

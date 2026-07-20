@@ -90,9 +90,10 @@ $doc-switch: 56rem;
   font-weight: 700;
   font-size: 0.9375rem;
   color: var(--text-cold-dark);
-  text-decoration: none;
 
-  &:hover { text-decoration: underline; }
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 // ─── colonne de contenu ─────────────────────────────────────────
@@ -157,6 +158,10 @@ $doc-switch: 56rem;
   flex-direction: column;
   gap: var(--space-10);
   scroll-margin-top: calc(var(--nav-height) + var(--space-20));
+
+  .index-nav__deco {
+    padding-left: var(--space-30);
+  }
 }
 
 .doc__bloc-titre {
@@ -165,9 +170,14 @@ $doc-switch: 56rem;
   font-weight: 700;
   font-size: var(--step-1);
   color: var(--text-cold-dark);
+  width: 100%;
+  height: max-content;
+  text-wrap: auto;
+  line-height: 1.5;
 }
 
 .doc__bloc-texte {
   margin: 0;
   color: var(--text-cold-dark);
+  padding: var(--space-7) var(--space-30) var(--space-10);
 }

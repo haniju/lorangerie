@@ -37,8 +37,8 @@
   position: relative;
   width: 2rem;
   height: 2rem;
-  border-radius: 50%;
-  background: var(--action-button-primary-initial);
+  /*border-radius: 50%;
+  background: var(--action-button-primary-initial);*/
 
   @media (prefers-reduced-motion: no-preference) {
     transition: transform 200ms ease;
