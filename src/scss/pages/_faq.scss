@@ -19,7 +19,7 @@ $faq-switch: 56rem;
 
 // ─── index des rubriques ───────────────────────────────────────
 .faq__index {
-  position: sticky;
+  position: relative;
   top: calc(var(--nav-height) + var(--space-20));
   z-index: 5;
   width: var(--grid-col-mobile-5);

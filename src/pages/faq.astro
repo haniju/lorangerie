@@ -24,7 +24,7 @@ const categories = faq.meta.categoriesOrder
       <div class="faq__cards">
         {categories.map((cat) => (
           <div class="faq__category" id={cat.id}>
-            <h2 class="faq__category-titre">{cat.label}</h2>
+            <h2 class="index-nav__deco faq__category-titre">{cat.label}</h2>
             <div class="faq__list">
               {cat.questions.map((q) => (
                 <article class="faq-card" data-faq-card>
