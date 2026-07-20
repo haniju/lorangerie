@@ -1,7 +1,9 @@
 ---
-// Rend l'écriture inclusive en stratégie B (INCLUSIVE-WRITING.md §3) :
-// le point médian reste affiché, la forme orale validée (inclusive-lexicon.json)
-// est lue par les lecteurs d'écran à sa place.
+// Rend l'écriture inclusive en stratégie A (INCLUSIVE-WRITING.md §3) :
+// aria-label porte la forme orale, le point médian reste le seul contenu
+// visible/textuel de l'élément. Testé avec VoiceOver (macOS) : la stratégie B
+// (aria-hidden + sr-only) fait lire la forme écrite telle quelle par VoiceOver
+// en lecture continue — l'aria-label est en pratique plus fiable.
 import lexicon from '../data/inclusive-lexicon.json'
 
 interface Props {
@@ -18,10 +20,7 @@ const parts = pattern ? text.split(pattern) : [text]
 ---
 {parts.map((part) =>
   Object.prototype.hasOwnProperty.call(lexicon, part) ? (
-    <span class="incl">
-      <span aria-hidden="true">{part}</span>
-      <span class="sr-only">{(lexicon as Record<string, string>)[part]}</span>
-    </span>
+    <span class="incl" aria-label={(lexicon as Record<string, string>)[part]}>{part}</span>
   ) : (
     part
   )

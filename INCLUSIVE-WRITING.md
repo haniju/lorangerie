@@ -89,16 +89,17 @@ silencieuse qui corrompt `tiers-lieu` en `tiers·lieu`.
 Le point médian affiché ne doit jamais être lu tel quel par un lecteur d'écran. Deux
 stratégies possibles ; **choisir la stratégie B par défaut** (meilleur support).
 
-### Stratégie A — forme orale via aria-label (simple, à réserver aux cas isolés)
+### Stratégie A — forme orale via aria-label — **retenue, cf. état d'implémentation**
 
 ```html
 <span aria-label="adhérentes et adhérents">adhérent·e·s</span>
 ```
 
-Le lecteur d'écran lit le `aria-label`, ignore le contenu visible. Limite : verbeux à écrire,
-et le contenu visible reste sélectionnable tel quel.
+Le lecteur d'écran lit le `aria-label`, ignore le contenu visible. Limite théorique : verbeux
+à écrire (résolu ici via le lexique centralisé, cf. §5) ; le contenu visible reste sélectionnable
+tel quel (pas de double chaîne au copier-coller, contrairement à la stratégie B).
 
-### Stratégie B — forme visible + forme orale masquée (recommandée)
+### Stratégie B — forme visible + forme orale masquée (écartée après test réel)
 
 Le mot affiche le point médian pour les voyants ; une forme « pleine » en `sr-only` est lue
 par les lecteurs d'écran ; la forme visible est masquée à l'oral via `aria-hidden`.
@@ -125,12 +126,12 @@ Avec le `sr-only` standard :
 }
 ```
 
-### Contraintes de la stratégie B
+### Contraintes de la stratégie B — et raison de l'abandon
 
 - **Copier-coller** : sélectionner le mot copie les **deux** formes (`adhérent·e·sadhérentes et adhérents`). Neutraliser avec `user-select: none` sur le `.sr-only`.
 - **`lang="fr"`** obligatoire sur `<html>` (et sur tout bloc d'une autre langue) : sans lui, une voix de synthèse anglaise prononce mal les formes développées.
 - **SEO / GEO** : `aria-hidden` masque de l'arbre d'accessibilité, **pas du DOM**. Les crawlers (moteurs classiques et génératifs) lisent les deux chaînes et récupèrent donc la forme lisible « adhérentes et adhérents » — bénéfique. Rendu **build-time** (Astro) : les `sr-only` sont dans le HTML servi. Vigilance : ne pas laisser la double chaîne être perçue comme du contenu dupliqué.
-- **Vérification** : tester sur un lecteur d'écran **réel** (VoiceOver macOS/iOS, NVDA Windows) — le comportement des synthèses vocales n'est pas déterministe ; ne pas se contenter d'inspecter l'arbre d'accessibilité.
+- **Vérification (2026-07, VoiceOver macOS réel)** : en lecture continue (VO+A), VoiceOver a lu la forme **écrite** (`adhérent point e point s`) et ignoré le `aria-hidden` sur le span visible — comportement documenté comme non déterministe (cf. ligne ci-dessus), confirmé en pratique sur ce projet. **Stratégie B abandonnée au profit de la stratégie A**, qui n'a pas ce problème (accessible name calculée directement depuis `aria-label`, sans dépendre du traitement de `aria-hidden` par le lecteur).
 
 ### Forme orale = « développée », validée au cas par cas
 
@@ -233,8 +234,10 @@ Le pipeline décrit en §5 est **construit et actif** : `scripts/figma-to-conten
 
 **Composants branchés sur `textes.json`** : `Tarif.astro`, `Partenaire.astro`, `Fonctionnement.astro`, `Pulpe.astro`. Restent hardcodés (hors scope de cette passe) : `Coworking.astro`, `Hero.astro`, `Navbar.astro`, `IndexNav.astro`.
 
-**Composant `<Incl>` (§3, stratégie B) — construit** : `src/components/Incl.astro` prend un `text` prop, repère les tokens de `inclusive-lexicon.json` (tri du plus long au plus court pour éviter les chevauchements) et émet `<span class="incl"><span aria-hidden="true">{visible}</span><span class="sr-only">{orale}</span></span>`. Branché sur les 8 occurrences (`Fonctionnement.astro`, `Tarif.astro`, `Pulpe.astro`). Classe `.sr-only` ajoutée dans `src/scss/utilities/_screen-reader.scss` (`user-select: none` pour éviter la double chaîne au copier-coller, conforme §3).
+**Composant `<Incl>` — construit, passé en stratégie A après test réel** : `src/components/Incl.astro` prend un `text` prop, repère les tokens de `inclusive-lexicon.json` (tri du plus long au plus court pour éviter les chevauchements) et émet `<span class="incl" aria-label="{orale}">{visible}</span>`. Branché sur les 8 occurrences (`Fonctionnement.astro`, `Tarif.astro`, `Pulpe.astro`).
+
+> **Changement de stratégie (2026-07, suite test VoiceOver réel)** : l'implémentation initiale suivait la stratégie B (§3) recommandée par la spec. Testée sur VoiceOver macOS en lecture continue, elle a échoué — VoiceOver lisait la forme écrite (`adhérent point e point s`) au lieu de la forme orale masquée. Bascule vers la **stratégie A** (`aria-label`), qui n'a pas cette dépendance au traitement de `aria-hidden` par le lecteur. La classe `.sr-only` (`src/scss/utilities/_screen-reader.scss`) reste en place pour un usage futur éventuel mais n'est plus utilisée par `<Incl>`.
 
 **Reste à faire** :
-- Vérification sur lecteur d'écran réel (VoiceOver/NVDA) — cf. §3, le comportement des synthèses vocales n'est pas déterministe.
+- Un signalement de « piège de navigation » sur la liste de `Fonctionnement.astro` a été rapporté pendant le test VoiceOver mais n'a pas pu être reproduit ensuite — à resurveiller si le symptôme revient (préciser alors : blocage/boucle, items sautés, ou perte de focus).
 - Si de nouveaux tokens inclusifs apparaissent dans `textes.json` (relance de `content:sync`), ils ressortiront `à-valider` dans `inclusive-report.json` tant qu'ils ne sont pas dans le lexique.
