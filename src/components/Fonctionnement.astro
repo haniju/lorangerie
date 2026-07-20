@@ -25,6 +25,10 @@ const principes = [
 
 <section class="fonctionnement u-container u-section" id="fonctionnement">
   <h2 class="index-nav__deco" data-label-for="fonctionnement">Notre fonctionnement</h2>
+  <span class="index-sentinel" data-sentinel-start data-section-ref="fonctionnement" aria-hidden="true"></span>
+  <span class="index-sentinel" data-sentinel-bellow data-section-ref="fonctionnement" aria-hidden="true"></span>
+<span class="index-sentinel" data-sentinel-after data-section-ref="fonctionnement" aria-hidden="true"></span>  
+  
   <div class="fonctionnement__grid">
     <!-- proposition 1 — accroche accès (width_2, coin big haut-droite) -->
     <div class="proposition proposition--gradient fonctionnement__prop fonctionnement__prop--1">
@@ -34,7 +38,7 @@ const principes = [
     <!-- liste des principes (width_3) -->
     <div class="text-box-liste fonctionnement__liste">
       {principes.map((text) => (
-        <div class="text-box-liste__item" data-sentinel-for="fonctionnement">
+        <div class="text-box-liste__item">
           <img class="text-box-liste__arrow" src={arrowUrl} alt="" aria-hidden="true" />
           <p class="text-box-liste__text">{text}</p>
         </div>

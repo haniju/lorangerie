@@ -317,14 +317,21 @@
                 "$type": "string",
                 "$value": "Accès aux locaux 7j/7 et 24h/24 - Thé et café à volonté"
               },
-              "desc_titre": {
+              "sous_titre_1": {
                 "$scopes": [
                   "ALL_SCOPES"
                 ],
                 "$type": "string",
-                "$value": "Contribution active au conseil des usagers de L’Orangerie (2h/mois). Les usagers et usagères de l’Orangerie se réunissent une fois par mois dans l’intention d’améliorer l’environnement de travail partagé et les liens que nous y tissons. Plusieurs types de contributions sont possibles :"
+                "$value": "Contribution active de 2h/mois au conseil des usagers de L’Orangerie"
               },
-              "contribution": {
+              "description_1": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "string",
+                "$value": "Les usagers et usagères de l’Orangerie se réunissent une fois par mois dans l’intention d’améliorer l’environnement de travail partagé et les liens que nous y tissons. Plusieurs types de contributions sont possibles :"
+              },
+              "liste_1": {
                 "$scopes": [
                   "ALL_SCOPES"
                 ],
@@ -359,14 +366,49 @@
                 "$type": "string",
                 "$value": "Accès aux locaux 7j/7 et 24h/24 - Thé et café à volonté."
               },
-              "desc_titre": {
+              "sous_titre_1": {
                 "$scopes": [
                   "ALL_SCOPES"
                 ],
                 "$type": "string",
-                "$value": "Contribution active au conseil des usagers de L’Orangerie (2h/mois) et Participation bénévole aux activités de PULPE (2h/mois) :"
+                "$value": "Contribution active de 2h/mois au conseil des usagers de L’Orangerie"
               },
-              "contribution": {
+              "description_1": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "string",
+                "$value": "Comme pour le tarif Coworker investi, tu participeras à la vie de l’Orangerie."
+              },
+              "afficher_description_1": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "boolean",
+                "$value": false
+              },
+              "sous_titre_2": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "string",
+                "$value": "Participation bénévole de 2h/mois aux activités de PULPE"
+              },
+              "description_2": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "string",
+                "$value": "Plusieurs commissions font tourner l’association, tu pourras choisir ce qui te parle le plus :"
+              },
+              "afficher_description_2": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "boolean",
+                "$value": true
+              },
+              "liste_2": {
                 "$scopes": [
                   "ALL_SCOPES"
                 ],

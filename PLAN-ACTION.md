@@ -150,89 +150,161 @@ Au chargement le nav est sous le fold (translate ≈ hauteur hero). Il remonte 1
 
 Premier item en `--start` (hardcodé dans `IndexNav.astro`). Les 4 autres en `--collapsed`. Le scrollspy (Intersection Observer) prendra le relais pour gérer les transitions dynamiques.
 
-### Implémentation réalisée — scrollspy « machine à états dérivée »
+### Implémentation réalisée — scrollspy « machine à états dérivée » (validé, 2026-07)
 
-Le scrollspy vivant (`initIndexNavScrollspy`, `src/js/index-nav.ts`) remplace l'IO double
-envisagé par une **machine à états dérivée du scroll** : à chaque frame on lit la géométrie
-(deco vs dot, deco vs section) et on **recalcule** le stade de chaque étiquette — l'état n'est
-jamais accumulé, donc la remontée rejoue exactement la chorégraphie à l'envers.
+Le scrollspy vivant (`initIndexNavScrollspy`, `src/js/index-nav.ts`) est une **machine à états
+dérivée du scroll** : à chaque frame on relit la géométrie (`getBoundingClientRect()`) et on
+**recalcule** le stade de chaque étiquette — rien n'est accumulé, donc la remontée rejoue
+exactement la chorégraphie à l'envers, par construction. Vérifié en conditions réelles (balayage
+fin de toute la page, scroll descendant ET remontant) : progression propre à 5 stades pour les 5
+sections, aucune oscillation, symétrie exacte à la remontée.
 
 **Deux acteurs**
 - `.index-nav__label` (dans `IndexNav.astro`) — l'étiquette du rail, une par section.
-- `.index-nav__deco` (`h2` dans chaque section, `data-label-for`) — miroir décoratif `sticky`
-  qui « voyage » vers le rail. *(anciennement `.section-label-deco`.)*
+- `.index-nav__deco` (`<h2>` dans chaque section, `data-label-for`) — miroir décoratif `sticky`
+  qui « voyage » vers le rail. Réactivé sur `coworking` (était commenté) : **plus de cas
+  spécial pour cette section** dans le JS, elle suit la même mécanique que les 4 autres.
 
-> **TEST en cours (2026-07)** — le modèle est passé de 5 à **4 états** : `--actif` a été retiré,
-> `--bellow` ne dépend plus des sentinelles, et `--collapse-after` utilise un nouveau repère
-> (« dernier dot de la liste »). Détail des triggers ci-dessous ; à valider avant de considérer
-> ce modèle comme définitif (cf. points ouverts en fin de section).
+**Architecture — 5 stades** (retour à la spec d'origine ; un raccourci à 4 stades testé
+précédemment fusionnait `actif` dans `start`, ce qui supprimait la fenêtre invisible permettant à
+`--label-to-first` de se positionner en silence avant reveal, et causait un saut visible à
+l'apparition) :
 
-**4 états de l'étiquette de rail**, franchis dans l'ordre au scroll descendant :
-`collapse-before → start → bellow → collapse-after`
+| Stade | Classe CSS | Label visible | Déclenché par |
+|---|---|---|---|
+| `Before` | `--collapse-before` | non | défaut, avant tout trigger |
+| `Actif` | `--actif` | **non** | T2 |
+| `Start` | `--start` | oui | T4 |
+| `Bellow` | `--bellow` | oui | T5 |
+| `After` | `--collapse-after` | non | T1 (prioritaire, écrase tout le reste) |
 
-Taille = celle du **label** (grand/petit). Le **dot** est de taille **uniforme (petit)** sur tous
-les états ; seule sa **couleur** varie (`sapin-60` en start/bellow, normal sinon).
+Taille = celle du **label** (grand en actif/start, petit sinon). Le **dot** est de taille
+**uniforme (petit)** sur tous les stades ; seule sa **couleur** varie (`sapin-60` en
+actif/start/bellow, normale sinon).
 
-| État (`.index-nav__item--…`) | Label | Dot | Visibility | Trigger |
+**Mécanisme de déclenchement — sentinels géométriques.** Plus aucun trigger ne dépend d'un
+`scrollTop` mémorisé ou verrouillé : tout est dérivé de la géométrie live à chaque frame, donc
+réversible par construction (symétrie scroll down / scroll up, vérifiée).
+
+| Trigger | Nom code | Repère mesuré | Compare à | Placement DOM |
 |---|---|---|---|---|
-| `collapse-before` | grand | petit | hidden | défaut, jamais atteint |
-| `start` | grand | petit · sapin-60 | **visible** | deco croise son **propre** dot miroir (`isStart` : `decoTop ≤ dotTop`) |
-| `bellow` | petit | petit · sapin-60 | **visible** | la **`<section>`** elle-même touche le haut de l'écran (`isSectionAtTop` : `sectionTop ≤ 0`) |
-| `collapse-after` | petit | petit · normal | hidden | la deco de la section **suivante** croise le dot du **dernier item de la liste** (`crossedLastDot`) |
+| T1 | `sentinelAfter` (`[data-sentinel-after]`) | offset **négatif** (`-175px`, avant le début de la section suivante) | `stickyTopPx` | `<span>` posé dans la `<section>`, juste après le `<h2 class="index-nav__deco">` |
+| T2 | `isActif()` | top de l'**item** lui-même (`entry.item`, pas le dot) | top du deco | — (pas un sentinel DOM) |
+| T3 | — (pas un stade) | top du deco | `stickyTopPx` | — (sert de ligne de référence conceptuelle, pas mesuré directement dans le code) |
+| T4 | `sentinelStart` (`[data-sentinel-start]`) | offset `+200px` | `stickyTopPx` | idem T1 |
+| T5 | `sentinelBellow` (`[data-sentinel-bellow]`) | offset `+300px` | `stickyTopPx` | idem T1 |
 
-**Position découplée du reveal** — c'est le point le plus subtil du modèle actuel. `isStart`
-(reveal, `decoTop ≤ dotTop`) déclenche bien avant que la deco n'atteigne son vrai point de collage.
-Si l'étiquette dockait (translate vers le haut) au même instant que le reveal, elle apparaîtrait
-directement calée en haut — sans transition, un comportement jugé cassé (c'était le rôle qu'assurait
-l'ex-`--actif`, en pré-positionnant *invisible* avant que `--start` ne révèle). Le modèle actuel
-sépare donc en deux fonctions distinctes :
-- `isStart(entry)` → reveal (classe `--start`, visibilité).
-- `isDocked(entry)` → `decoTop ≤ stickyTopPx` (l'ancien seuil, repris tel quel) → autorise le
-  docking (translate réel vers la position 1).
+**Placement DOM réel des sentinels** — les trois (`start`/`bellow`/`after`) sont des `<span
+class="index-sentinel">` **frères** du `<h2 class="index-nav__deco">`, tous enfants directs de la
+`<section>` (pas nichés dans le `<h2>`). Positionnés en `position: absolute` (non-sticky) avec un
+`top` fixe en pixels (`--index-start-offset`/`--index-bellow-offset`/`--index-after-offset`,
+tous à leur valeur de fallback aujourd'hui — voir plus bas). N'étant **pas** sticky, leur position
+viewport évolue de façon strictement monotone avec le scroll : chaque sentinel franchit
+`stickyTopPx` **exactement une fois** par passage de section, ce qui suffit à un déclenchement
+stable sans dépendre du comportement (sticky, non-monotone une fois docké) du deco lui-même.
 
-Tant qu'un item est `--start` mais **pas encore docké**, `updateScrollspy` force
-`--label-to-first: 0px` sur cet item (après le calcul normal des offsets) → le label reste à
-**sa position naturelle** dans le flux du rail. Dès que `isDocked` devient vrai (au fil du
-scroll), le vrai offset reprend la main et le label migre vers le haut. *(Sans deco — coworking —
-`isDocked` renvoie toujours vrai : offset ≈ 0 de toute façon, item déjà en position 1.)*
+**Valeurs des offsets** — `--index-start-offset`, `--index-bellow-offset` et
+`--index-after-offset` sont référencées via `var(--x, fallback)` dans `_index-nav.scss` mais
+**ne sont déclarées nulle part dans `:root`** : ce sont donc les valeurs de **fallback** qui
+s'appliquent réellement, soit `200px` / `300px` / `175px`. Retouchables par tâtonnement visuel en
+les déclarant dans `:root` (aucune n'est déduite d'un calcul).
 
-> Trigger `collapse-after` — dernier repère (2026-07) : câblé sur `crossedLastDot(next)`, PAS sur
-> `isStart(next)`. `lastDot` = le dot du **dernier** item du rail (`partenaires`), capté une fois
-> à l'init. La deco entrante descend vers le haut de l'écran et croise ce dot (le plus bas de la
-> liste) bien **avant** d'atteindre son propre miroir → l'item précédent disparaît plus tôt que
-> si le trigger restait sur le miroir de la section suivante. Cas particulier auto-cohérent : pour
-> l'avant-dernière section, `next` EST le dernier item → `crossedLastDot(next) ≡ isStart(next)`,
-> aucun cas spécial à coder. `collapse-after` étant prioritaire dans `stageOf`, ce trigger peut
-> court-circuiter `bellow` pour une section courte — comportement voulu, pas un bug.
+```scss
+[data-sentinel-start]  { top: var(--index-start-offset, 200px); }
+[data-sentinel-bellow] { top: var(--index-bellow-offset, 300px); }
+[data-sentinel-after]  { top: calc(var(--index-after-offset, 175px) * -1); }
+```
 
-> Refactor dots (2026-07) : (1) `--collapse-before` passé en petite taille de label (comme `--bellow`) ;
-> (2) taille du dot uniformisée (petite partout) — supprime le décalage horizontal dû au `left`
-> qui dépendait de `--dot-size`. Le rond visuel est `.index-nav__dot-core` dans l'enveloppe paddée `.index-nav__dot`.
+**T2 (`isActif`) mesuré contre le top de l'item, pas le dot** — le dot est centré (`top: 50%`)
+*dans* l'item, donc sa position bouge avec la hauteur de l'item — y compris au survol, qui fait
+passer un item encore `collapse-before`/`collapse-after` à la hauteur « bellow » sans changer son
+stage. Le top de l'item, en flex-column, ne dépend que des items **au-dessus**, jamais de sa
+propre hauteur → immunisé contre ce bruit.
 
-La `.index-nav__deco` se masque **peu après** le passage `collapse-before → start` (et non plus
-au passage `bellow`) : `isStart()` n'étant pas figé (contrairement à l'ancien repère "sticky"), le
-JS mémorise le `scrollTop` du franchissement (`entry.startScrollTop`) puis masque la deco
-`DECO_HIDE_AFTER_START_PX` (2px) de scroll plus loin. Réversible à la remontée.
-`aria-current` posé sur l'item en `start` (R15). *(coworking, sans deco, démarre en `start`.)*
+**Deco masqué** — dérivé directement de `stage >= Stage.Start` (`decoLabel.classList.toggle(...)`
+dans `updateScrollspy`), pas de verrou de scroll séparé : redondant une fois `Actif` réintroduit
+comme stade distinct et caché.
 
-**Deux pièges résolus (repères de coordonnées)**
-- **`stickyTopPx`** = ligne du rail en coords **viewport**, lue sur `.index-nav`
-  (`calc(nav-height + index-nav-gap)`), PAS le `top` de la deco (relatif à `main`, décalé de
-  `nav-height` via son `margin-top`). Sinon `isDocked` ne se déclenche jamais.
-- **`--label-to-first`** (offset translateY qui docke l'étiquette N sur la position de l'item 1)
-  **n'est pas invariant** : les hauteurs du rail changent au scroll (grande ↔ petite). Il est donc
-  recalculé à **chaque frame, après** application des classes d'état. Le `transform` du label
-  n'affecte pas la boîte de l'`<a>` mesurée → pas de boucle de rétroaction.
+**`scroll-margin-top` sur `.u-section` — atterrissage au clic (réécrit, 2026-07)**
+
+Décision abandonnée en cours de route : faire *descendre le rail* (`.index-nav`) au clic pour
+qu'il rejoigne le deco de la section ciblée (« chase », piloté par `requestIndexNavChase` +
+`--index-nav-chase-y`). Implémenté, testé (Playwright), mais **retiré** sur demande explicite —
+le rail reste fixe en permanence ; seule la position d'atterrissage du scroll est réglée.
+
+Cible du scroll = la `<section>` elle-même, **jamais** `.index-nav__deco` directement :
+`.index-nav__deco` est `position: sticky`, donc sa bounding box dépend de l'historique de scroll
+— une fois qu'on a dépassé sa section, il reste « collé » en bas de son conteneur, et
+`scrollIntoView()` / `scroll-margin-top` visé sur un élément sticky cible alors CETTE position
+collée, pas son point de départ (bug constaté : atterrissage à la fin de la section au lieu du
+début). Cibler la section (jamais sticky) élimine le problème quel que soit le sens du clic.
+
+Le réglage vise maintenant `--index-deco-viewport-target` (`_index-nav.scss`) — où le deco doit
+apparaître dans le viewport après le clic, actuellement **37vh** (calibré à l'œil à 1717×909).
+Formule (`.u-section`) :
+```
+scroll-margin-top = target - nav-height - padding-top(section) - margin-top(deco)
+```
+`.coworking` a son propre override (padding-top: 0, pas de terme à retrancher pour lui).
+⚠️ Le target doit rester nettement au-dessus de la ligne de docking (`stickyTopPx +
+$item-label-margin`, ~85px) : si le calcul pousse la section trop haut, le deco franchit le seuil
+sticky *avant la fin du scroll* et se fait clamper à sa position dockée — le pill atterrit alors
+collé aux dots et chevauche le texte au lieu de laisser sa place normale.
+
+⚠️ `.u-section` est également utilisée hors des 5 sections indexées (pages FAQ, contact, mentions
+légales, CGV, 404, design-system) — le réglage s'applique donc partout où cette classe est posée,
+pas seulement sur le rail (cf. points ouverts).
+
+**Fallback section sans deco** — `console.warn` posé une fois à l'init (pas dans la boucle de
+scroll) si `decoLabel` introuvable pour une section ; l'item resterait alors bloqué en `--start`.
+Mort dans les faits aujourd'hui (les 5 sections ont toutes leur `.index-nav__deco`, coworking
+compris), conservé par défense.
 
 **Empilement** : les étiquettes sont dockées au même endroit ; l'ordre de peinture = ordre DOM,
 donc l'étiquette N+1 recouvre la N (règle « la 2 au-dessus de la 1 »). Aucun `z-index` nécessaire.
 
-**Sentinelles — laissées de côté pour ce test** : `[data-sentinel-for="<id>"]` reste dans le
-markup de chaque section (`Coworking.astro`, `Fonctionnement.astro`, `Tarif.astro`, `Pulpe.astro`,
-`Partenaire.astro`) mais **n'est plus lu par le scrollspy** (`passed()`/`entry.sentinel` retirés
-de `index-nav.ts`). `bellow` utilise désormais `entry.section` (la `<section>` elle-même, captée
-via `document.getElementById(entry.id)`). À trancher : si ce modèle est validé, retirer les
-attributs `data-sentinel-for` du markup (dette sinon — deux mécanismes qui se chevauchent).
+> **Positionnement horizontal du rail — fix scrollbar (résolu, 2026-07)**
+>
+> Un décalage horizontal persistant entre `.index-nav__label` et `.index-nav__deco` (visible sur
+> écran large avec une scrollbar réelle, pas reproductible en scrollbar overlay/headless) venait
+> de deux bases de calcul différentes pour un même alignement visuel :
+> - `.u-container` (donc `.index-nav__deco`, enfant de section) se centre via `margin-inline: auto`
+>   + `width: 100%`, **relatif à `<main>`** — dont la largeur de contenu disponible est amputée par
+>   SA PROPRE scrollbar (`overflow-y: auto`).
+> - `.index-nav` (`position: fixed`) se centre via `calc((100vw - content-cap) / 2)` — `100vw`
+>   ignore totalement cette scrollbar (elle n'existe qu'à l'intérieur de `main`, pas au niveau
+>   document : `html`/`body` sont en `overflow: hidden`).
+>
+> Les deux formules ne divergent que lorsque la fenêtre dépasse `--content-cap` (1550px, seuil où
+> le terme de centrage devient actif des deux côtés) — l'écart vaut alors la moitié de la largeur
+> de la scrollbar. `position: fixed` étant structurellement ancré au viewport (jamais à `main`),
+> aucune formule CSS pure basée sur `100vw`/`%` ne peut reproduire exactement le centrage de
+> `.u-container` tant qu'une scrollbar réelle prend de la place.
+>
+> **Fix** : mesure JS plutôt que formule CSS. `IndexNav.astro` → `updateNavLeft()` lit
+> `coworking.getBoundingClientRect().left` (`#coworking` porte déjà `.u-container`) et pose le
+> résultat en `--index-nav-left` sur `.index-nav`, appelée à l'init et sur `resize`.
+> `_index-nav.scss` : `.index-nav { left: var(--index-nav-left, ancienne-formule-100vw) }` —
+> l'ancienne formule reste en fallback avant que le JS ne prenne la main. Vérifié à 1440/1800/2200px
+> et sur redimensionnement : alignement exact, aucune dépendance à la largeur de la scrollbar.
+
+> **Positionnement vertical du label docké — fix inset de centrage (résolu, 2026-07)**
+>
+> `--label-to-first` (offset `translateY` qui docke le label de l'item N sur la position de
+> l'item 1) atterrissait systématiquement 5px trop bas. Cause : chaque hauteur d'item
+> (`_index-nav.scss`, `height: calc(Npx + 10px)`) ajoute 10px de plus que la hauteur réelle du
+> label — centré via `align-items: center`, le label se retrouve donc à 10px/2 = 5px sous le haut
+> de SON PROPRE item, uniformément quel que soit l'état (start/bellow partagent la même
+> convention `+10px`). L'ancrage (`items[0].getBoundingClientRect().top`) mesure le haut BRUT de
+> la boîte du premier item (son label peut être caché, non mesurable) — sans retrancher cet inset,
+> l'inset du label CIBLE s'ajoutait après le docking au lieu de s'annuler avec un inset équivalent
+> côté ancrage.
+>
+> **Fix** (`src/js/index-nav.ts`, `calcLabelOffsets`) : `firstTop = items[0]...top -
+> LABEL_TOP_INSET` (constante `5`, dérivée de la convention `+10px` partagée par toutes les
+> hauteurs d'item). Vérifié en direct : le label docké atterrit désormais exactement au haut de
+> la boîte de l'item 1 (avant : 5px plus bas), en `--start` comme en `--bellow`, sur plusieurs
+> sections.
 
 **Reste à implémenter**
 - Mobile : appliquer les tailles `--mobile` via media query dans le rail (pas via classe JS).
@@ -240,16 +312,13 @@ attributs `data-sentinel-for` du markup (dette sinon — deux mécanismes qui se
   ci-dessous, cf. `IndexNav.astro`/`_index-nav.scss` — pas encore construit).
 - Interactions `--collapsed` (hover/touch-hold) : conservées pour la démo DS, non branchées sur
   le rail vivant qui est désormais piloté au scroll.
-- **Mobile — touch-and-hold rétabli** (voir note ci-dessous).
-- Valider le modèle à 4 états (test 2026-07) puis, si retenu, nettoyer le markup des sentinelles
-  et mettre à jour cette note.
 
 > **Note pour l'ingénieur — Mobile touch-and-hold (résolu, 2026-07)**
 >
-> Cause : `initIndexNavTouch()` (`src/js/index-nav.ts`) ciblait `.index-nav__item--collapsed`,
-> classe posée par l'ancien modèle à 5 stades mais **plus jamais** par le scrollspy vivant
-> (passé à 4 stades `collapse-before / start / bellow / collapse-after`) — le JS de touch
-> tournait dans le vide sur `index.astro`. Seule la démo Design System (markup statique
+> Cause (historique) : `initIndexNavTouch()` (`src/js/index-nav.ts`) ciblait
+> `.index-nav__item--collapsed`, classe posée par un ancien modèle mais **jamais** par le
+> scrollspy vivant (`collapse-before / actif / start / bellow / collapse-after`) — le JS de
+> touch tournait dans le vide sur `index.astro`. Seule la démo Design System (markup statique
 > avec `--collapsed` en dur) l'exerçait encore, d'où l'écart DS ↔ rail réel.
 >
 > Fix (miroir du hover desktop déjà en prod, `IndexNav.astro` / `.index-nav__item:hover`) :
@@ -271,7 +340,48 @@ attributs `data-sentinel-for` du markup (dette sinon — deux mécanismes qui se
 >
 > Reste ouvert : les styles `.index-nav__item--collapsed` dans `_index-nav.scss` restent
 > **legacy DS-only** (démo Design System uniquement, non utilisés par le rail vivant) —
-> à retirer ou documenter explicitement comme tel si le modèle à 4 états est validé.
+> à retirer ou documenter explicitement comme tel si on retire un jour cette démo.
+
+> **Note pour l'ingénieur — Mobile : label bloqué après tap (EN COURS, non résolu, 2026-07-20)**
+>
+> Régression découverte après le point ci-dessus : après le tap+hold+drag-vers-label R13
+> (`navigate()`, `initIndexNavTouch`), le label du rail ne revient pas correctement sous contrôle
+> de la state machine (`STAGE_CLASS`) une fois la section chargée — reste visible / mal positionné
+> au lieu de repasser en `--collapse-before` et reprendre ses triggers sentinel normalement.
+>
+> Deux bugs distincts identifiés et corrigés jusqu'ici (mais le symptôme persiste — cf. « reste
+> ouvert » ci-dessous) :
+> 1. **`pointer-events` non hérité par le reveal.** Le label révélé par `is-touch-held` reste
+>    `pointer-events: none` (hérité de la règle de masquage `--collapse-before`/`--actif`, qui ne
+>    porte que sur `display`/`transform`, jamais `pointer-events`). Conséquence : le label est
+>    *visible* mais jamais hit-testable — `document.elementFromPoint` (dans le handler
+>    `touchmove`) retombe systématiquement sur l'item parent, jamais le label, donc
+>    `--touch-drag` ne se déclenche jamais via le geste documenté (repli silencieux sur le lien
+>    natif `<a href="#id">`, qui masque le symptôme). Fix : `pointer-events: auto` ajouté à la
+>    règle de reveal (`.index-nav__item.is-touch-held .index-nav__label`, `_index-nav.scss`).
+> 2. **Pas de cycle explicite de reveal/hide autour de `navigate()`.** `clearActive()` (appelé
+>    dans `reset()`, juste avant `navigate()`) retire `is-touch-held` immédiatement au lâcher du
+>    doigt — sans rien d'autre, le label disparaît avant même que le scroll ait commencé, ou pire,
+>    reste bloqué selon l'état exact au moment du relâchement. Fix : nouvelle classe
+>    `--nav-pending`, posée par `navigate()` pour toute la durée du scroll (garde le label
+>    révélé pendant le trajet), retirée une fois le scroll stabilisé — l'item retombe alors sous
+>    contrôle normal de `STAGE_CLASS`.
+>    - Détection de fin de scroll : d'abord tentée par **debounce sur l'event `'scroll'`** —
+>      abandonnée, la cadence de cet event pendant un scroll natif fluide n'est pas garantie par
+>      le navigateur (le debounce pouvait ne jamais se déclencher tout seul, seul un scroll
+>      MANUEL de l'utilisateur — relançant l'event — le débloquait). Remplacée par un **polling
+>      `requestAnimationFrame`** qui mesure `scrollTop` à chaque frame indépendamment de l'event,
+>      avec filet de sécurité (`MAX_FRAMES`, ~5s) si le scroll ne se stabilise jamais.
+>
+> **Reste ouvert** : malgré les deux fixes ci-dessus (vérifiés isolément via Playwright + touch
+> émulé, cf. historique de session), l'utilisateur rapporte en test réel (Chrome DevTools device
+> mode) que le label **ne revient toujours pas** dans le flow d'interaction attendu après
+> tap+chargement — actuellement en cours de debug direct à l'inspecteur. Hypothèses non encore
+> vérifiées : interaction avec le vrai moteur de scroll mobile (inertie/momentum, différent du
+> `scrollIntoView` desktop simulé) ; timing réel de stabilisation de `scrollTop` sur device
+> potentiellement hors des bornes `STABLE_FRAMES`/`MAX_FRAMES` actuelles ; ou cause encore non
+> identifiée empêchant le retour propre à `--collapse-before`. À reprendre avec les observations
+> de l'inspecteur avant d'ajuster le code plus loin.
 
 > **Hover par-dot — résolu (2026-07)**, l'ancienne note ci-dessus est obsolète. Deux mécanismes
 > distincts cohabitent désormais dans `_index-nav.scss` (repérés `// @hover-reveal`) :

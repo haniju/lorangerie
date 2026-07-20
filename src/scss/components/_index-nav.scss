@@ -10,6 +10,15 @@
 
 $index-switch: 56rem;
 
+// Inset vertical entre la boîte d'un item/deco et le texte du label qu'il
+// contient — produit par le centrage flex de .index-nav__item sur un label
+// dont la hauteur est réduite de 2x cette valeur (cf. .index-nav__label,
+// height: calc(100% - #{$item-label-margin * 2})). .index-nav__deco n'a pas
+// ce parent centreur : son `top` sticky compense l'inset manuellement (+1x
+// cette valeur) pour que son texte atterrisse à la même ligne que le label
+// docké (cf. LABEL_TOP_INSET, index-nav.ts).
+$item-label-margin: 5px;
+
 // Écart vertical de l'index-nav (rail + deco) sous la navbar.
 // Point de réglage unique, partagé rail + deco (défini sur :root car la deco n'est
 // pas descendante de .index-nav). Mobile-first : base = mobile, override desktop.
@@ -19,14 +28,64 @@ $index-switch: 56rem;
   @media (min-width: $index-switch) {
     --index-nav-gap: var(--space-10); // desktop — ajuste ici
   }
+
+  // Où le deco doit apparaître dans le viewport au clic sur un item du rail
+  // (ou un deep-link #id) — indépendant de la ligne de docking du rail
+  // (--index-nav-gap), qui ne bouge plus au clic : le rail reste fixe, seule
+  // la position d'atterrissage du scroll est réglée ici.
+  //
+  // ⚠️ Doit rester nettement AU-DESSUS de la ligne de docking (stickyTopPx +
+  // $item-label-margin, ~85px) : si le scroll-margin-top calculé ci-dessous
+  // pousse la section trop haut (au point que le deco, en flux normal,
+  // franchisse le seuil sticky avant même la fin du scroll), le sticky clampe
+  // le deco à SA position dockée — le pill atterrit alors collé aux dots et
+  // chevauche le texte au lieu de laisser sa place normale (bug constaté en
+  // réutilisant --index-after-offset, calibré pour un tout autre usage : le
+  // déclenchement T1 du scrollspy, pas l'atterrissage au clic).
+  // 37vh reproduit ~337px d'atterrissage à 1717×909 (le réglage validé à l'œil) —
+  // recalculé depuis cette valeur plutôt que choisi au hasard : voir dérivation
+  // ci-dessous (.u-section).
+  --index-deco-viewport-target: 37vh;
+}
+
+// ── Point d'atterrissage au clic / deep-link ──────────────────────────
+// On cible la <section> (stable), jamais .index-nav__deco directement : le
+// deco est position:sticky, donc sa bounding box dépend de l'historique de
+// scroll — une fois qu'on a dépassé sa section, il reste "collé" en bas de
+// son conteneur, et scrollIntoView()/scroll-margin-top sur un élément sticky
+// vise alors CETTE position collée, pas son point de départ. Résultat observé :
+// le scroll atterrissait à la fin de la section au lieu du début. Cibler la
+// section (jamais sticky, position stable quel que soit l'historique de
+// scroll) élimine le problème quel que soit le sens du clic.
+//
+// scroll-margin-top est mesuré depuis le scrollport de `main` (pas le
+// viewport : `main` a déjà `margin-top: var(--nav-height)`, cf. _reset.scss).
+// Le deco est lui-même à padding-top (--space-xl-2xl) + margin-top
+// ($item-label-margin) du haut de sa section — pour qu'il atterrisse à
+// --index-deco-viewport-target du haut du VIEWPORT, il faut donc retrancher
+// ces trois écarts de la cible :
+//   scroll-margin-top = target - nav-height - padding-top - margin-top(deco)
+.u-section {
+  scroll-margin-top: calc(var(--index-deco-viewport-target) - var(--nav-height) - var(--space-xl-2xl) - #{$item-label-margin});
+}
+
+// Coworking suit directement le hero (pas de section au-dessus) : pas de
+// padding-top standard de .u-section à retrancher (padding-block:0 ci-dessous).
+.coworking {
+  scroll-margin-top: calc(var(--index-deco-viewport-target) - var(--nav-height) - #{$item-label-margin});
+  padding-block: 0 var(--space-xl-2xl);
 }
 
 .index-nav__item {
-  --dot-size: 0.875rem; // 14px — défaut (bellow / collapsed desktop)
+  --dot-size: 0.5rem; // mobile
   --dot-color: var(--text-cold-dark);
   display: inline-flex;
   align-items: center;
   gap: var(--space-10);
+
+  @media (min-width: $index-switch) {
+    --dot-size: 0.875rem; // 14px — desktop (bellow / collapsed)
+  }
 }
 
 .index-nav__item--actif,
@@ -34,17 +93,31 @@ $index-switch: 56rem;
   height: calc(55px + 10px);
 }
 
-.index-nav__item--collapse-before,
-.index-nav__item--collapse-after,
 .index-nav__item--bellow {
   height: calc(35px + 10px);
 }
 
+.index-nav__item--bellow, 
+.index-nav__item--collapse-before,
+.index-nav__item--collapse-after{
+  .index-nav__label {
+    font-size: 1rem; // 16px — title/h1/section_below
+    padding: var(--space-7) var(--space-20); // défaut = bellow
+    border-radius: var(--corner-medium); // 25px
+  }
+}
+
+// collapse-before / collapse-after : ne sont plus listés dans la règle bellow
+// ci-dessus. Leur hauteur y était de toute façon systématiquement écrasée par
+// celle-ci (même spécificité, bloc plus tardif dans la cascade) — les lister
+// deux fois ne faisait que rendre le résultat dépendant de l'ordre des blocs.
 .index-nav__item--collapse-before,
 .index-nav__item--collapse-after {
   height: calc(15px + 10px);
 
-  &:hover{height: calc(35px + 10px);}
+  &:hover {
+    height: calc(35px + 10px);
+  }
 }
 
 .index-nav__dot {
@@ -52,11 +125,15 @@ $index-switch: 56rem;
 }
 
 .index-nav__label {
-  height: calc(100% - 10px);
+  height: calc(100% - #{$item-label-margin * 2});
 }
 
+.index-nav__deco {
+    height: calc(65px - #{$item-label-margin * 2});
+}
 // Enveloppe paddée : cible du hover (closest('.index-nav__dot')) + espace autour
-// du rond. Le visuel est dans .index-nav__dot-core (mesuré par le JS pour le trigger).
+// du rond. Le visuel est dans .index-nav__dot-core (purement visuel désormais —
+// T2 mesure le top de l'item lui-même, pas le dot, cf. index-nav.ts / isActif).
 .index-nav__dot {
   flex-shrink: 0;
   position: relative;
@@ -85,9 +162,7 @@ $index-switch: 56rem;
   font-weight: 400;
   line-height: 1;
   white-space: nowrap;
-  font-size: 1rem; // 16px — title/h1/section_below
-  padding: var(--space-7) var(--space-20); // défaut = bellow
-  border-radius: var(--corner-medium); // 25px
+  letter-spacing: normal;
   background: var(--action-index-initial);
   color: var(--action-index-texte-initial);
 }
@@ -207,27 +282,64 @@ $index-switch: 56rem;
   }
 
   // ── Mobile : touch-and-hold (JS → .is-touch-held) ──
-  // .is-touch-held   = doigt maintenu → label visible en initial
-  // .is-label-pressed = doigt glissé sur le label → pressed
+  // .is-touch-held = doigt maintenu → label visible en initial
   &.is-touch-held .index-nav__label {
     opacity: 1;
     transform: translateY(-50%) translateX(0);
     pointer-events: auto;
   }
+}
 
-  &.is-label-pressed .index-nav__label {
-    background: var(--action-index-pressed);
-    color: var(--action-index-texte-pressed);
-    text-decoration: underline;
+// ════════════════════════════════════════════════════════════════════
+// SENTINELS — repères T4/T5 de la spec, matérialisés en DOM
+// À poser dans chaque .astro de section, dans le même wrapper `position:relative`
+// que .index-nav__deco (ou sur <section> elle-même si son bord haut coïncide
+// avec le deco — cf. échange sur le wrapper). Offsets mesurés depuis le deco,
+// donc INDÉPENDANTS du scroll — seule leur position par rapport à la ligne du
+// rail (stickyTopPx, lue en JS) détermine le déclenchement.
+//
+//   [data-sentinel-start]  : T4 — "+20px après T3" de la spec
+//   [data-sentinel-bellow] : T5 — "+50px après T4", donc cumulé = 70px après T3
+//
+// Valeurs cumulées volontairement (bellow > start toujours, puisque comparées
+// à la MÊME ligne stickyTopPx) — ne pas les rendre indépendantes l'une de l'autre.
+// ════════════════════════════════════════════════════════════════════
+
+.index-sentinel {
+  position: absolute;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+[data-sentinel-start] {
+  top: var(--index-start-offset, 200px);
+}
+
+[data-sentinel-bellow] {
+  top: var(--index-bellow-offset, 300px);
+}
+
+// 20 + 50 cumulé
+[data-sentinel-after] {
+  top: calc(var(--index-after-offset, 175px)*-1);
+  @media (min-width: $index-switch) {
+    top: calc(var(--index-after-offset, 175px)*-1);
   }
 }
+
+// T1, remplace crossedNavBottom
 
 // ════════════════════════════════════════════════════════════════════
 // LABEL DÉCORATIF DE SECTION — .index-nav__deco
 // Miroir visuel de .index-nav__label : même typographie, même fond pill,
 // pas d'interactions. Positionné sticky dans sa section pour "voyager"
 // vers le rail et pousser l'étiquette précédente vers le haut.
-// Position x calée via --index-nav-label-left (set par JS à l'init).
+// Position x : héritée du flux normal de la <section> (padding-inline de
+// .u-container) — aucun calage JS nécessaire ici, contrairement à .index-nav
+// (position:fixed, cf. bloc RAIL NAV plus bas).
 // ════════════════════════════════════════════════════════════════════
 
 .index-nav__deco {
@@ -237,9 +349,10 @@ $index-switch: 56rem;
   font-family: var(--font-heading);
   font-weight: 400;
   line-height: 1;
+  letter-spacing: normal;
   white-space: nowrap;
   font-size: 2.25rem; // 36px — état start (défaut)
-  padding: var(--space-7) var(--space-30) var(--space-10);
+  padding: var(--space-7) var(--space-20) var(--space-7) var(--space-20);
   border-radius: var(--corner-big); // 80px
   background: var(--action-index-initial);
   color: var(--action-index-texte-initial);
@@ -248,7 +361,8 @@ $index-switch: 56rem;
   // Y = même formule que .index-nav { top }
   // X = --pad-grid depuis le bord viewport, corrigé du décalage de centrage du container au-delà de 1550px
   position: sticky;
-  top: var(--index-nav-gap); // même écart que le rail (relatif à main, décalé de nav-height)
+  top: calc(var(--index-nav-gap) + #{$item-label-margin}); // même écart que le rail (relatif à main, décalé de nav-height)
+  margin-block: 5px;
   margin-left: 0px;
 
   &.index-nav__deco--hidden {
@@ -259,20 +373,12 @@ $index-switch: 56rem;
     transition: font-size 220ms ease, padding 220ms ease, border-radius 220ms ease;
   }
 
-  // ── état bellow : réduit (miroir de .index-nav__item--bellow .index-nav__label)
-  &.index-nav__deco--bellow {
-    font-size: 1rem; // 16px
-    padding: var(--space-7) var(--space-20);
-    border-radius: var(--corner-medium); // 25px
+  @media (min-width: $index-switch) {
+    padding: var(--space-7) var(--space-30) var(--space-10);
   }
-
   // ── mobile
   @media (max-width: #{$index-switch}) {
     font-size: 1.625rem; // 26px
-
-    &.index-nav__deco--bellow {
-      font-size: 1rem;
-    }
   }
 }
 
@@ -292,15 +398,22 @@ $index-switch: 56rem;
 // block = toute la page.
 // Dot centré dans la marge gauche via left absolu depuis le bord page.
 // Label en flux aligné avec le contenu via padding-left: --pad-grid.
-// left = même marge que les sections (.u-container) : au-delà de --content-cap
-// le contenu se centre, donc on ajoute le décalage de centrage au bord viewport.
+// left = bord gauche RÉEL de .u-container, mesuré en JS (--index-nav-left,
+// IndexNav.astro) plutôt que recalculé ici via 100vw. .index-nav est
+// position:fixed → son containing block est le viewport, alors que .u-container
+// se centre (margin-inline:auto) par rapport à <main>, dont la largeur de
+// contenu est amputée de SA PROPRE scrollbar (overflow-y:auto) — scrollbar que
+// 100vw ignore totalement (elle n'existe pas au niveau document, html/body
+// étant en overflow:hidden). Les deux formules divergeraient donc dès que la
+// fenêtre dépasse --content-cap. Le fallback ci-dessous (avant que le JS ne
+// prenne la main) reste l'ancienne formule, approximative mais raisonnable.
 // ════════════════════════════════════════════════════════════════════
 
 .index-nav {
   position: fixed;
   top: calc(var(--nav-height) + var(--index-nav-gap)); // écart réglable (défaut --space-10)
-  left: max(0px, calc((100vw - var(--content-cap)) / 2));
-  z-index: 8;
+  left: var(--index-nav-left, max(0px, calc((100vw - var(--content-cap)) / 2)));
+  z-index: 8; // sous la navbar mobile ouverte (cf. affinage navbar mobile, _navbar.scss)
   pointer-events: none;
   // translateY piloté par JS en suivant le top de #coworking.
   // Valeur initiale hors écran; JS prend la main immédiatement.
@@ -365,11 +478,8 @@ $index-switch: 56rem;
   .index-nav__item--start .index-nav__label,
   .index-nav__item--bellow .index-nav__label,
   .index-nav__item--collapse-after .index-nav__label {
+    // valeur identique en desktop qu'en mobile — pas besoin de la répéter dans un @media
     transform: translateY(var(--label-to-first, 0px));
-
-    @media (min-width: $index-switch) {
-      transform: translateY(var(--label-to-first, 0px));
-    }
   }
 
   // @hover-reveal — DEUX mécanismes distincts :
@@ -389,18 +499,30 @@ $index-switch: 56rem;
   //    (le déclencheur reste « le point »). Dès que le label s'affiche, la boîte grandit
   //    et englobe dot+gap+label → la zone de hover s'étend, on peut atteindre et CLIQUER
   //    le label sans perdre le survol. Scopé .index-nav → 0,4,0 > masquage 0,3,0.
-  .index-nav__item:hover .index-nav__label {
-    // @hover-reveal
-    display: inline-flex;
-    transform: none;
+  @media (hover: hover) {
+    .index-nav__item:hover .index-nav__label {
+      // @hover-reveal
+      display: inline-flex;
+      transform: none;
+    }
   }
 
   // Mobile — équivalent touch du hover ci-dessus (R12, posé par initIndexNavTouch,
   // src/js/index-nav.ts). Même mécanisme de spécificité : (0,3,0) > (0,2,0) du
   // masquage --collapse-before/--collapse-after ci-dessous, donc gagne sans ordre à gérer.
-  .index-nav__item.is-touch-held .index-nav__label {
+  //
+  // pointer-events:auto est nécessaire ici — sans lui, le label révélé hérite du
+  // pointer-events:none du masquage --collapse-before (ci-dessous), qui ne porte
+  // que sur `display`/`transform`, pas sur pointer-events. Résultat : le label
+  // est VISIBLE mais pas hit-testable — document.elementFromPoint (touchmove,
+  // ci-dessous) retombe alors sur l'item parent, jamais le label, donc le
+  // glissement-vers-le-label (--touch-drag) ne se déclenche jamais.
+  .index-nav__item.is-touch-held .index-nav__label,
+  .index-nav__item.index-nav__item--nav-pending .index-nav__label {
     display: inline-flex;
     transform: none;
+    pointer-events: auto;
+    height: calc(35px + 10px)!important; //même hauteur qu'un item bellow le temps du touch-held
   }
 
   // Pressed on release — au clic (desktop) comme au tap rapide (mobile, :active
@@ -421,7 +543,6 @@ $index-switch: 56rem;
   .index-nav__item--collapse-before .index-nav__label,
   .index-nav__item--actif .index-nav__label,
   .index-nav__item--collapse-after .index-nav__label {
-    //visibility: hidden;
     display: none;
     pointer-events: none;
   }

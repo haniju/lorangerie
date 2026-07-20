@@ -25,4 +25,31 @@
 
 .u-section {
   padding-block: var(--space-xl-2xl);
+  position: relative;
+}
+
+// ─── Scroll area (mobile filmstrip) ──────────────────────────
+// Rangée à défilement horizontal plein écran : bleed jusqu'aux deux bords
+// via margins négatives + padding qui redonne l'indent (--pad-grid).
+
+.u-scroll-area {
+  display: flex;
+  gap: var(--space-10);
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  scroll-padding-left: var(--pad-grid); // le snap respecte l'indent gauche
+  -webkit-overflow-scrolling: touch; // momentum scrolling iOS
+  scrollbar-width: none; // Firefox
+  margin-left: calc(-1 * var(--pad-grid));
+  margin-right: calc(-1 * var(--pad-grid));
+  padding-left: var(--pad-grid);
+  padding-right: var(--pad-grid);
+
+  &::-webkit-scrollbar {
+    display: none; // Chromium/Safari
+  }
+
+  >* {
+    scroll-snap-align: start;
+  }
 }

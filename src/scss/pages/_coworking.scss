@@ -1,5 +1,7 @@
 // Section coworking (32:2613). PREMIÈRE PASSE.
 
+$coworking-switch: 56rem;
+
 .coworking {
   display: flex;
   flex-direction: column;
@@ -9,4 +11,8 @@
 
 .coworking__cta {
   align-self: center;
+  @media (min-width: $coworking-switch) {
+    width: calc(var(--grid-col-desktop-4) - 5px);
+    align-self: flex-start;
+  }
 }
