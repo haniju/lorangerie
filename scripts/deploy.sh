@@ -26,7 +26,7 @@ echo "→ Deploying to $S3_BUCKET..."
 
 s3cmd sync dist/ "s3://$S3_BUCKET/" \
   --host="$(echo $S3_ENDPOINT | sed 's|https://||')" \
-  --host-bucket="%(bucket)s.$(echo $S3_ENDPOINT | sed 's|https://||')" \
+  --host-bucket="$(echo $S3_ENDPOINT | sed 's|https://||')" \
   --access_key="$S3_ACCESS_KEY" \
   --secret_key="$S3_SECRET_KEY" \
   --no-mime-magic \
