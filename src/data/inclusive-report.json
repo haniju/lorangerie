@@ -20,24 +20,24 @@
     "brut": "fait.e",
     "modalite": "point",
     "converti": "fait·e",
-    "orale": null,
-    "statut": "à-valider"
+    "orale": "faite ou fait",
+    "statut": "auto"
   },
   {
     "cle": "tarifs_.copulpeur_.copulpeur",
     "brut": "Copulpeur.euse",
     "modalite": "point",
     "converti": "Copulpeur·euse",
-    "orale": null,
-    "statut": "à-valider"
+    "orale": "Copulpeuse et Copulpeur",
+    "statut": "auto"
   },
   {
     "cle": "pulpe_.intro",
     "brut": "usagers.ères",
     "modalite": "point",
     "converti": "usagers·ères",
-    "orale": null,
-    "statut": "à-valider"
+    "orale": "usagères et usagers",
+    "statut": "auto"
   },
   {
     "cle": "pulpe_.historique",
@@ -52,8 +52,8 @@
     "brut": "entrepreneur.e.s",
     "modalite": "point",
     "converti": "entrepreneur·e·s",
-    "orale": null,
-    "statut": "à-valider"
+    "orale": "entrepreneuses et entrepreneurs",
+    "statut": "auto"
   },
   {
     "cle": "pulpe_.historique",

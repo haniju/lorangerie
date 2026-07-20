@@ -1,0 +1,28 @@
+---
+// Rend l'écriture inclusive en stratégie B (INCLUSIVE-WRITING.md §3) :
+// le point médian reste affiché, la forme orale validée (inclusive-lexicon.json)
+// est lue par les lecteurs d'écran à sa place.
+import lexicon from '../data/inclusive-lexicon.json'
+
+interface Props {
+  text: string
+}
+
+const { text } = Astro.props
+
+const tokens = Object.keys(lexicon).sort((a, b) => b.length - a.length)
+const escape = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+const pattern = tokens.length ? new RegExp(`(${tokens.map(escape).join('|')})`, 'g') : null
+
+const parts = pattern ? text.split(pattern) : [text]
+---
+{parts.map((part) =>
+  Object.prototype.hasOwnProperty.call(lexicon, part) ? (
+    <span class="incl">
+      <span aria-hidden="true">{part}</span>
+      <span class="sr-only">{(lexicon as Record<string, string>)[part]}</span>
+    </span>
+  ) : (
+    part
+  )
+)}

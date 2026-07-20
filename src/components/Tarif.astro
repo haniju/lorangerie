@@ -3,6 +3,7 @@
 // Desktop : tableau-tarifs indent 1 col, forfait-a 2 col, div-b 4 col, gap --space-20.
 // Mobile : forfait-a 5 col (pleine utile), div-b scroll horizontal, instances 4 col chacune.
 import textes from '../data/textes.json'
+import Incl from './Incl.astro'
 import soleilUrl from '../assets/pictos/soleil.svg?url'
 import blurredLeavesUrl from '../assets/images/blurred_leaves.jpg?url'
 
@@ -63,7 +64,7 @@ const tarifs = mode["tarifs_"]
 
       <article class="forfait forfait--communautaire">
         <div class="forfait__header">
-          <h3 class="forfait__titre">{tarifs["copulpeur_"]["copulpeur"]}</h3>
+          <h3 class="forfait__titre"><Incl text={tarifs["copulpeur_"]["copulpeur"]} /></h3>
         </div>
         <div class="forfait__body">
           <div class="forfait__prix">
@@ -92,7 +93,7 @@ const tarifs = mode["tarifs_"]
     <div class="tarifs__propositions">
       <div class="proposition proposition--demi-lune tarifs__prop tarifs__prop--1">
         <img class="proposition__picto" src={soleilUrl} alt="" aria-hidden="true" />
-        <p class="proposition__text">{tarifs["suisje"]}</p>
+        <p class="proposition__text"><Incl text={tarifs["suisje"]} /></p>
       </div>
       <div class="proposition proposition--demi-lune proposition--demi-lune--orange tarifs__prop tarifs__prop--2">
         <img class="proposition__picto" src={soleilUrl} alt="" aria-hidden="true" />

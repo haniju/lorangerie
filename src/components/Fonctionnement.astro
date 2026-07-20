@@ -7,6 +7,7 @@
 // boutons (.btn--primary / .btn--secondary).
 import arrowUrl from '../assets/pictos/simple.svg?url'
 import textes from '../data/textes.json'
+import Incl from './Incl.astro'
 
 const t = textes
 const f = t['fonctionement_']
@@ -34,7 +35,7 @@ const principes = Object.values(f['liste_']) as string[]
       {principes.map((text) => (
         <div class="text-box-liste__item">
           <img class="text-box-liste__arrow" src={arrowUrl} alt="" aria-hidden="true" />
-          <p class="text-box-liste__text">{text}</p>
+          <p class="text-box-liste__text"><Incl text={text} /></p>
         </div>
       ))}
     </div>
@@ -42,7 +43,7 @@ const principes = Object.values(f['liste_']) as string[]
     <!-- proposition 2 — accroche entretien partagé (width_2, coin big bas-droite) -->
     <div class="bento__row bento__row--milieu"></div>
     <div class="proposition proposition--gradient fonctionnement__prop fonctionnement__prop--2">
-      <p class="proposition__text">{prop2}</p>
+      <p class="proposition__text"><Incl text={prop2} /></p>
     </div>
 
     <!-- boutons -->

@@ -9,6 +9,7 @@
 import pulpeGroupe from '../assets/images/pulpe_groupe.jpg'
 import pulpeLogoUrl from '../assets/logos/pulpe.svg?url'
 import textes from '../data/textes.json'
+import Incl from './Incl.astro'
 import concert    from '../assets/images/pulpe/concert.jpg'
 import foot       from '../assets/images/pulpe/foot.jpg'
 import potager    from '../assets/images/pulpe/potager.jpg'
@@ -38,7 +39,7 @@ const p = textes['pulpe_']
 
   <div class="proposition proposition--none proposition--section-intro pulpe__intro">
     <p class="proposition__text">
-      {p['intro']}
+      <Incl text={p['intro']} />
     </p>
   </div>
 
@@ -49,7 +50,7 @@ const p = textes['pulpe_']
         <div class="pulpe__group-texte">
           <h3 class="pulpe__titre">{p['histotitre']}</h3>
           <p class="pulpe__texte">
-            {p['historique']}
+            <Incl text={p['historique']} />
           </p>
         </div>
         <div class="pulpe__group-texte">

@@ -217,20 +217,24 @@ Le **rapport avant/après** (§4) produit les entrées candidates ; tu valides, 
 
 Le pipeline décrit en §5 est **construit et actif** : `scripts/figma-to-content.js` (`npm run content:sync`) lit `tokens.textes.json` (brut Figma), unifie les modalités vers le point médian et écrit `textes.json`, `src/data/inclusive-report.json` et amorce `src/data/inclusive-lexicon.json`.
 
-**8 occurrences détectées** dans le contenu actuel (et non 7 — le script a trouvé une occurrence de plus que le recensement manuel d'origine : `usagers·ères` dans `pulpe_.intro`) :
+**8 occurrences détectées** dans le contenu actuel (et non 7 — le script a trouvé une occurrence de plus que le recensement manuel d'origine : `usagers·ères` dans `pulpe_.intro`). Les 4 formes restées `à-valider` ont été tranchées et versées dans `inclusive-lexicon.json` :
 
-| Token unifié | Forme orale | Statut |
+| Token unifié | Forme orale | Décision |
 |---|---|---|
-| `adhérent·e·s` | adhérentes et adhérents | `auto` (lexique) |
-| `habitant·e·s` (×2) | habitantes et habitants | `auto` (lexique) |
-| `humain·es` | humaines et humains | `auto` (lexique) |
-| `fait·e` | — | **`à-valider`** |
-| `Copulpeur·euse` | — | **`à-valider`** |
-| `entrepreneur·e·s` | — | **`à-valider`** |
-| `usagers·ères` | — | **`à-valider`** (nouvelle occurrence, hors tableau §3 d'origine) |
+| `adhérent·e·s` | adhérentes et adhérents | — |
+| `habitant·e·s` (×2) | habitantes et habitants | — |
+| `humain·es` | humaines et humains | — |
+| `fait·e` | faite ou fait | « ou » plutôt que « et » — attribut d'un « tu » dont le genre n'est pas fixé, pas un pluriel comme les autres tokens |
+| `Copulpeur·euse` | Copulpeuse et Copulpeur | modèle -eur/-euse standard |
+| `entrepreneur·e·s` | entrepreneuses et entrepreneurs | forme choisie (l'alternative « entrepreneures » écartée) |
+| `usagers·ères` | usagères et usagers | aligné sur l'entrée `usager·ère·s` déjà prévue ci-dessus, mise au pluriel |
+
+**Les 8 occurrences sont maintenant `statut: auto`** — `npm run content:sync` ne produit plus d'entrée `à-valider`.
 
 **Composants branchés sur `textes.json`** : `Tarif.astro`, `Partenaire.astro`, `Fonctionnement.astro`, `Pulpe.astro`. Restent hardcodés (hors scope de cette passe) : `Coworking.astro`, `Hero.astro`, `Navbar.astro`, `IndexNav.astro`.
 
+**Composant `<Incl>` (§3, stratégie B) — construit** : `src/components/Incl.astro` prend un `text` prop, repère les tokens de `inclusive-lexicon.json` (tri du plus long au plus court pour éviter les chevauchements) et émet `<span class="incl"><span aria-hidden="true">{visible}</span><span class="sr-only">{orale}</span></span>`. Branché sur les 8 occurrences (`Fonctionnement.astro`, `Tarif.astro`, `Pulpe.astro`). Classe `.sr-only` ajoutée dans `src/scss/utilities/_screen-reader.scss` (`user-select: none` pour éviter la double chaîne au copier-coller, conforme §3).
+
 **Reste à faire** :
-- Valider à la main les 4 formes orales ci-dessus (contexte, néologismes maison) et les ajouter à `inclusive-lexicon.json`.
-- Construire le composant `<Incl>` (§3, stratégie B) — pour l'instant seule l'unification visuelle (`·`) est en place ; rien n'expose encore de forme orale aux lecteurs d'écran.
+- Vérification sur lecteur d'écran réel (VoiceOver/NVDA) — cf. §3, le comportement des synthèses vocales n'est pas déterministe.
+- Si de nouveaux tokens inclusifs apparaissent dans `textes.json` (relance de `content:sync`), ils ressortiront `à-valider` dans `inclusive-report.json` tant qu'ils ne sont pas dans le lexique.
