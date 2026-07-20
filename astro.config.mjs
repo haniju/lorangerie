@@ -7,6 +7,9 @@ import colorsPlugin from './vite-plugin-colors.js'
 // reste valable.
 export default defineConfig({
   outDir: './dist',
+  devToolbar: {
+    enabled: false,
+  },
   vite: {
     plugins: [colorsPlugin()],
     css: {
