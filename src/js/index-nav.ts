@@ -302,3 +302,23 @@ export function initIndexNavTouch(root: ParentNode = document) {
     })
   })
 }
+
+// R15 (accessibilité) — active("clic"/Entrée) sur un point du rail : le saut de
+// hash natif (href="#id") scrolle bien la section en vue, mais ne déplace JAMAIS
+// le focus clavier/lecteur d'écran dessus si elle n'est pas focusable — la
+// navigation séquentielle reprend alors depuis le lien lui-même (rail), pas
+// depuis le contenu qu'on vient d'atteindre. Rendu focusable à la volée
+// (tabindex="-1" : cible programmatique uniquement, jamais dans l'ordre de tab)
+// puis focus() différé pour laisser le jump/scroll natif se produire d'abord.
+export function initIndexNavFocus(root: ParentNode = document) {
+  const items = root.querySelectorAll<HTMLAnchorElement>('.index-nav__item')
+  items.forEach((el) => {
+    el.addEventListener('click', () => {
+      const id = el.dataset.section
+      const target = id ? document.getElementById(id) : null
+      if (!target) return
+      if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1')
+      requestAnimationFrame(() => target.focus({ preventScroll: true }))
+    })
+  })
+}

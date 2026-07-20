@@ -22,9 +22,10 @@ const sections = [
           href={`#${id}`}
           class={`index-nav__item ${i === 0 ? 'index-nav__item--start' : 'index-nav__item--collapse-before'}`}
           data-section={id}
+          aria-label={label}
         >
           <span class="index-nav__dot" aria-hidden="true"><span class="index-nav__dot-core"></span></span>
-          <span class="index-nav__label">
+          <span class="index-nav__label" aria-hidden="true">
             {label}
             {logo && <img class="index-nav__deco-logo" src={logo} alt="Pulpe" />}
           </span>
@@ -35,9 +36,10 @@ const sections = [
 </nav>
 
 <script>
-  import { initIndexNavTouch, initIndexNavScrollspy } from '../js/index-nav.ts'
+  import { initIndexNavTouch, initIndexNavScrollspy, initIndexNavFocus } from '../js/index-nav.ts'
   initIndexNavTouch()
   initIndexNavScrollspy()
+  initIndexNavFocus()
 
   // Le nav suit le top de #coworking : translateY = max(0, coworkingTop - navTop).
   // Quand coworking remonte jusqu'à la position sticky du nav, translateY = 0 → nav calé.
