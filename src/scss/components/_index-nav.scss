@@ -522,6 +522,7 @@ $item-label-margin: 5px;
     display: inline-flex;
     transform: none;
     pointer-events: auto;
+    height: calc(35px + 10px)!important; //même hauteur qu'un item bellow le temps du touch-held
   }
 
   // Pressed on release — au clic (desktop) comme au tap rapide (mobile, :active
