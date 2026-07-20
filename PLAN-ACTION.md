@@ -225,13 +225,35 @@ propre hauteur → immunisé contre ce bruit.
 dans `updateScrollspy`), pas de verrou de scroll séparé : redondant une fois `Actif` réintroduit
 comme stade distinct et caché.
 
-**`scroll-margin-top` sur `.u-section`** — un clic sur un item du rail (ou un lien `#id`, ou un
-retour navigateur) atterrit exactement sur la ligne de docking (T3), via
-`--index-scroll-anchor: calc(var(--nav-height) + var(--index-nav-gap))` — respecté nativement par
-`<a href="#id">` et par `scrollIntoView()` (`initIndexNavTouch`), un seul réglage couvre desktop
-et mobile. ⚠️ `.u-section` est également utilisée hors des 5 sections indexées (pages FAQ,
-contact, mentions légales, CGV, 404, design-system) — le réglage s'applique donc partout où cette
-classe est posée, pas seulement sur le rail (cf. points ouverts).
+**`scroll-margin-top` sur `.u-section` — atterrissage au clic (réécrit, 2026-07)**
+
+Décision abandonnée en cours de route : faire *descendre le rail* (`.index-nav`) au clic pour
+qu'il rejoigne le deco de la section ciblée (« chase », piloté par `requestIndexNavChase` +
+`--index-nav-chase-y`). Implémenté, testé (Playwright), mais **retiré** sur demande explicite —
+le rail reste fixe en permanence ; seule la position d'atterrissage du scroll est réglée.
+
+Cible du scroll = la `<section>` elle-même, **jamais** `.index-nav__deco` directement :
+`.index-nav__deco` est `position: sticky`, donc sa bounding box dépend de l'historique de scroll
+— une fois qu'on a dépassé sa section, il reste « collé » en bas de son conteneur, et
+`scrollIntoView()` / `scroll-margin-top` visé sur un élément sticky cible alors CETTE position
+collée, pas son point de départ (bug constaté : atterrissage à la fin de la section au lieu du
+début). Cibler la section (jamais sticky) élimine le problème quel que soit le sens du clic.
+
+Le réglage vise maintenant `--index-deco-viewport-target` (`_index-nav.scss`) — où le deco doit
+apparaître dans le viewport après le clic, actuellement **37vh** (calibré à l'œil à 1717×909).
+Formule (`.u-section`) :
+```
+scroll-margin-top = target - nav-height - padding-top(section) - margin-top(deco)
+```
+`.coworking` a son propre override (padding-top: 0, pas de terme à retrancher pour lui).
+⚠️ Le target doit rester nettement au-dessus de la ligne de docking (`stickyTopPx +
+$item-label-margin`, ~85px) : si le calcul pousse la section trop haut, le deco franchit le seuil
+sticky *avant la fin du scroll* et se fait clamper à sa position dockée — le pill atterrit alors
+collé aux dots et chevauche le texte au lieu de laisser sa place normale.
+
+⚠️ `.u-section` est également utilisée hors des 5 sections indexées (pages FAQ, contact, mentions
+légales, CGV, 404, design-system) — le réglage s'applique donc partout où cette classe est posée,
+pas seulement sur le rail (cf. points ouverts).
 
 **Fallback section sans deco** — `console.warn` posé une fois à l'init (pas dans la boucle de
 scroll) si `decoLabel` introuvable pour une section ; l'item resterait alors bloqué en `--start`.
@@ -319,6 +341,47 @@ donc l'étiquette N+1 recouvre la N (règle « la 2 au-dessus de la 1 »). Aucun
 > Reste ouvert : les styles `.index-nav__item--collapsed` dans `_index-nav.scss` restent
 > **legacy DS-only** (démo Design System uniquement, non utilisés par le rail vivant) —
 > à retirer ou documenter explicitement comme tel si on retire un jour cette démo.
+
+> **Note pour l'ingénieur — Mobile : label bloqué après tap (EN COURS, non résolu, 2026-07-20)**
+>
+> Régression découverte après le point ci-dessus : après le tap+hold+drag-vers-label R13
+> (`navigate()`, `initIndexNavTouch`), le label du rail ne revient pas correctement sous contrôle
+> de la state machine (`STAGE_CLASS`) une fois la section chargée — reste visible / mal positionné
+> au lieu de repasser en `--collapse-before` et reprendre ses triggers sentinel normalement.
+>
+> Deux bugs distincts identifiés et corrigés jusqu'ici (mais le symptôme persiste — cf. « reste
+> ouvert » ci-dessous) :
+> 1. **`pointer-events` non hérité par le reveal.** Le label révélé par `is-touch-held` reste
+>    `pointer-events: none` (hérité de la règle de masquage `--collapse-before`/`--actif`, qui ne
+>    porte que sur `display`/`transform`, jamais `pointer-events`). Conséquence : le label est
+>    *visible* mais jamais hit-testable — `document.elementFromPoint` (dans le handler
+>    `touchmove`) retombe systématiquement sur l'item parent, jamais le label, donc
+>    `--touch-drag` ne se déclenche jamais via le geste documenté (repli silencieux sur le lien
+>    natif `<a href="#id">`, qui masque le symptôme). Fix : `pointer-events: auto` ajouté à la
+>    règle de reveal (`.index-nav__item.is-touch-held .index-nav__label`, `_index-nav.scss`).
+> 2. **Pas de cycle explicite de reveal/hide autour de `navigate()`.** `clearActive()` (appelé
+>    dans `reset()`, juste avant `navigate()`) retire `is-touch-held` immédiatement au lâcher du
+>    doigt — sans rien d'autre, le label disparaît avant même que le scroll ait commencé, ou pire,
+>    reste bloqué selon l'état exact au moment du relâchement. Fix : nouvelle classe
+>    `--nav-pending`, posée par `navigate()` pour toute la durée du scroll (garde le label
+>    révélé pendant le trajet), retirée une fois le scroll stabilisé — l'item retombe alors sous
+>    contrôle normal de `STAGE_CLASS`.
+>    - Détection de fin de scroll : d'abord tentée par **debounce sur l'event `'scroll'`** —
+>      abandonnée, la cadence de cet event pendant un scroll natif fluide n'est pas garantie par
+>      le navigateur (le debounce pouvait ne jamais se déclencher tout seul, seul un scroll
+>      MANUEL de l'utilisateur — relançant l'event — le débloquait). Remplacée par un **polling
+>      `requestAnimationFrame`** qui mesure `scrollTop` à chaque frame indépendamment de l'event,
+>      avec filet de sécurité (`MAX_FRAMES`, ~5s) si le scroll ne se stabilise jamais.
+>
+> **Reste ouvert** : malgré les deux fixes ci-dessus (vérifiés isolément via Playwright + touch
+> émulé, cf. historique de session), l'utilisateur rapporte en test réel (Chrome DevTools device
+> mode) que le label **ne revient toujours pas** dans le flow d'interaction attendu après
+> tap+chargement — actuellement en cours de debug direct à l'inspecteur. Hypothèses non encore
+> vérifiées : interaction avec le vrai moteur de scroll mobile (inertie/momentum, différent du
+> `scrollIntoView` desktop simulé) ; timing réel de stabilisation de `scrollTop` sur device
+> potentiellement hors des bornes `STABLE_FRAMES`/`MAX_FRAMES` actuelles ; ou cause encore non
+> identifiée empêchant le retour propre à `--collapse-before`. À reprendre avec les observations
+> de l'inspecteur avant d'ajuster le code plus loin.
 
 > **Hover par-dot — résolu (2026-07)**, l'ancienne note ci-dessus est obsolète. Deux mécanismes
 > distincts cohabitent désormais dans `_index-nav.scss` (repérés `// @hover-reveal`) :
