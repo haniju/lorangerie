@@ -210,3 +210,27 @@ Le **rapport avant/après** (§4) produit les entrées candidates ; tu valides, 
 3. **Stockage de la forme orale** : lexique centralisé `src/data/inclusive-lexicon.json` (Option A, cf. §5).
 
 > Au fil de l'eau : chaque nouveau token voit sa forme orale validée via le rapport avant/après (`statut: à-valider`). Un token détecté qui ne relèverait PAS de l'inclusif se marque simplement `statut: faux-positif-ignoré` — aucune règle spéciale nécessaire (les 7 occurrences actuelles de `textes.json` sont toutes de la vraie écriture inclusive).
+
+---
+
+## État d'implémentation (2026-07)
+
+Le pipeline décrit en §5 est **construit et actif** : `scripts/figma-to-content.js` (`npm run content:sync`) lit `tokens.textes.json` (brut Figma), unifie les modalités vers le point médian et écrit `textes.json`, `src/data/inclusive-report.json` et amorce `src/data/inclusive-lexicon.json`.
+
+**8 occurrences détectées** dans le contenu actuel (et non 7 — le script a trouvé une occurrence de plus que le recensement manuel d'origine : `usagers·ères` dans `pulpe_.intro`) :
+
+| Token unifié | Forme orale | Statut |
+|---|---|---|
+| `adhérent·e·s` | adhérentes et adhérents | `auto` (lexique) |
+| `habitant·e·s` (×2) | habitantes et habitants | `auto` (lexique) |
+| `humain·es` | humaines et humains | `auto` (lexique) |
+| `fait·e` | — | **`à-valider`** |
+| `Copulpeur·euse` | — | **`à-valider`** |
+| `entrepreneur·e·s` | — | **`à-valider`** |
+| `usagers·ères` | — | **`à-valider`** (nouvelle occurrence, hors tableau §3 d'origine) |
+
+**Composants branchés sur `textes.json`** : `Tarif.astro`, `Partenaire.astro`, `Fonctionnement.astro`, `Pulpe.astro`. Restent hardcodés (hors scope de cette passe) : `Coworking.astro`, `Hero.astro`, `Navbar.astro`, `IndexNav.astro`.
+
+**Reste à faire** :
+- Valider à la main les 4 formes orales ci-dessus (contexte, néologismes maison) et les ajouter à `inclusive-lexicon.json`.
+- Construire le composant `<Incl>` (§3, stratégie B) — pour l'instant seule l'unification visuelle (`·`) est en place ; rien n'expose encore de forme orale aux lecteurs d'écran.

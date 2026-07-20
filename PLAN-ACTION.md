@@ -68,10 +68,11 @@ Voir [README-tokens-couleur.md](README-tokens-couleur.md). Le plugin exporte l'`
 Twin de `generate-tokens.js` : **`generate-fluid.js`** génère les échelles `clamp()` Utopia (`--space-*`, `--step-*`) à partir des bornes mobile 440 / desktop 1280 (plafond 1550).
 Prérequis : le plugin doit aussi exporter les variables **FLOAT** (espacements, corners) avec leurs valeurs desktop/mobile.
 
-### Contenu (variables string) — À FAIRE
-Le fichier réel `src/data/textes.json` est aujourd'hui un **export brut Figma** (format DTCG `modes/$type/$value`). Il lui manque son transform twin **`scripts/figma-to-content.js`** (jumeau de `figma-to-colors.js`) qui produira un `textes.json` **consommable** par les composants, la FAQ et le futur skill `inclusive-writing`.
+### Contenu (variables string) — FAIT
+`Figma → export brut → tokens.textes.json → figma-to-content.js → textes.json (consommable) + inclusive-report.json + inclusive-lexicon.json`
+`scripts/figma-to-content.js` (jumeau de `figma-to-colors.js`, `npm run content:sync`) aplatit le DTCG et unifie les 3 modalités d'écriture inclusive vers le point médian `·`. `Tarif.astro`, `Partenaire.astro`, `Fonctionnement.astro`, `Pulpe.astro` consomment `textes.json`. Restent hardcodés : `Coworking.astro`, `Hero.astro`, `Navbar.astro`, `IndexNav.astro` (labels).
 
-> Écriture inclusive : voir **[INCLUSIVE-WRITING.md](INCLUSIVE-WRITING.md)**. Spec du transform `figma-to-content.js` : **fournie séparément — placeholder, ne pas inventer.**
+> Écriture inclusive : voir **[INCLUSIVE-WRITING.md](INCLUSIVE-WRITING.md)**. Le rapport avant/après (`src/data/inclusive-report.json`) liste 4 formes orales encore **à valider** à la main (statut `à-valider`) avant de peupler `inclusive-lexicon.json` : `fait·e`, `Copulpeur·euse`, `entrepreneur·e·s`, `usagers·ères` (cette dernière, absente du tableau §3 d'origine, détectée par le script). Le composant `<Incl>` (rendu aria stratégie B) reste à construire.
 
 ---
 

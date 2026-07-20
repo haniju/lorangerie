@@ -1,0 +1,66 @@
+[
+  {
+    "cle": "fonctionement_.liste_.reunion",
+    "brut": "adhérent·e·s",
+    "modalite": "point-médian",
+    "converti": "adhérent·e·s",
+    "orale": "adhérentes et adhérents",
+    "statut": "auto"
+  },
+  {
+    "cle": "fonctionement_.orangerie",
+    "brut": "humain-es",
+    "modalite": "tiret",
+    "converti": "humain·es",
+    "orale": "humaines et humains",
+    "statut": "auto"
+  },
+  {
+    "cle": "tarifs_.suisje",
+    "brut": "fait.e",
+    "modalite": "point",
+    "converti": "fait·e",
+    "orale": null,
+    "statut": "à-valider"
+  },
+  {
+    "cle": "tarifs_.copulpeur_.copulpeur",
+    "brut": "Copulpeur.euse",
+    "modalite": "point",
+    "converti": "Copulpeur·euse",
+    "orale": null,
+    "statut": "à-valider"
+  },
+  {
+    "cle": "pulpe_.intro",
+    "brut": "usagers.ères",
+    "modalite": "point",
+    "converti": "usagers·ères",
+    "orale": null,
+    "statut": "à-valider"
+  },
+  {
+    "cle": "pulpe_.historique",
+    "brut": "habitant.e.s",
+    "modalite": "point",
+    "converti": "habitant·e·s",
+    "orale": "habitantes et habitants",
+    "statut": "auto"
+  },
+  {
+    "cle": "pulpe_.historique",
+    "brut": "entrepreneur.e.s",
+    "modalite": "point",
+    "converti": "entrepreneur·e·s",
+    "orale": null,
+    "statut": "à-valider"
+  },
+  {
+    "cle": "pulpe_.historique",
+    "brut": "habitant.e.s",
+    "modalite": "point",
+    "converti": "habitant·e·s",
+    "orale": "habitantes et habitants",
+    "statut": "auto"
+  }
+]

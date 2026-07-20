@@ -4,27 +4,22 @@
 // (width_2) + bloc boutons. Un seul markup : empilement vertical en mobile,
 // collage 2 colonnes interlock en desktop (≥ 56rem).
 // Composants réutilisés : .proposition (variante dégradé/italique), .text-box-liste,
-// boutons (.btn--primary / .btn--secondary). Contenu inline → à terme textes.json.
+// boutons (.btn--primary / .btn--secondary).
 import arrowUrl from '../assets/pictos/simple.svg?url'
+import textes from '../data/textes.json'
 
-const prop1 = 'Nos espaces sont accessibles 7/7J et 24/24h en autonomie'
-const prop2 =
-  "L’Orangerie est occupée par des humain-es qui s’en partagent la responsabilité. Ainsi, tous nos coworkers participent à l’entretien ménager des locaux."
+const t = textes
+const f = t['fonctionement_']
+
+const prop1 = f['accessible']
+const prop2 = f['orangerie']
 
 // fonctionement_/liste_/* (variables string Figma)
-const principes = [
-  'La salle de réunion est accessible sur réservation pour les adhérent·e·s.',
-  'La location de la salle de réunion est accessible aux individus et organisations extérieures à partir de 50€ la journée.',
-  'Parkings, restaurants et petite restauration accessibles à quelques minutes à pied. Le stationnement n’est pas autorisé dans la cour du lieu partagé.',
-  'Casier verrouillable accessible sur demande.',
-  'Packs d’impressions réservables en ligne.',
-  'Thé et café moulu à volonté.',
-  'Cuisine et salle à manger partagées.',
-]
+const principes = Object.values(f['liste_']) as string[]
 ---
 
 <section class="fonctionnement u-container u-section" id="fonctionnement">
-  <h2 class="index-nav__deco" data-label-for="fonctionnement">Notre fonctionnement</h2>
+  <h2 class="index-nav__deco" data-label-for="fonctionnement">{t['index_']['fonctionnement']}</h2>
   <div class="fonctionnement__grid">
     <!-- proposition 1 — accroche accès (width_2, coin big haut-droite) -->
     <div class="proposition proposition--gradient fonctionnement__prop fonctionnement__prop--1">

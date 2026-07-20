@@ -13,7 +13,7 @@ import passtempsLogoUrl    from "../assets/logos/pass'temps.svg?url"
 import regionLogoUrl       from '../assets/logos/region.svg?url'
 import villeLogoUrl        from '../assets/logos/ville.svg?url'
 
-const mode = textes[0]['textes']['modes']['Mode 1']
+const mode = textes
 const t = mode
 const partenaire = mode['partenaire_']
 
@@ -27,18 +27,18 @@ const logosSoutien = [
 ---
 
 <section class="partenaire u-container u-section" id="partenaires">
-  <h2 class="index-nav__deco" data-label-for="partenaires">{t['index_']['partenaire']['$value']}</h2>
+  <h2 class="index-nav__deco" data-label-for="partenaires">{t['index_']['partenaire']}</h2>
 
   <div class="partenaire__grid">
     <!-- col1 : lieu créé par + logo Pulpe -->
     <div class="partenaire__col-createur">
-      <p class="partenaire__legende">{partenaire['label1']['$value']}</p>
+      <p class="partenaire__legende">{partenaire['label1']}</p>
       <img class="partenaire__logo-pulpe" src={pulpeLogoUrl} alt="Pulpe" loading="lazy" />
     </div>
 
     <!-- col2 : soutenue par + logos partenaires -->
     <div class="partenaire__col-soutien" data-sentinel-for="partenaires">
-      <p class="partenaire__legende">{partenaire['label2']['$value']}</p>
+      <p class="partenaire__legende">{partenaire['label2']}</p>
       <div class="partenaire__logos">
         {logosSoutien.map(({ src, alt }) => (
           <img class="partenaire__logo" src={src} alt={alt} loading="lazy" />
@@ -48,7 +48,7 @@ const logosSoutien = [
   </div>
 
   <div class="btn-group">
-    <p class="btn-label">{partenaire['btnprimarylabel']['$value']}</p>
-    <a href="/contact" class="btn--primary">{partenaire['btnprimary']['$value']}</a>
+    <p class="btn-label">{partenaire['btnprimarylabel']}</p>
+    <a href="/contact" class="btn--primary">{partenaire['btnprimary']}</a>
   </div>
 </section>

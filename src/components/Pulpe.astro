@@ -8,6 +8,7 @@
 
 import pulpeGroupe from '../assets/images/pulpe_groupe.jpg'
 import pulpeLogoUrl from '../assets/logos/pulpe.svg?url'
+import textes from '../data/textes.json'
 import concert    from '../assets/images/pulpe/concert.jpg'
 import foot       from '../assets/images/pulpe/foot.jpg'
 import potager    from '../assets/images/pulpe/potager.jpg'
@@ -25,6 +26,8 @@ const photos = [
   { src: theatre,    alt: 'Spectacle de théâtre' },
   { src: travaux,    alt: 'Travaux du bâtiment Faubourg Sainte-Anne' },
 ]
+
+const p = textes['pulpe_']
 ---
 
 <section class="pulpe u-container u-section" id="pulpe">
@@ -35,9 +38,7 @@ const photos = [
 
   <div class="proposition proposition--none proposition--section-intro pulpe__intro">
     <p class="proposition__text">
-      L'Orangerie s'inscrit dans un projet plus grand. Le projet de Pulpe et son bâtiment
-      sont pensés comme des outils au service de tous ses usagers.ères, dont les coworkers
-      (possibilité d'y organiser ateliers, événements réseaux, etc...).
+      {p['intro']}
     </p>
   </div>
 
@@ -46,25 +47,15 @@ const photos = [
     <div class="pulpe__col-textes">
       <div class="u-scroll-area wrapper">
         <div class="pulpe__group-texte">
-          <h3 class="pulpe__titre">Historique de Pulpe</h3>
+          <h3 class="pulpe__titre">{p['histotitre']}</h3>
           <p class="pulpe__texte">
-            Partant d'un constat de manque de locaux professionnels accessibles, d'une envie
-            de travailler à plusieurs, de mutualiser des outils et des espaces et de proposer
-            une offre socioculturelle de proximité aux habitant.e.s, un collectif composé
-            d'entrepreneur.e.s, d'associations et d'habitant.e.s du territoire se forme en
-            2021. En juin 2022, l'association PULPE est créée avec le projet d'ouvrir un lieu
-            partagé (ou tiers-lieu) à Malestroit (56).
+            {p['historique']}
           </p>
         </div>
         <div class="pulpe__group-texte">
-          <h3 class="pulpe__titre">Pulpe aujourd'hui</h3>
+          <h3 class="pulpe__titre">{p['aujtitre']}</h3>
           <p class="pulpe__texte">
-            C'est en novembre 2024 que la ville de Malestroit (56) met à disposition le
-            bâtiment Faubourg Sainte-Anne et permet au projet de poser ses valises. Ce dernier
-            accueille aujourd'hui l'espace valorisation de la ressourcerie de Malestroit
-            (Rouages) et un espace de convivialité où se déroulent régulièrement concerts,
-            ateliers, goûters, temps de rencontres et de vie associative. En 2025, 67
-            événements ont été organisés au sein du lieu partagé.
+            {p['aujourdhui']}
           </p>
         </div>
       </div>

@@ -9,7 +9,8 @@
     "deploy": "bash scripts/deploy.sh",
     "tokens:colors": "node scripts/figma-to-colors.js",
     "tokens:fluid": "node scripts/generate-fluid.js",
-    "tokens": "npm run tokens:colors && npm run tokens:fluid"
+    "tokens": "npm run tokens:colors && npm run tokens:fluid",
+    "content:sync": "node scripts/figma-to-content.js"
   },
   "keywords": [],
   "author": "haniju",
