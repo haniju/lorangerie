@@ -27,6 +27,14 @@ main {
   // sinon sa boîte déborde sous le viewport (html/body en overflow:hidden)
   // et la fin du contenu — le bas du footer — devient inatteignable.
   height: calc(100% - var(--nav-height));
+
+  // scroll-behavior sur html (ci-dessus) est sans effet : main, pas html, est
+  // le vrai conteneur de scroll (html est en overflow:hidden). Sans ceci, les
+  // ancres <a href="#id"> sautent instantanément — aucune fenêtre d'animation
+  // pour le scrollspy (index-nav.ts) qui en dépend.
+  @media (prefers-reduced-motion: no-preference) {
+    scroll-behavior: smooth;
+  }
 }
 
 body {

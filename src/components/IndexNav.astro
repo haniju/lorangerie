@@ -50,10 +50,18 @@ const sections = [
   // display:none donc la boîte de l'item ≈ le dot seul (déclenchement de fait « sur le
   // point »), mais une fois le label affiché la classe TIENT jusque sur le label —
   // sinon elle tombait au passage dot→label et le label redisparaissait avant le clic.
-  nav?.addEventListener('mouseover', (e) => {
+  // pointerover/pointerout + pointerType : mouseover/mouseout se déclenchent aussi
+  // en synthétique après un tap tactile (compat historique), sans mouseout fiable
+  // ensuite (pas de curseur qui bouge) — is-dot-hover restait alors collé sur
+  // <nav> après le premier tap. pointerType distingue l'interaction réelle
+  // (contrairement à @media (hover:hover), qui ne teste que la capacité de
+  // l'appareil et ne suffirait pas sur un hybride souris+tactile).
+  nav?.addEventListener('pointerover', (e) => {
+    if (e.pointerType !== 'mouse') return
     if ((e.target as HTMLElement).closest?.('.index-nav__item')) nav.classList.add('is-dot-hover')
   })
-  nav?.addEventListener('mouseout', (e) => {
+  nav?.addEventListener('pointerout', (e) => {
+    if (e.pointerType !== 'mouse') return
     if (!(e.target as HTMLElement).closest?.('.index-nav__item')) return
     const related = e.relatedTarget as HTMLElement | null
     if (!related?.closest?.('.index-nav__item')) nav.classList.remove('is-dot-hover')
@@ -63,11 +71,28 @@ const sections = [
     if (!nav || !coworking) return
     const coworkingTop = coworking.getBoundingClientRect().top
     const navTop = parseFloat(getComputedStyle(nav).top)
-const translate = Math.max(0, coworkingTop - navTop)
+    const translate = Math.max(0, coworkingTop - navTop)
     nav.style.transform = `translateY(${translate}px)`
   }
 
   const scroller = document.querySelector('main') ?? window
   scroller.addEventListener('scroll', updateNavPosition, { passive: true })
   updateNavPosition()
+
+  // Cale --index-nav-left sur le bord gauche RÉEL de .u-container (mesuré via
+  // #coworking, qui porte aussi cette classe) plutôt que de le recalculer en CSS
+  // via 100vw. .index-nav est position:fixed → son containing block est le
+  // viewport, alors que .u-container se centre (margin-inline:auto) par rapport
+  // à <main>, dont la largeur de contenu est réduite par SA PROPRE scrollbar
+  // (overflow-y:auto). 100vw ignore cette scrollbar (elle n'est pas au niveau
+  // document, html/body étant en overflow:hidden) → les deux formules divergent
+  // dès que la fenêtre dépasse --content-cap, d'un écart = moitié de la largeur
+  // de la scrollbar. Mesurer la vraie position élimine le problème à la racine.
+  function updateNavLeft() {
+    if (!nav || !coworking) return
+    nav.style.setProperty('--index-nav-left', `${coworking.getBoundingClientRect().left}px`)
+  }
+
+  window.addEventListener('resize', updateNavLeft, { passive: true })
+  updateNavLeft()
 </script>

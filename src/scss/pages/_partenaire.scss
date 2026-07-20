@@ -15,6 +15,7 @@ $partenaire-switch: 56rem;
   display: flex;
   flex-direction: column;
   margin-bottom: var(--space-90);
+  gap: var(--space-10);
 
   h2 {
     margin-bottom: var(--space-90);
@@ -74,12 +75,12 @@ $partenaire-switch: 56rem;
 }
 
 .partenaire .btn-group {
-  margin-top: var(--space-40);
-  margin-bottom: var(--space-10);
+  margin-top: var(--space-60);
+  margin-bottom: var(--space-20);
 }
 
 .partenaire .btn-group {
-  width: var(--grid-col-desktop-3);
+  width: var(--grid-col-mobile-5);
   align-self: flex-end;
 }
 
@@ -87,6 +88,10 @@ $partenaire-switch: 56rem;
 // DESKTOP (≥ 56rem)
 // ════════════════════════════════════════════════════════════════════════════════
 @media (min-width: $partenaire-switch) {
+
+  .partenaire {
+    gap: var(--space-60);
+  }
 
   .partenaire__grid {
     flex-direction: row;
@@ -108,4 +113,11 @@ $partenaire-switch: 56rem;
   .partenaire__logos {
     width: var(--grid-col-desktop-5);
   }
+
+  .partenaire .btn-group {
+    width: var(--grid-col-desktop-3);
+    align-self: flex-end;
+    margin-top: var(--space-60);
+  }
+
 }
