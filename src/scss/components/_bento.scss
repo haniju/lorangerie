@@ -186,7 +186,6 @@ $bento-mobile-row-h: clamp(15rem, 62vw, 20rem);
   width: min(80vw, 20rem);
   padding: var(--space-10);
   border-radius: var(--corner-small);
-  background: var(--text-bloc-background-1); // fond simple (pas de blur Figma)
   font-family: var(--font-body);
   font-size: 0.9375rem; // 15px — font/text/regular
   line-height: 1.47; // font/line-height/compact

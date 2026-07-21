@@ -181,7 +181,7 @@ $bouton-switch: 56rem;
   // état actif (Figma « statut=focus ») : soulignement + bordure basse « warm »
   // NB: --action-nav-warm absent de l'export Figma → primitive interim (peche/80).
   &[aria-current='page'] {
-    border-bottom-color: var(--peche-80);
+    //border-bottom-color: var(--peche-80);
     text-decoration: underline;
   }
 }
