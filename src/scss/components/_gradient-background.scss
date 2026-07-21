@@ -2,6 +2,8 @@
 // derrière le contenu + panneau de réglages flottant (replié par défaut,
 // ouvert via le bouton nav data-gradient-panel-toggle).
 
+// Fenêtre fixe au viewport, qui rogne .gradient-bg__inner (plus haut que
+// l'écran → effet parallaxe piloté en JS via GSAP/ScrollTrigger).
 .gradient-bg {
   position: fixed;
   inset: 0;
@@ -9,9 +11,19 @@
   overflow: hidden;
 }
 
+// Hauteur posée dynamiquement en JS (entre 100% du viewport et la hauteur
+// de page) ; translaté verticalement au scroll pour le décalage parallaxe.
+.gradient-bg__inner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  will-change: transform;
+}
+
 .gradient-bg__canvas,
 .gradient-bg__grain {
-  position: fixed;
+  position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
@@ -209,6 +221,17 @@
     color: rgba(80, 58, 40, 0.6);
     flex: 0 0 auto;
     min-width: 5.5rem;
+  }
+
+  select {
+    flex: 1;
+    padding: var(--space-3xs) var(--space-2xs);
+    background: rgba(255, 255, 255, 0.5);
+    border: 0.5px solid rgba(160, 130, 110, 0.25);
+    border-radius: var(--space-3xs);
+    font: inherit;
+    font-size: inherit;
+    color: rgba(70, 50, 35, 0.7);
   }
 }
 

@@ -6,8 +6,10 @@
 ---
 
 <div class="gradient-bg">
-  <canvas class="gradient-bg__canvas" aria-hidden="true"></canvas>
-  <canvas class="gradient-bg__grain" aria-hidden="true"></canvas>
+  <div class="gradient-bg__inner">
+    <canvas class="gradient-bg__canvas" aria-hidden="true"></canvas>
+    <canvas class="gradient-bg__grain" aria-hidden="true"></canvas>
+  </div>
 </div>
 
 <div class="gradient-bg-ui">
@@ -44,9 +46,32 @@
           <span class="gradient-bg__val" id="gbg-amplitude-val">1.0×</span>
         </div>
         <div class="gradient-bg__row">
+          <label for="gbg-parallax">Parallaxe</label>
+          <input type="range" id="gbg-parallax" min="0" max="1" step="0.05" value="0.4" />
+          <span class="gradient-bg__val" id="gbg-parallax-val">40%</span>
+        </div>
+        <div class="gradient-bg__row">
           <label for="gbg-radius">Taille orbes</label>
           <input type="range" id="gbg-radius" min="0.2" max="1.5" step="0.05" value="1" />
           <span class="gradient-bg__val" id="gbg-radius-val">1.0×</span>
+        </div>
+      </div>
+
+      <div class="gradient-bg__section">
+        <p class="gradient-bg__section-title">Forme</p>
+        <div class="gradient-bg__row">
+          <label for="gbg-shape">Forme</label>
+          <select id="gbg-shape">
+            <option value="circle">Cercle</option>
+            <option value="ellipse">Ellipse</option>
+            <option value="blob">Blob organique</option>
+            <option value="polygon">Polygone</option>
+          </select>
+        </div>
+        <div class="gradient-bg__row">
+          <label for="gbg-shape-intensity">Intensité</label>
+          <input type="range" id="gbg-shape-intensity" min="0" max="1" step="0.05" value="0.4" />
+          <span class="gradient-bg__val" id="gbg-shape-intensity-val">40%</span>
         </div>
       </div>
 
@@ -99,6 +124,7 @@
           <select id="gbg-presets-select">
             <option value="" disabled selected>Charger un preset…</option>
           </select>
+          <button type="button" id="gbg-update-preset" title="Enregistrer les réglages actuels dans ce preset">✓</button>
           <button type="button" id="gbg-delete-preset" title="Supprimer">×</button>
         </div>
       </div>

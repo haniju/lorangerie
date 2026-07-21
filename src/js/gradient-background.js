@@ -3,6 +3,12 @@
 // flottant, replié par défaut, ouvert via le bouton nav (voir Navbar.astro).
 
 import colorsData from '../data/colors.json'
+import { createOrbRenderer } from './webgl-orbs.js'
+
+// Résolution du framebuffer WebGL cappée indépendamment du devicePixelRatio
+// réel — le coût d'un shader plein écran scale avec le nombre de pixels,
+// pas avec la complexité de la scène (cf. WEBGL-BACKGROUND-PLAN.md).
+const WEBGL_RESOLUTION_SCALE = 1
 
 // Couleurs des orbes choisies parmi les primitives de marque (Figma-first,
 // _base uniquement — pas les alias sémantiques action/text/light/background).
@@ -31,6 +37,12 @@ const DEFAULTS = {
   grainTintMix: 0,
   orbAlpha: 0.82,
   veil: 0.22,
+  // 0 = fond figé au viewport (pas de parallaxe), 1 = fond aussi haut que
+  // la page (défile à la même vitesse que le contenu, pas de parallaxe
+  // non plus). Un réglage intermédiaire donne le décalage recherché.
+  parallax: 0.4,
+  shape: 'circle',
+  shapeIntensity: 0.4,
 }
 
 const ORB_BASE = [
@@ -46,10 +58,44 @@ const STORAGE_KEY = 'orangerie-gradient-presets'
 const GRAIN_FRAMES = 5
 
 export function initGradientBackground(canvasRoot, uiRoot) {
+  const inner = canvasRoot.querySelector('.gradient-bg__inner')
   const canvas = canvasRoot.querySelector('.gradient-bg__canvas')
   const grainCanvas = canvasRoot.querySelector('.gradient-bg__grain')
-  const ctx = canvas.getContext('2d')
   const grainCtx = grainCanvas.getContext('2d')
+  const mainEl = document.querySelector('main')
+
+  // Rendu orbes en WebGL1 ; si indisponible (pas de support, contexte
+  // logiciel type SwiftShader/llvmpipe) → fallback couleur CSS statique,
+  // pas de retour au Canvas2D animé (cf. WEBGL-BACKGROUND-PLAN.md).
+  let orbRenderer = null
+  try {
+    orbRenderer = createOrbRenderer(canvas, ORB_BASE)
+  } catch (err) {
+    console.error('[gradient-background] WebGL init failed', err)
+    orbRenderer = null
+  }
+
+  function applyStaticFallback() {
+    canvas.style.display = orbRenderer ? '' : 'none'
+    const [br, bg, bb] = cfg.baseColor
+    inner.style.backgroundColor = `rgb(${br},${bg},${bb})`
+  }
+
+  canvas.addEventListener('webglcontextlost', e => {
+    e.preventDefault()
+    orbRenderer = null
+    applyStaticFallback()
+  })
+  canvas.addEventListener('webglcontextrestored', () => {
+    try {
+      orbRenderer = createOrbRenderer(canvas, ORB_BASE)
+    } catch (err) {
+      console.error('[gradient-background] WebGL re-init failed', err)
+      orbRenderer = null
+    }
+    applyStaticFallback()
+    resize()
+  })
 
   const cfg = {
     baseColor: [...DEFAULTS.baseColor],
@@ -64,6 +110,9 @@ export function initGradientBackground(canvasRoot, uiRoot) {
     grainTintMix: DEFAULTS.grainTintMix,
     orbAlpha: DEFAULTS.orbAlpha,
     veil: DEFAULTS.veil,
+    parallax: DEFAULTS.parallax,
+    shape: DEFAULTS.shape,
+    shapeIntensity: DEFAULTS.shapeIntensity,
   }
 
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -75,14 +124,48 @@ export function initGradientBackground(canvasRoot, uiRoot) {
   let lastGrainTint = [128, 128, 128]
   let lastGrainTintMix = 0
 
+  // Parallaxe pilotée à la main plutôt que via GSAP/ScrollTrigger : ici le
+  // trigger et le scroller sont le même élément (`main` défile sur
+  // lui-même), un cas dégénéré que ScrollTrigger ne mesure pas correctement
+  // (start/end calculés par rapport à l'élément lui-même) — le tween ne se
+  // déclenchait jamais. Un listener de scroll direct est plus simple et
+  // fiable pour ce cas précis.
+  let parallaxTravel = 0
+
+  function updateParallax() {
+    if (reduceMotion || parallaxTravel <= 0) return
+    const maxScroll = mainEl.scrollHeight - mainEl.clientHeight
+    const progress = maxScroll > 0 ? mainEl.scrollTop / maxScroll : 0
+    inner.style.transform = `translateY(${-progress * parallaxTravel}px)`
+  }
+
+  let parallaxTicking = false
+  mainEl.addEventListener('scroll', () => {
+    if (parallaxTicking) return
+    parallaxTicking = true
+    requestAnimationFrame(() => {
+      updateParallax()
+      parallaxTicking = false
+    })
+  })
+
   function resize() {
     dpr = Math.min(window.devicePixelRatio || 1, 2)
+    const viewportH = window.innerHeight
     W = window.innerWidth
-    H = window.innerHeight
 
-    canvas.width = W * dpr
-    canvas.height = H * dpr
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+    const pageH = reduceMotion ? viewportH : Math.max(mainEl.scrollHeight, viewportH)
+    H = Math.round(viewportH + (pageH - viewportH) * cfg.parallax)
+    inner.style.height = `${H}px`
+
+    if (orbRenderer) {
+      canvas.width = Math.round(W * WEBGL_RESOLUTION_SCALE)
+      canvas.height = Math.round(H * WEBGL_RESOLUTION_SCALE)
+      canvas.style.width = W + 'px'
+      canvas.style.height = H + 'px'
+      orbRenderer.resize(canvas.width, canvas.height)
+    }
+    applyStaticFallback()
 
     grainCanvas.width = W * dpr
     grainCanvas.height = H * dpr
@@ -90,6 +173,9 @@ export function initGradientBackground(canvasRoot, uiRoot) {
     grainCanvas.style.height = H + 'px'
 
     buildGrain()
+
+    parallaxTravel = H - viewportH
+    updateParallax()
   }
 
   function buildGrain() {
@@ -144,45 +230,32 @@ export function initGradientBackground(canvasRoot, uiRoot) {
     if (grainCache[grainIdx]) grainCtx.putImageData(grainCache[grainIdx], 0, 0)
   }
 
-  function drawOrbs(t) {
-    const [br, bg, bb] = cfg.baseColor
+  // t en secondes, modulo pour rester dans une plage sûre pour la précision
+  // mediump des sin/cos côté shader (cf. WEBGL-BACKGROUND-PLAN.md).
+  const TIME_WRAP_SECONDS = 60
 
-    ctx.clearRect(0, 0, W, H)
-    ctx.fillStyle = `rgb(${br},${bg},${bb})`
-    ctx.fillRect(0, 0, W, H)
-
-    ctx.globalCompositeOperation = 'multiply'
-    const maxR = Math.max(W, H)
-
-    for (const o of ORB_BASE) {
-      const x = (o.px + Math.sin(t * o.fx + o.p) * o.ax * cfg.amplitude) * W
-      const y = (o.py + Math.cos(t * o.fy + o.p * 1.3) * o.ay * cfg.amplitude) * H
-      const radius = o.r * maxR * cfg.radius
-      const [r, g, b] = cfg.colors[o.ci]
-      const a = cfg.orbAlpha
-
-      const grad = ctx.createRadialGradient(x, y, 0, x, y, radius)
-      grad.addColorStop(0, `rgba(${r},${g},${b},${a})`)
-      grad.addColorStop(0.4, `rgba(${r},${g},${b},${(a * 0.55).toFixed(2)})`)
-      grad.addColorStop(0.75, `rgba(${r},${g},${b},${(a * 0.14).toFixed(2)})`)
-      grad.addColorStop(1, `rgba(${r},${g},${b},0)`)
-
-      ctx.beginPath()
-      ctx.arc(x, y, radius, 0, Math.PI * 2)
-      ctx.fillStyle = grad
-      ctx.fill()
-    }
-
-    ctx.globalCompositeOperation = 'source-over'
-    ctx.fillStyle = `rgba(${br},${bg},${bb},${cfg.veil})`
-    ctx.fillRect(0, 0, W, H)
+  function drawOrbs(tSeconds) {
+    if (!orbRenderer) return
+    orbRenderer.render(cfg, tSeconds % TIME_WRAP_SECONDS)
   }
+
+  let rafId = null
 
   function draw(ts) {
-    drawOrbs(ts * cfg.speed)
+    drawOrbs((ts / 1000) * cfg.speed)
     if (Math.round(ts / 16) % cfg.grainFreq === 0) drawGrain()
-    requestAnimationFrame(draw)
+    rafId = requestAnimationFrame(draw)
   }
+
+  document.addEventListener('visibilitychange', () => {
+    if (reduceMotion) return
+    if (document.hidden) {
+      if (rafId !== null) cancelAnimationFrame(rafId)
+      rafId = null
+    } else if (rafId === null) {
+      rafId = requestAnimationFrame(draw)
+    }
+  })
 
   // ── Panneau de réglages ──
   const panel = uiRoot.querySelector('.gradient-bg__panel')
@@ -317,6 +390,7 @@ export function initGradientBackground(canvasRoot, uiRoot) {
     openColorPicker(baseColorSwatch, hex => {
       cfg.baseColor = hexToRgb(hex)
       baseColorSwatch.style.background = hex
+      applyStaticFallback()
     })
   })
 
@@ -331,7 +405,15 @@ export function initGradientBackground(canvasRoot, uiRoot) {
 
   bindSlider('gbg-speed', 'gbg-speed-val', 'speed', v => v.toFixed(1) + '×')
   bindSlider('gbg-amplitude', 'gbg-amplitude-val', 'amplitude', v => v.toFixed(2) + '×')
+  bindSlider('gbg-parallax', 'gbg-parallax-val', 'parallax', v => Math.round(v * 100) + '%')
+  // La hauteur du fond (donc le canvas, le grain, la distance de translation)
+  // dépend de `parallax` → il faut relancer resize(), pas juste maj le cfg.
+  uiRoot.querySelector('#gbg-parallax').addEventListener('input', () => resize())
   bindSlider('gbg-radius', 'gbg-radius-val', 'radius', v => v.toFixed(2) + '×')
+  bindSlider('gbg-shape-intensity', 'gbg-shape-intensity-val', 'shapeIntensity', v => Math.round(v * 100) + '%')
+  uiRoot.querySelector('#gbg-shape').addEventListener('change', e => {
+    cfg.shape = e.target.value
+  })
   bindSlider('gbg-grain-opacity', 'gbg-grain-val', 'grainOpacity', v => Math.round(v * 100) + '%')
   bindSlider('gbg-grain-scale', 'gbg-grain-scale-val', 'grainScale', v => v + '×')
   bindSlider('gbg-grain-freq', 'gbg-grain-freq-val', 'grainFreq', v => v)
@@ -368,9 +450,15 @@ export function initGradientBackground(canvasRoot, uiRoot) {
     setText('gbg-alpha-val', Math.round(cfg.orbAlpha * 100) + '%')
     set('gbg-veil', cfg.veil)
     setText('gbg-veil-val', Math.round(cfg.veil * 100) + '%')
+    set('gbg-parallax', cfg.parallax)
+    setText('gbg-parallax-val', Math.round(cfg.parallax * 100) + '%')
+    set('gbg-shape', cfg.shape)
+    set('gbg-shape-intensity', cfg.shapeIntensity)
+    setText('gbg-shape-intensity-val', Math.round(cfg.shapeIntensity * 100) + '%')
     grid.querySelectorAll('.gradient-bg__swatch').forEach((swatch, i) => {
       swatch.style.background = rgbToHex(cfg.colors[i])
     })
+    applyStaticFallback()
   }
 
   function applyCfg(src) {
@@ -386,7 +474,11 @@ export function initGradientBackground(canvasRoot, uiRoot) {
     cfg.grainTintMix = src.grainTintMix ?? DEFAULTS.grainTintMix
     cfg.orbAlpha = src.orbAlpha
     cfg.veil = src.veil
+    cfg.parallax = src.parallax ?? DEFAULTS.parallax
+    cfg.shape = src.shape ?? DEFAULTS.shape
+    cfg.shapeIntensity = src.shapeIntensity ?? DEFAULTS.shapeIntensity
     syncUI()
+    resize()
   }
 
   uiRoot.querySelector('#gbg-reset').addEventListener('click', () => {
@@ -433,6 +525,35 @@ export function initGradientBackground(canvasRoot, uiRoot) {
     renderPresetOptions()
   })
 
+  function buildSnapshot() {
+    return {
+      baseColor: [...cfg.baseColor],
+      colors: cfg.colors.map(c => [...c]),
+      speed: cfg.speed,
+      amplitude: cfg.amplitude,
+      radius: cfg.radius,
+      grainOpacity: cfg.grainOpacity,
+      grainScale: cfg.grainScale,
+      grainFreq: cfg.grainFreq,
+      grainTint: [...cfg.grainTint],
+      grainTintMix: cfg.grainTintMix,
+      orbAlpha: cfg.orbAlpha,
+      veil: cfg.veil,
+      parallax: cfg.parallax,
+      shape: cfg.shape,
+      shapeIntensity: cfg.shapeIntensity,
+    }
+  }
+
+  uiRoot.querySelector('#gbg-update-preset').addEventListener('click', () => {
+    const idx = parseInt(presetsSelect.value)
+    if (Number.isNaN(idx)) return
+    const presets = loadPresets()
+    if (!presets[idx]) return
+    presets[idx].data = buildSnapshot()
+    savePresets(presets)
+  })
+
   const overlay = uiRoot.querySelector('.gradient-bg__modal-overlay')
   const modalInput = uiRoot.querySelector('#gbg-modal-input')
 
@@ -453,22 +574,8 @@ export function initGradientBackground(canvasRoot, uiRoot) {
   function confirmSave() {
     const name = modalInput.value.trim()
     if (!name) return
-    const snapshot = {
-      baseColor: [...cfg.baseColor],
-      colors: cfg.colors.map(c => [...c]),
-      speed: cfg.speed,
-      amplitude: cfg.amplitude,
-      radius: cfg.radius,
-      grainOpacity: cfg.grainOpacity,
-      grainScale: cfg.grainScale,
-      grainFreq: cfg.grainFreq,
-      grainTint: [...cfg.grainTint],
-      grainTintMix: cfg.grainTintMix,
-      orbAlpha: cfg.orbAlpha,
-      veil: cfg.veil,
-    }
     const presets = loadPresets()
-    presets.push({ name, data: snapshot })
+    presets.push({ name, data: buildSnapshot() })
     savePresets(presets)
     renderPresetOptions()
     presetsSelect.value = String(presets.length - 1)
@@ -485,12 +592,13 @@ export function initGradientBackground(canvasRoot, uiRoot) {
   syncUI()
 
   window.addEventListener('resize', resize)
+  window.addEventListener('load', resize)
   resize()
 
   if (reduceMotion) {
     drawOrbs(0)
     drawGrain()
   } else {
-    requestAnimationFrame(draw)
+    rafId = requestAnimationFrame(draw)
   }
 }
