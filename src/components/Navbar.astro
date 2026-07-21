@@ -37,6 +37,15 @@ const current = stripSlash(Astro.url.pathname)
 
     <button
       type="button"
+      class="navbar__bg-toggle"
+      data-gradient-panel-toggle
+      aria-expanded="false"
+      aria-label="Réglages du fond"
+      title="Réglages du fond"
+    >⚙</button>
+
+    <button
+      type="button"
       class="navbar__toggle"
       aria-expanded="false"
       aria-controls="navbar-links"

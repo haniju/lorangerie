@@ -1,0 +1,126 @@
+---
+// Fond animé "orbes" (canvas 2D) + panneau de réglages flottant, replié par
+// défaut. Ouverture via le bouton nav (data-gradient-panel-toggle, Navbar.astro).
+// Porté depuis orangerie-gradient-canvas.html — couleurs/valeurs par défaut
+// inchangées pour l'instant (cf. décision produit).
+---
+
+<div class="gradient-bg">
+  <canvas class="gradient-bg__canvas" aria-hidden="true"></canvas>
+  <canvas class="gradient-bg__grain" aria-hidden="true"></canvas>
+</div>
+
+<div class="gradient-bg-ui">
+  <div class="gradient-bg__panel">
+    <div class="gradient-bg__panel-header">
+      <span>Configuration du fond</span>
+      <span class="gradient-bg__panel-arrow">▼</span>
+    </div>
+
+    <div class="gradient-bg__panel-body">
+      <div class="gradient-bg__section">
+        <p class="gradient-bg__section-title">Fond</p>
+        <div class="gradient-bg__row">
+          <label for="gbg-base-color">Couleur de fond</label>
+          <button type="button" class="gradient-bg__swatch" id="gbg-base-color" aria-label="Couleur de fond" style="background:#F4EFE6"></button>
+        </div>
+      </div>
+
+      <div class="gradient-bg__section">
+        <p class="gradient-bg__section-title">Couleurs des orbes</p>
+        <div class="gradient-bg__colors"></div>
+      </div>
+
+      <div class="gradient-bg__section">
+        <p class="gradient-bg__section-title">Mouvement</p>
+        <div class="gradient-bg__row">
+          <label for="gbg-speed">Vitesse</label>
+          <input type="range" id="gbg-speed" min="0.1" max="5" step="0.1" value="1" />
+          <span class="gradient-bg__val" id="gbg-speed-val">1.0×</span>
+        </div>
+        <div class="gradient-bg__row">
+          <label for="gbg-amplitude">Amplitude</label>
+          <input type="range" id="gbg-amplitude" min="0.1" max="2" step="0.05" value="1" />
+          <span class="gradient-bg__val" id="gbg-amplitude-val">1.0×</span>
+        </div>
+        <div class="gradient-bg__row">
+          <label for="gbg-radius">Taille orbes</label>
+          <input type="range" id="gbg-radius" min="0.2" max="1.5" step="0.05" value="1" />
+          <span class="gradient-bg__val" id="gbg-radius-val">1.0×</span>
+        </div>
+      </div>
+
+      <div class="gradient-bg__section">
+        <p class="gradient-bg__section-title">Bruit</p>
+        <div class="gradient-bg__row">
+          <label for="gbg-grain-opacity">Opacité</label>
+          <input type="range" id="gbg-grain-opacity" min="0" max="0.18" step="0.005" value="0.05" />
+          <span class="gradient-bg__val" id="gbg-grain-val">5%</span>
+        </div>
+        <div class="gradient-bg__row">
+          <label for="gbg-grain-scale">Taille</label>
+          <input type="range" id="gbg-grain-scale" min="1" max="8" step="1" value="1" />
+          <span class="gradient-bg__val" id="gbg-grain-scale-val">1×</span>
+        </div>
+        <div class="gradient-bg__row">
+          <label for="gbg-grain-freq">Scintillement</label>
+          <input type="range" id="gbg-grain-freq" min="1" max="10" step="1" value="3" />
+          <span class="gradient-bg__val" id="gbg-grain-freq-val">3</span>
+        </div>
+        <div class="gradient-bg__row">
+          <label for="gbg-grain-tint-mix">Teinte</label>
+          <input type="range" id="gbg-grain-tint-mix" min="0" max="1" step="0.05" value="0" />
+          <span class="gradient-bg__val" id="gbg-grain-tint-val">0%</span>
+        </div>
+        <div class="gradient-bg__row">
+          <label for="gbg-grain-tint">Couleur</label>
+          <button type="button" class="gradient-bg__swatch" id="gbg-grain-tint" aria-label="Couleur de teinte du grain" style="background:#808080"></button>
+        </div>
+      </div>
+
+      <div class="gradient-bg__section">
+        <p class="gradient-bg__section-title">Alpha</p>
+        <div class="gradient-bg__row">
+          <label for="gbg-orb-alpha">Alpha orbes</label>
+          <input type="range" id="gbg-orb-alpha" min="0.1" max="1" step="0.02" value="0.82" />
+          <span class="gradient-bg__val" id="gbg-alpha-val">82%</span>
+        </div>
+        <div class="gradient-bg__row">
+          <label for="gbg-veil">Voile fond</label>
+          <input type="range" id="gbg-veil" min="0" max="0.6" step="0.01" value="0.22" />
+          <span class="gradient-bg__val" id="gbg-veil-val">22%</span>
+        </div>
+      </div>
+
+      <div class="gradient-bg__section">
+        <button type="button" class="gradient-bg__btn" id="gbg-save-preset">Sauvegarder</button>
+        <button type="button" class="gradient-bg__btn" id="gbg-reset">Réinitialiser</button>
+        <div class="gradient-bg__preset-row">
+          <select id="gbg-presets-select">
+            <option value="" disabled selected>Charger un preset…</option>
+          </select>
+          <button type="button" id="gbg-delete-preset" title="Supprimer">×</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="gradient-bg__modal-overlay">
+    <div class="gradient-bg__modal">
+      <h3>Nom du preset</h3>
+      <input type="text" id="gbg-modal-input" placeholder="Ex : Coucher de soleil" autocomplete="off" />
+      <div class="gradient-bg__modal-actions">
+        <button type="button" id="gbg-modal-cancel">Annuler</button>
+        <button type="button" id="gbg-modal-save">Enregistrer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { initGradientBackground } from '../js/gradient-background.js'
+
+  const canvasRoot = document.querySelector('.gradient-bg')
+  const uiRoot = document.querySelector('.gradient-bg-ui')
+  if (canvasRoot && uiRoot) initGradientBackground(canvasRoot, uiRoot)
+</script>

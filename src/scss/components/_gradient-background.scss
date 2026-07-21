@@ -1,0 +1,384 @@
+// Fond animé "orbes" (GradientBackground.astro) — canvas plein écran fixé
+// derrière le contenu + panneau de réglages flottant (replié par défaut,
+// ouvert via le bouton nav data-gradient-panel-toggle).
+
+.gradient-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.gradient-bg__canvas,
+.gradient-bg__grain {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.gradient-bg__grain {
+  pointer-events: none;
+}
+
+// Panneau + modale : hors de .gradient-bg (z-index:-1) pour rester
+// cliquables au-dessus de la nav (z-index:10) et du contenu de page.
+.gradient-bg-ui {
+  position: relative;
+  z-index: 40;
+}
+
+// ── Panneau ──
+.gradient-bg__panel {
+  position: fixed;
+  top: var(--space-s);
+  right: var(--space-s);
+  z-index: 40;
+  width: min(280px, calc(100vw - var(--space-l)));
+  font-size: var(--step--2);
+  display: none;
+
+  @media (min-width: 56rem) {
+    top: calc(var(--nav-height) + var(--space-s));
+  }
+}
+
+.gradient-bg__panel.is-visible {
+  display: block;
+}
+
+.gradient-bg__panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 0.5px solid rgba(160, 130, 110, 0.25);
+  border-radius: var(--space-3xs);
+  padding: var(--space-2xs) var(--space-xs);
+  cursor: pointer;
+  color: rgba(70, 50, 35, 0.7);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  user-select: none;
+}
+
+.gradient-bg__panel-arrow {
+  transition: transform 0.3s ease;
+  opacity: 0.5;
+}
+
+.gradient-bg__panel.is-open .gradient-bg__panel-arrow {
+  transform: rotate(180deg);
+}
+
+.gradient-bg__panel-body {
+  display: none;
+  margin-top: var(--space-3xs);
+  max-height: 70vh;
+  overflow-y: auto;
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 0.5px solid rgba(160, 130, 110, 0.2);
+  border-radius: var(--space-3xs);
+}
+
+.gradient-bg__panel.is-open .gradient-bg__panel-body {
+  display: block;
+}
+
+.gradient-bg__section {
+  padding: var(--space-xs);
+  border-bottom: 0.5px solid rgba(160, 130, 110, 0.12);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.gradient-bg__section-title {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(100, 75, 55, 0.45);
+  margin-bottom: var(--space-2xs);
+}
+
+.gradient-bg__colors {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: var(--space-3xs);
+}
+
+.gradient-bg__color-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3xs);
+
+  label {
+    font-size: 0.65rem;
+    color: rgba(90, 65, 45, 0.4);
+  }
+}
+
+.gradient-bg__swatch {
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0;
+  border: 1px solid rgba(160, 130, 110, 0.3);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.15s;
+
+  &:hover {
+    transform: scale(1.08);
+  }
+}
+
+// Popover — palette de couleurs du projet (primitives Figma _base).
+// Attaché à document.body pour ne pas être clippé par l'overflow du panneau.
+.gradient-bg__color-picker {
+  position: fixed;
+  z-index: 60;
+  width: 220px;
+  max-height: 60vh;
+  overflow-y: auto;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 0.5px solid rgba(160, 130, 110, 0.25);
+  border-radius: var(--space-3xs);
+  padding: var(--space-2xs);
+  font-size: var(--step--2);
+
+  &[hidden] {
+    display: none;
+  }
+}
+
+.gradient-bg__color-picker-group {
+  margin-bottom: var(--space-2xs);
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.gradient-bg__color-picker-title {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(100, 75, 55, 0.45);
+  margin-bottom: var(--space-3xs);
+}
+
+.gradient-bg__color-picker-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3xs);
+}
+
+.gradient-bg__color-picker-chip {
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0;
+  border: 1px solid rgba(160, 130, 110, 0.3);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.15s;
+
+  &:hover {
+    transform: scale(1.15);
+  }
+}
+
+.gradient-bg__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-2xs);
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  label {
+    color: rgba(80, 58, 40, 0.6);
+    flex: 0 0 auto;
+    min-width: 5.5rem;
+  }
+}
+
+.gradient-bg__val {
+  color: rgba(80, 58, 40, 0.5);
+  min-width: 2rem;
+  text-align: right;
+  flex: 0 0 auto;
+}
+
+.gradient-bg__btn {
+  width: 100%;
+  padding: var(--space-2xs);
+  background: none;
+  border: 0.5px solid rgba(160, 130, 110, 0.25);
+  border-radius: var(--space-3xs);
+  color: rgba(90, 65, 45, 0.5);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.65rem;
+
+  &:hover {
+    background: rgba(160, 130, 110, 0.08);
+    color: rgba(80, 55, 35, 0.8);
+  }
+
+  & + & {
+    margin-top: var(--space-3xs);
+  }
+}
+
+.gradient-bg__preset-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3xs);
+  margin-top: var(--space-2xs);
+
+  select {
+    flex: 1;
+    padding: var(--space-3xs) var(--space-2xs);
+    background: rgba(255, 255, 255, 0.5);
+    border: 0.5px solid rgba(160, 130, 110, 0.25);
+    border-radius: var(--space-3xs);
+    font: inherit;
+    color: rgba(70, 50, 35, 0.7);
+  }
+
+  button {
+    flex: 0 0 auto;
+    width: 1.6rem;
+    height: 1.6rem;
+    padding: 0;
+    border: 0.5px solid rgba(160, 130, 110, 0.25);
+    border-radius: var(--space-3xs);
+    background: none;
+    color: rgba(160, 90, 80, 0.5);
+    cursor: pointer;
+
+    &:hover {
+      background: rgba(200, 100, 80, 0.08);
+      color: rgba(180, 60, 50, 0.8);
+    }
+  }
+}
+
+// ── Modale (nom du preset) ──
+.gradient-bg__modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(30, 25, 20, 0.35);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 50;
+  align-items: center;
+  justify-content: center;
+
+  &.is-open {
+    display: flex;
+  }
+}
+
+.gradient-bg__modal {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 0.5px solid rgba(160, 130, 110, 0.2);
+  border-radius: var(--space-2xs);
+  padding: var(--space-m) var(--space-l);
+  width: min(280px, calc(100vw - var(--space-l)));
+
+  h3 {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(70, 50, 35, 0.6);
+    margin-bottom: var(--space-xs);
+  }
+
+  input {
+    width: 100%;
+    padding: var(--space-2xs) var(--space-xs);
+    border: 0.5px solid rgba(160, 130, 110, 0.3);
+    border-radius: var(--space-3xs);
+    font: inherit;
+    color: rgba(50, 35, 25, 0.8);
+    background: rgba(255, 255, 255, 0.6);
+
+    &:focus {
+      border-color: rgba(160, 130, 110, 0.55);
+      outline: none;
+    }
+  }
+}
+
+.gradient-bg__modal-actions {
+  display: flex;
+  gap: var(--space-2xs);
+  margin-top: var(--space-xs);
+
+  button {
+    flex: 1;
+    padding: var(--space-2xs);
+    border-radius: var(--space-3xs);
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    font: inherit;
+  }
+}
+
+#gbg-modal-cancel {
+  background: none;
+  border: 0.5px solid rgba(160, 130, 110, 0.25);
+  color: rgba(90, 65, 45, 0.5);
+
+  &:hover {
+    background: rgba(160, 130, 110, 0.08);
+  }
+}
+
+#gbg-modal-save {
+  background: rgba(90, 65, 45, 0.08);
+  border: 0.5px solid rgba(160, 130, 110, 0.3);
+  color: rgba(70, 50, 35, 0.7);
+
+  &:hover {
+    background: rgba(90, 65, 45, 0.15);
+    color: rgba(50, 35, 20, 0.9);
+  }
+}
+
+// ── Bouton nav ──
+.navbar__bg-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding-inline: var(--space-2xs);
+  background: none;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+
+  &:hover,
+  &[aria-expanded='true'] {
+    opacity: 1;
+  }
+}
