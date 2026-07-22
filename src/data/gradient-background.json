@@ -8,11 +8,11 @@
     [249, 213, 189],
     [250, 232, 101]
   ],
-  "speed": 0.8,
+  "speed": 1,
   "amplitude": 0.5,
   "radius": 0.5,
   "grainOpacity": 0.05,
-  "grainScale": 4,
+  "grainScale": 1,
   "grainFreq": 2,
   "grainTint": [234, 144, 86],
   "grainTintMix": 0.2,

@@ -161,6 +161,7 @@ $doc-switch: 56rem;
 
   .index-nav__deco {
     padding-left: var(--space-30);
+    background-color: var(--sapin-80);
   }
 }
 
@@ -169,7 +170,7 @@ $doc-switch: 56rem;
   font-family: var(--font-heading);
   font-weight: 700;
   font-size: var(--step-1);
-  color: var(--text-cold-dark);
+  color: var(--light-neutral);
   width: 100%;
   height: max-content;
   text-wrap: auto;

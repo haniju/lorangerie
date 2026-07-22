@@ -26,6 +26,7 @@ $faq-switch: 56rem;
   width: var(--grid-col-mobile-5);
 
   @media (min-width: $faq-switch) {
+    display: flex;
     width: var(--grid-col-desktop-2);
     flex-shrink: 0;
   }
@@ -38,8 +39,8 @@ $faq-switch: 56rem;
   display: flex;
   flex-direction: column;
   gap: var(--space-10);
-  background: var(--sable-05);
-  border: 3px solid var(--sable-30);
+  //background: var(--sable-05);
+  border: 3px solid var(--sable-05);
   border-radius: var(--corner-small);
 }
 
@@ -48,7 +49,6 @@ $faq-switch: 56rem;
   font-weight: 700;
   font-size: 0.9375rem;
   color: var(--text-cold-dark);
-  text-decoration: none;
 
   &:hover {
     text-decoration: underline;
@@ -75,6 +75,7 @@ $faq-switch: 56rem;
 
   .index-nav__deco {
     padding-left: var(--space-30);
+    background-color: var(--sapin-80);
   }
 }
 
@@ -83,7 +84,7 @@ $faq-switch: 56rem;
   font-family: var(--font-heading);
   font-weight: 700;
   font-size: var(--step-1);
-  color: var(--text-cold-dark);
+  color: var(--light-neutral);
   width: 100%;
   height: max-content;
   text-wrap: auto;
@@ -96,4 +97,5 @@ $faq-switch: 56rem;
   display: flex;
   flex-direction: column;
   gap: var(--space-20);
+  margin: var(--space-7) var(--space-30) var(--space-10);
 }

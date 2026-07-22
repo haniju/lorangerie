@@ -1,9 +1,11 @@
 ---
 import Layout from '../layouts/Layout.astro'
+import textes from '../data/textes.json'
 
 // Contact — formulaire (nom, email, objet, message) + coordonnées + carte
-// Leaflet/OSM. Page non maquettée (cf. SITE-PLAN.md) : contenu placeholder,
-// à connecter à src/data/contact.json une fois le transform content dispo.
+// Leaflet/OSM. Page non maquettée (cf. SITE-PLAN.md) : adresse/téléphone
+// depuis textes.json, reste (email, carte) encore placeholder.
+const { adresse, telephone } = textes.contact_
 ---
 
 <Layout title="Contact — L'Orangerie">
@@ -34,10 +36,12 @@ import Layout from '../layouts/Layout.astro'
       <aside class="contact__infos">
         <h2 class="titre-paragraphe">Nous trouver</h2>
         <address class="contact__adresse">
-          12 rue de l'Orangerie<br />
-          75000 Paris
+          {adresse}
         </address>
         <p class="bloc-simple">Lun–Ven, 9h–18h</p>
+        <p class="bloc-simple">
+          <a href={`tel:${telephone.replace(/\s/g, '')}`}>{telephone}</a>
+        </p>
         <p class="bloc-simple">
           <a href="mailto:contact@lorangerie.fr">contact@lorangerie.fr</a>
         </p>
@@ -54,13 +58,13 @@ import Layout from '../layouts/Layout.astro'
 
   const mapEl = document.getElementById('contact-map')
   if (mapEl) {
-    // Coordonnées placeholder — à remplacer par l'adresse réelle.
-    const lat = 48.8566
-    const lng = 2.3522
+    // Géocodage du 9/13 faubourg Sainte-Anne, 56140 Malestroit (Nominatim/OSM).
+    const lat = 47.8084096
+    const lng = -2.3852978
 
     const map = L.map(mapEl, {
       center: [lat, lng],
-      zoom: 15,
+      zoom: 17,
       scrollWheelZoom: false,
     })
 

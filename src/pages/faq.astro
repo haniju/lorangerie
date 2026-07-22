@@ -16,7 +16,7 @@ const categories = faq.meta.categoriesOrder
       <nav class="faq__index" aria-label="Rubriques de la FAQ">
         <ul class="faq__index-list">
           {categories.map((cat) => (
-            <li><a class="faq__index-link" href={`#${cat.id}`}>{cat.label}</a></li>
+            <li><a class="faq__index-link btn--lien" href={`#${cat.id}`}>{cat.label}</a></li>
           ))}
         </ul>
       </nav>
@@ -29,7 +29,7 @@ const categories = faq.meta.categoriesOrder
               {cat.questions.map((q) => (
                 <article class="faq-card" data-faq-card>
                   <button
-                    class="faq-card__toggle-btn"
+                    class="faq-card__toggle-btn btn--lien"
                     type="button"
                     aria-expanded="false"
                     aria-controls={`faq-answer-${q.id}`}
