@@ -148,14 +148,17 @@ $bouton-switch: 56rem;
   cursor: pointer;
   background: none;
   border: 0;
-  transition: color var(--duration-fast) var(--ease-out);
+  transition: color var(--duration-fast) var(--ease-out),
+    font-weight var(--duration-fast) var(--ease-out);
 
   &:hover {
     color: var(--action-index-texte-hover);
+    font-weight: 800; // Medium
   }
 
   &:active {
     color: var(--action-index-texte-pressed);
+    font-weight: 600; // Medium
   }
 }
 

@@ -20,7 +20,7 @@ $faq-switch: 56rem;
 // ─── index des rubriques ───────────────────────────────────────
 .faq__index {
   display: none;
-  position: relative;
+  position: sticky;
   top: calc(var(--nav-height) + var(--space-20));
   z-index: 5;
   width: var(--grid-col-mobile-5);
@@ -39,20 +39,8 @@ $faq-switch: 56rem;
   display: flex;
   flex-direction: column;
   gap: var(--space-10);
-  //background: var(--sable-05);
   border: 3px solid var(--sable-05);
   border-radius: var(--corner-small);
-}
-
-.faq__index-link {
-  font-family: var(--font-heading);
-  font-weight: 700;
-  font-size: 0.9375rem;
-  color: var(--text-cold-dark);
-
-  &:hover {
-    text-decoration: underline;
-  }
 }
 
 // ─── colonne de cartes ──────────────────────────────────────────
