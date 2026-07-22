@@ -5,6 +5,7 @@
 import '../scss/main.scss'
 import Navbar from '../components/Navbar.astro'
 import Footer from '../components/Footer.astro'
+import GradientBackground from '../components/GradientBackground.astro'
 
 interface Props {
   title?: string
@@ -28,6 +29,7 @@ const {
     <title>{title}</title>
   </head>
   <body>
+    <GradientBackground />
     <Navbar />
     <main>
       <slot />
