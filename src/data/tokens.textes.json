@@ -507,7 +507,7 @@
                 "ALL_SCOPES"
               ],
               "$type": "string",
-              "$value": "Notre action t'a convaicue ?"
+              "$value": "Notre action t'a convaincue ?"
             },
             "btnprimary": {
               "$scopes": [
