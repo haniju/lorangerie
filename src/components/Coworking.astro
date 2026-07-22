@@ -42,7 +42,7 @@ const widths = [400, 700, 1000]
   <div class="bento bento--desktop">
     <!-- première ligne : photo + plan légendé -->
     <div class="bento__row bento__row--une">
-      <Image class="bento__photo bento__tiers" src={framboise2} alt="Un poste de travail dans la salle Framboise" widths={widths} sizes={sizes} />
+      <Image class="bento__photo bento__tiers" src={framboise2} alt="Un poste de travail dans la salle Framboise" width={1000} widths={widths} sizes={sizes} />
       <div class="bento__plan bento__deux-tiers">
         <div class="bento__plan-row">
           <p class="bento__text">{openSpace}</p>
@@ -57,22 +57,22 @@ const widths = [400, 700, 1000]
 
     <!-- milieu : deux open spaces -->
     <div class="bento__row bento__row--milieu">
-      <Image class="bento__photo" src={framboise1} alt="L’open space Framboise" widths={widths} sizes={sizes} />
-      <Image class="bento__photo" src={kiwi1} alt="L’open space Kiwi" widths={widths} sizes={sizes} />
+      <Image class="bento__photo" src={framboise1} alt="L’open space Framboise" width={1000} widths={widths} sizes={sizes} />
+      <Image class="bento__photo" src={kiwi1} alt="L’open space Kiwi" width={1000} widths={widths} sizes={sizes} />
     </div>
 
     <!-- bas : réunion + coordinatrice, et colonne kiwi/copieur -->
     <div class="bento__row bento__row--bas">
       <div class="bento__col bento__deux-tiers">
-        <Image class="bento__photo" src={reunion} alt="La salle de réunion" widths={widths} sizes={sizes} />
+        <Image class="bento__photo" src={reunion} alt="La salle de réunion" width={1000} widths={widths} sizes={sizes} />
         <div class="bento__coordinatrice">
-          <Image class="bento__coordinatrice-shape" src={ludivine} alt="Ludivine, coordinatrice de l’Orangerie" widths={[200, 300]} sizes="6rem" />
+          <Image class="bento__coordinatrice-shape" src={ludivine} alt="Ludivine, coordinatrice de l’Orangerie" width={300} widths={[200, 300]} sizes="6rem" />
           <p class="bento__coordinatrice-text">{coordinatrice}</p>
         </div>
       </div>
       <div class="bento__col bento__tiers">
-        <Image class="bento__photo" src={kiwi2} alt="L’open space Kiwi, seconde vue" widths={widths} sizes={sizes} />
-        <Image class="bento__photo" src={photocopies} alt="L’espace copieur multifonction" widths={widths} sizes={sizes} />
+        <Image class="bento__photo" src={kiwi2} alt="L’open space Kiwi, seconde vue" width={1000} widths={widths} sizes={sizes} />
+        <Image class="bento__photo" src={photocopies} alt="L’espace copieur multifonction" width={1000} widths={widths} sizes={sizes} />
       </div>
     </div>
   </div>
@@ -92,21 +92,21 @@ const widths = [400, 700, 1000]
 
     <!-- rangée photos « salles » (alignées en bas) -->
     <div class="u-scroll-area bento-mobile__photos bento-mobile__photos--bottom">
-      <Image class="bento-mobile__photo" src={framboise1} alt="L’open space Framboise" widths={widths} sizes={sizes} />
-      <Image class="bento-mobile__photo" src={framboise2} alt="Un poste de travail dans la salle Framboise" widths={widths} sizes={sizes} />
-      <Image class="bento-mobile__photo" src={kiwi1} alt="L’open space Kiwi" widths={widths} sizes={sizes} />
-      <Image class="bento-mobile__photo" src={kiwi2} alt="L’open space Kiwi, seconde vue" widths={widths} sizes={sizes} />
+      <Image class="bento-mobile__photo" src={framboise1} alt="L’open space Framboise" width={1000} widths={widths} sizes={sizes} />
+      <Image class="bento-mobile__photo" src={framboise2} alt="Un poste de travail dans la salle Framboise" width={1000} widths={widths} sizes={sizes} />
+      <Image class="bento-mobile__photo" src={kiwi1} alt="L’open space Kiwi" width={1000} widths={widths} sizes={sizes} />
+      <Image class="bento-mobile__photo" src={kiwi2} alt="L’open space Kiwi, seconde vue" width={1000} widths={widths} sizes={sizes} />
     </div>
 
     <!-- rangée photos « réunion » (alignées en haut) -->
     <div class="u-scroll-area bento-mobile__photos bento-mobile__photos--top">
-      <Image class="bento-mobile__photo" src={reunion} alt="La salle de réunion" widths={widths} sizes={sizes} />
-      <Image class="bento-mobile__photo" src={photocopies} alt="L’espace copieur multifonction" widths={widths} sizes={sizes} />
+      <Image class="bento-mobile__photo" src={reunion} alt="La salle de réunion" width={1000} widths={widths} sizes={sizes} />
+      <Image class="bento-mobile__photo" src={photocopies} alt="L’espace copieur multifonction" width={1000} widths={widths} sizes={sizes} />
     </div>
 
     <!-- carte coordinatrice (pleine largeur, comme desktop) -->
     <div class="bento__coordinatrice">
-      <Image class="bento__coordinatrice-shape" src={ludivine} alt="Ludivine, coordinatrice de l’Orangerie" widths={[200, 300]} sizes="6rem" />
+      <Image class="bento__coordinatrice-shape" src={ludivine} alt="Ludivine, coordinatrice de l’Orangerie" width={300} widths={[200, 300]} sizes="6rem" />
       <p class="bento__coordinatrice-text">{coordinatrice}</p>
     </div>
   </div>
