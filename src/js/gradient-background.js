@@ -3,6 +3,7 @@
 // Moteur de rendu identique (webgl-orbs.js, orbes + grain procédural en
 // shader unique), pas d'UI de configuration ici.
 
+import BASE_CFG from '../data/gradient-background.json'
 import { createOrbRenderer } from './webgl-orbs.js'
 
 // Résolution du framebuffer WebGL cappée indépendamment du devicePixelRatio
@@ -10,31 +11,11 @@ import { createOrbRenderer } from './webgl-orbs.js'
 // pas avec la complexité de la scène (cf. WEBGL-BACKGROUND-PLAN.md).
 const WEBGL_RESOLUTION_SCALE = 1
 
-// Preset exporté depuis le panneau de réglages (branche feature/gradient-background, 22/07).
-const BASE_CFG = {
-  baseColor: [252, 247, 243],
-  colors: [
-    [246, 233, 216],
-    [249, 213, 189],
-    [253, 187, 145],
-    [249, 213, 189],
-    [249, 213, 189],
-    [250, 232, 101],
-  ],
-  speed: 0.8,
-  amplitude: 0.5,
-  radius: 0.5,
-  grainOpacity: 0.05,
-  grainScale: 4,
-  grainFreq: 2,
-  grainTint: [234, 144, 86],
-  grainTintMix: 0.2,
-  orbAlpha: 0.54,
-  veil: 0.12,
-  parallax: 0.9,
-  shape: 'blob',
-  shapeIntensity: 0.2,
-}
+// BASE_CFG vient de src/data/gradient-background.json — même fichier que
+// celui utilisé par le panneau de réglages sur feature/gradient-background
+// (comme valeurs de départ / bouton "Réinitialiser"). Éditer ce fichier
+// (sur cette branche, avec les valeurs voulues pour la prod) suffit à faire
+// évoluer le preset figé, plus besoin de coller le JSON exporté à la main.
 
 // Même seuil que $nav-switch dans _navbar.scss (56rem = 896px à 16px/rem).
 const MOBILE_BREAKPOINT = 896

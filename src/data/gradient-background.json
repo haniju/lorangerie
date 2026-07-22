@@ -1,0 +1,24 @@
+{
+  "baseColor": [252, 247, 243],
+  "colors": [
+    [246, 233, 216],
+    [249, 213, 189],
+    [253, 187, 145],
+    [249, 213, 189],
+    [249, 213, 189],
+    [250, 232, 101]
+  ],
+  "speed": 0.8,
+  "amplitude": 0.5,
+  "radius": 0.5,
+  "grainOpacity": 0.05,
+  "grainScale": 4,
+  "grainFreq": 2,
+  "grainTint": [234, 144, 86],
+  "grainTintMix": 0.2,
+  "orbAlpha": 0.54,
+  "veil": 0.12,
+  "parallax": 0.9,
+  "shape": "blob",
+  "shapeIntensity": 0.2
+}
