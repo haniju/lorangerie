@@ -171,7 +171,15 @@ export function initIndexNavScrollspy() {
     calcLabelOffsets()
   }
 
-  main.addEventListener('scroll', updateScrollspy, { passive: true })
+  let scrollTicking = false
+  main.addEventListener('scroll', () => {
+    if (scrollTicking) return
+    scrollTicking = true
+    requestAnimationFrame(() => {
+      updateScrollspy()
+      scrollTicking = false
+    })
+  }, { passive: true })
   new ResizeObserver(updateScrollspy).observe(document.documentElement)
   updateScrollspy()
 }
