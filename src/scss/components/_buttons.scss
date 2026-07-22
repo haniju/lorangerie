@@ -164,7 +164,7 @@ $bouton-switch: 56rem;
   @extend %btn-base;
   gap: var(--space-10);
   padding: var(--space-10) var(--space-40);
-  background: var(--action-nav-nav-primary-initial);
+  //background: var(--action-nav-nav-primary-initial);
   color: var(--action-nav-nav-primary-texte-primary);
   border-bottom: var(--stroke-big) solid transparent; // réserve la place de l'état actif
 

@@ -130,6 +130,7 @@ $item-label-margin: 5px;
 
 .index-nav__deco {
     height: calc(65px - #{$item-label-margin * 2});
+    
 }
 // Enveloppe paddée : cible du hover (closest('.index-nav__dot')) + espace autour
 // du rond. Le visuel est dans .index-nav__dot-core (purement visuel désormais —

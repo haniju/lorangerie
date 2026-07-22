@@ -22,7 +22,7 @@ $nav-switch: 56rem;
   justify-content: space-between;
   height: var(--nav-height);
   padding-left: var(--space-2);
-  background: var(--background-nav);   // sable/14 (desktop)
+  //background: var(--background-nav);   // sable/14 (desktop)
   // NB: --action-nav-dark absent de l'export Figma → primitive interim (sapin/80).
   border-bottom: 3px solid var(--sapin-80);
   z-index: 10;
