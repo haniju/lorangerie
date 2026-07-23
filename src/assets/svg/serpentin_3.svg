@@ -11,23 +11,24 @@
 	<!ENTITY ns_adobe_xpath "http://ns.adobe.com/XPath/1.0/">
 ]>
 <svg version="1.1" id="Calque_1" xmlns:x="&ns_extend;" xmlns:i="&ns_ai;" xmlns:graph="&ns_graphs;"
-	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="953px" height="1808.9px"
-	 viewBox="0 0 953 1808.9" style="enable-background:new 0 0 953 1808.9;" xml:space="preserve">
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1075px" height="2354.5px"
+	 viewBox="0 0 1075 2354.5" style="enable-background:new 0 0 1075 2354.5;" xml:space="preserve">
 <style type="text/css">
 	.st0{fill:none;stroke:url(#SVGID_1_);stroke-width:35;stroke-miterlimit:10;}
 </style>
 <metadata>
 	<sfw  xmlns="&ns_sfw;">
 		<slices></slices>
-		<sliceSourceBounds  bottomLeftOrigin="true" height="1803" width="949.4" x="1.5" y="-170"></sliceSourceBounds>
+		<sliceSourceBounds  bottomLeftOrigin="true" height="2346.9" width="1061.1" x="-110.2" y="-713.9"></sliceSourceBounds>
 	</sfw>
 </metadata>
-<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="1.5182" y1="903.5001" x2="950.9453" y2="903.5001">
+<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="11.8049" y1="1175.4559" x2="1072.9215" y2="1175.4559">
 	<stop  offset="0" style="stop-color:#FDBB91"/>
 	<stop  offset="0.544" style="stop-color:#F5EEE4"/>
 	<stop  offset="0.818" style="stop-color:#FAE865"/>
 	<stop  offset="0.929" style="stop-color:#FDBB91"/>
 </linearGradient>
-<path class="st0" d="M630.3,19.5C735,24.4,863.9,47.3,919.1,222.4c52,164.9-45,290.3-168.1,316.2C644.9,561,518.3,550,468.7,505.9
-	c-61-54.2-16.2-145.9,74.5-107.3c106.2,45.2,137.8,360.3,112.9,489c-20.6,106.7-91.5,300.4-341.1,421.3S-70,1561.5,84.7,1795.3"/>
+<path class="st0" d="M752.3,19.5c104.7,4.9,233.6,27.8,288.8,202.9c52,164.9-45,290.3-168.1,316.2C766.9,561,640.3,550,590.7,505.9
+	c-61-54.2-16.2-145.9,74.5-107.3c106.2,45.2,124.9,358.5,112.9,489c-15.8,172.8-153.6,425.8-456.3,531.3
+	c-203,70.8-314,197.2-289.1,377.9c24.3,177,302.4,205.2,328.7,342.2c24.8,129.9,136.7,145.7,133.3,208.9"/>
 </svg>
