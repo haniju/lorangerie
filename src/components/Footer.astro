@@ -3,8 +3,9 @@
 // Un seul point de bascule structurel (top : row ↔ column) cf. Navbar.
 import Facebook from '../assets/pictos/facebook.svg'
 import Linkedin from '../assets/pictos/linkedin.svg'
+import textes from '../data/textes.json'
 
-const year = new Date().getFullYear()
+const footer = textes.footer
 
 const pageAccueil = [
   { label: 'Le coworking', href: '/#coworking' },
@@ -15,8 +16,8 @@ const pageAccueil = [
 ]
 
 const autresPages = [
-  { label: 'Contactez-nous', href: '/contact' },
-  { label: 'Foire Aux Questions (F.A.Q.)', href: '/faq' },
+  { label: footer.bouton6, href: '/contact' },
+  { label: footer.bouton7, href: '/faq' },
 ]
 ---
 
@@ -25,27 +26,27 @@ const autresPages = [
     <div class="site-footer__brand">
       <a href="/" class="site-footer__logo">L'Orangerie</a>
       <p class="bloc-simple site-footer__recap">
-        {`Récap rapide sur l'Orangerie en deux lignes grand max`}
+        {footer.description}
       </p>
       <div class="site-footer__socials">
-        <a href="https://facebook.com" class="site-footer__social" aria-label="Facebook">
+        <a href={footer.facebook} class="site-footer__social" aria-label="Facebook">
           <Facebook width={40} height={36} aria-hidden="true" />
         </a>
-        <a href="https://linkedin.com" class="site-footer__social" aria-label="LinkedIn">
+        <a href={footer.linkedin} class="site-footer__social" aria-label="LinkedIn">
           <Linkedin width={40} height={36} aria-hidden="true" />
         </a>
       </div>
     </div>
 
     <div class="site-footer__pages">
-      <nav class="site-footer__links-group" aria-label="Page d'accueil">
-        <p class="site-footer__links-title">Page d'accueil</p>
+      <nav class="site-footer__links-group" aria-label={footer.titreplan1}>
+        <p class="site-footer__links-title">{footer.titreplan1}</p>
         {pageAccueil.map(({ label, href }) => (
           <a href={href} class="btn--lien">{label}</a>
         ))}
       </nav>
-      <nav class="site-footer__links-group" aria-label="Autres pages">
-        <p class="site-footer__links-title">Autres pages</p>
+      <nav class="site-footer__links-group" aria-label={footer.titreplan2}>
+        <p class="site-footer__links-title">{footer.titreplan2}</p>
         {autresPages.map(({ label, href }) => (
           <a href={href} class="btn--lien">{label}</a>
         ))}
@@ -54,8 +55,8 @@ const autresPages = [
   </div>
 
   <div class="site-footer__legals">
-    <p class="bloc-simple site-footer__copyright">{year} L'Orangerie - Tous droits réservés</p>
-    <a href="/cgv" class="btn--lien">Conditions générales de vente</a>
-    <a href="/mentions-legales" class="btn--lien">Mentions légales</a>
+    <p class="bloc-simple site-footer__copyright">{footer.droits}</p>
+    <a href="/cgv" class="btn--lien">{footer.cgv}</a>
+    <a href="/mentions-legales" class="btn--lien">{footer.mentions}</a>
   </div>
 </footer>
