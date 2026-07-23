@@ -36,14 +36,14 @@ main {
     scroll-behavior: smooth;
   }
 
-  scrollbar-color: var(--sapin-80) var(--sable-05); // Firefox
+  scrollbar-color: var(--sapin-80) #fcf7f300; // Firefox
 
   &::-webkit-scrollbar {
     width: var(--space-8);
   }
 
   &::-webkit-scrollbar-track {
-    background-color: var(--sable-05);
+    background-color: #fcf7f300;
   }
 
   &::-webkit-scrollbar-thumb {

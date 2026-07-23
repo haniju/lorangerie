@@ -1,10 +1,33 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="619" height="795" fill="none" viewBox="0 0 619 795">
-  <path fill="url(#a)" d="M231.5 575.553v16.5a16.5 16.5 0 0 0 14.536-24.308l-14.536 7.808Zm-95.356-177.514 1.057-16.466a16.498 16.498 0 0 0-15.592 24.274l14.535-7.808Zm210.066 13.482-1.056 16.466a16.5 16.5 0 0 0 16.796-21.416l-15.74 4.95Zm-61.919-196.906-.51-16.492a16.5 16.5 0 0 0-15.23 21.442l15.74-4.95Zm216.995-6.71.511 16.492a16.502 16.502 0 0 0 14.864-22.481l-15.375 5.989ZM426.736 16.5l1.4-16.44a16.499 16.499 0 0 0-16.775 22.428l15.375-5.988ZM16.5 575.553v-16.5a16.5 16.5 0 0 0-12.11 27.708l12.11-11.208Zm215 0 14.536-7.808-95.356-177.514-14.536 7.808-14.535 7.808 95.356 177.514 14.535-7.808Zm-95.356-177.514-1.056 16.466 210.066 13.482 1.056-16.466 1.057-16.466-210.066-13.482-1.057 16.466Zm210.066 13.482 15.74-4.95-61.919-196.905-15.74 4.949-15.74 4.95L330.47 416.47l15.74-4.949Zm-61.919-196.906.51 16.493 216.996-6.711-.511-16.492-.51-16.492-216.995 6.71.51 16.492Zm216.995-6.71 15.375-5.989L442.11 10.512 426.736 16.5l-15.375 5.988 74.551 191.405 15.374-5.988ZM426.736 16.5l-1.401 16.44 190.574 16.24 1.401-16.44 1.401-16.44L428.136.06l-1.4 16.44ZM231.5 575.553v-16.5h-215v33h215v-16.5Zm-215 0L4.39 586.761l192.501 208L209 783.553l12.11-11.207-192.5-208-12.11 11.207Z"/>
-  <defs>
-    <linearGradient id="a" x1="285.04" x2="424.95" y1="582.222" y2="-26.778" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#FDBB91"/>
-      <stop offset=".577" stop-color="#FAE865"/>
-      <stop offset="1" stop-color="#FDBB91"/>
-    </linearGradient>
-  </defs>
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 24.0.2, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
+	<!ENTITY ns_extend "http://ns.adobe.com/Extensibility/1.0/">
+	<!ENTITY ns_ai "http://ns.adobe.com/AdobeIllustrator/10.0/">
+	<!ENTITY ns_graphs "http://ns.adobe.com/Graphs/1.0/">
+	<!ENTITY ns_vars "http://ns.adobe.com/Variables/1.0/">
+	<!ENTITY ns_imrep "http://ns.adobe.com/ImageReplacement/1.0/">
+	<!ENTITY ns_sfw "http://ns.adobe.com/SaveForWeb/1.0/">
+	<!ENTITY ns_custom "http://ns.adobe.com/GenericCustomNamespace/1.0/">
+	<!ENTITY ns_adobe_xpath "http://ns.adobe.com/XPath/1.0/">
+]>
+<svg version="1.1" id="Calque_1" xmlns:x="&ns_extend;" xmlns:i="&ns_ai;" xmlns:graph="&ns_graphs;"
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="887.8px"
+	 height="1011.8px" viewBox="0 0 887.8 1011.8" style="enable-background:new 0 0 887.8 1011.8;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;stroke:url(#SVGID_1_);stroke-width:35;stroke-linejoin:round;stroke-miterlimit:10;}
+</style>
+<metadata>
+	<sfw  xmlns="&ns_sfw;">
+		<slices></slices>
+		<sliceSourceBounds  bottomLeftOrigin="true" height="967.1" width="901.1" x="-288.1" y="-187.4"></sliceSourceBounds>
+	</sfw>
+</metadata>
+<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="454.7538" y1="-4.4328" x2="407.7708" y2="1002.1818">
+	<stop  offset="0" style="stop-color:#FDBB91"/>
+	<stop  offset="0.544" style="stop-color:#F5EEE4"/>
+	<stop  offset="0.818" style="stop-color:#FAE865"/>
+	<stop  offset="0.929" style="stop-color:#FDBB91"/>
+</linearGradient>
+<polyline class="st0" points="881.8,33 613.9,32.8 726.4,258.7 443.7,234.8 553.3,485.8 271.1,484 403.3,713.8 134.9,713.8 
+	276.3,944.7 -18.1,964.9 "/>
 </svg>

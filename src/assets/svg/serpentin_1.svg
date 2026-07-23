@@ -1,10 +1,33 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="446" height="498" fill="none" viewBox="0 0 446 498">
-  <path stroke="url(#a)" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="33" d="M16.11 493.851c36-162.5 218.999-257.924 266.639-273.74 47.656-15.742 140.954-8.52 146.206 54.431 4.085 49.788-51.075 84.913-97.986 43.445-48.033-42.464-64.413-111.176-70.211-180.525-4.266-50.67 8.281-135.038 8.281-135.038"/>
-  <defs>
-    <linearGradient id="a" x1="310.234" x2="236.016" y1="365.995" y2="3.922" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#FDBB91"/>
-      <stop offset=".394" stop-color="#FAE865"/>
-      <stop offset="1" stop-color="#FDBB91"/>
-    </linearGradient>
-  </defs>
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 24.0.2, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
+	<!ENTITY ns_extend "http://ns.adobe.com/Extensibility/1.0/">
+	<!ENTITY ns_ai "http://ns.adobe.com/AdobeIllustrator/10.0/">
+	<!ENTITY ns_graphs "http://ns.adobe.com/Graphs/1.0/">
+	<!ENTITY ns_vars "http://ns.adobe.com/Variables/1.0/">
+	<!ENTITY ns_imrep "http://ns.adobe.com/ImageReplacement/1.0/">
+	<!ENTITY ns_sfw "http://ns.adobe.com/SaveForWeb/1.0/">
+	<!ENTITY ns_custom "http://ns.adobe.com/GenericCustomNamespace/1.0/">
+	<!ENTITY ns_adobe_xpath "http://ns.adobe.com/XPath/1.0/">
+]>
+<svg version="1.1" id="Calque_1" xmlns:x="&ns_extend;" xmlns:i="&ns_ai;" xmlns:graph="&ns_graphs;"
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="817px" height="572px"
+	 viewBox="0 0 817 572" style="enable-background:new 0 0 817 572;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;stroke:url(#SVGID_1_);stroke-width:35;stroke-miterlimit:10;}
+</style>
+<metadata>
+	<sfw  xmlns="&ns_sfw;">
+		<slices></slices>
+		<sliceSourceBounds  bottomLeftOrigin="true" height="569.5" width="812.2" x="3.8" y="1.6"></sliceSourceBounds>
+	</sfw>
+</metadata>
+<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="415.3054" y1="-16.7775" x2="387.5964" y2="576.8894">
+	<stop  offset="0" style="stop-color:#FDBB91"/>
+	<stop  offset="0.544" style="stop-color:#F5EEE4"/>
+	<stop  offset="0.818" style="stop-color:#FAE865"/>
+	<stop  offset="0.929" style="stop-color:#FDBB91"/>
+</linearGradient>
+<path class="st0" d="M805.6,15.1C729,71,661,86,539,78S343,30,231,32C161,33.2,83.6,52.7,46,97s-27.8,125.5-1,171
+	c23,39,69,66,110,91c58.8,35.8,85,76,87,123c1.6,38-4,61-10,84"/>
 </svg>

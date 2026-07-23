@@ -6,6 +6,7 @@ import textes from '../data/textes.json'
 import Incl from './Incl.astro'
 import soleilUrl from '../assets/pictos/soleil.svg?url'
 import blurredLeavesUrl from '../assets/images/blurred_leaves.jpg?url'
+import serpentin3Url from '../assets/svg/serpentin_3.svg?url'
 
 const mode = textes
 const t = mode
@@ -13,6 +14,7 @@ const tarifs = mode["tarifs_"]
 ---
 
 <section class="tarifs u-container u-section" id="tarifs">
+  <img class="serpentin" src={serpentin3Url} alt="" data-parallax="0.2" aria-hidden="true" />
   <h2 class="index-nav__deco" data-label-for="tarifs">{t["index_"]["tarif"]}</h2>
   <span class="index-sentinel" data-sentinel-start data-section-ref="tarifs" aria-hidden="true"></span>
   <span class="index-sentinel" data-sentinel-bellow data-section-ref="tarifs" aria-hidden="true"></span>

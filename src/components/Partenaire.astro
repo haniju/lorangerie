@@ -7,6 +7,7 @@
 
 import textes from '../data/textes.json'
 import pulpeLogoUrl        from '../assets/logos/pulpe.svg?url'
+import serpentin5Url       from '../assets/svg/serpentin_5.svg?url'
 import communLogoUrl       from '../assets/logos/commu.svg?url'
 import franceActiveLogoUrl from '../assets/logos/franceactive.svg?url'
 import passtempsLogoUrl    from "../assets/logos/pass'temps.svg?url"
@@ -27,6 +28,7 @@ const logosSoutien = [
 ---
 
 <section class="partenaire u-container u-section" id="partenaires">
+  <img class="serpentin" src={serpentin5Url} alt="" data-parallax="0.2" aria-hidden="true" />
   <h2 class="index-nav__deco" data-label-for="partenaires">{t['index_']['partenaire']}</h2>
   <span class="index-sentinel" data-sentinel-start data-section-ref="partenaires" aria-hidden="true"></span>
   <span class="index-sentinel" data-sentinel-bellow data-section-ref="partenaires" aria-hidden="true"></span>

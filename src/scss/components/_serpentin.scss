@@ -1,0 +1,35 @@
+// Décor de section : SVG serpentin positionné en absolute derrière le contenu,
+// avec un effet parallaxe (data-parallax, cf. src/js/animations.js → initParallax).
+// Réglages par section ci-dessous (top/right/etc.) — centralisés ici plutôt
+// que dispersés dans pages/_*.scss.
+.serpentin {
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  user-select: none;
+}
+
+.coworking .serpentin {
+  top: -7rem;
+  right: 470px;
+}
+
+.fonctionnement .serpentin {
+  top: -6rem;
+  right: 165px;
+}
+
+.tarifs .serpentin {
+  top: -24rem;
+  right: 170px;
+}
+
+.pulpe .serpentin {
+  top: -14rem;
+  right: 0px;
+}
+
+.partenaire .serpentin {
+  top: -15rem;
+  left: -170px;
+}
