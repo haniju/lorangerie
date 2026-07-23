@@ -30,6 +30,7 @@ export function initParallax() {
       ease: 'none',
       scrollTrigger: {
         trigger: el,
+        scroller: 'main', // main est le vrai conteneur de scroll (html/body en overflow:hidden, cf. _reset.scss)
         start: 'top bottom',
         end: 'bottom top',
         scrub: true,
