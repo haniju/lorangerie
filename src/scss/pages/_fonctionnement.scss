@@ -5,7 +5,8 @@
 // Propositions au bord gauche de la colonne ; liste décalée de --grid-col-desktop-1 (desktop)
 // ou --space-20 (mobile).
 
-$fonct-switch: 56rem;
+@use '../base/breakpoints' as bp;
+
 $overlap: var(--space-20); // recouvrement entre les 3 blocs
 
 .fonctionnement {
@@ -26,7 +27,7 @@ $overlap: var(--space-20); // recouvrement entre les 3 blocs
   font-weight: 700;
   font-size: 1rem;
   color: var(--text-warm-dark);
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow-soft);
   position: relative;
   width: var(--grid-col-mobile-4);
 }
@@ -72,7 +73,7 @@ $overlap: var(--space-20); // recouvrement entre les 3 blocs
 // prop1/prop2 : --grid-col-desktop-2, flush gauche de la colonne.
 // liste       : --grid-col-desktop-3, décalée de --grid-col-desktop-1.
 // ════════════════════════════════════════════════════════════════════
-@media (min-width: $fonct-switch) {
+@media (min-width: bp.$bp-desktop) {
   .u-container.fonctionnement {
     //margin-inline : unset;
   }

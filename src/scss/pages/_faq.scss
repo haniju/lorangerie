@@ -2,7 +2,7 @@
 // Le tout aligné à gauche, sans indent. Desktop : flex-row, index + cartes
 // côte à côte. Mobile : reflow en colonne, index sticky en haut de l'écran.
 
-$faq-switch: 56rem;
+@use '../base/breakpoints' as bp;
 
 .faq__layout {
   display: flex;
@@ -10,7 +10,7 @@ $faq-switch: 56rem;
   align-items: flex-start;
   gap: var(--space-30);
 
-  @media (min-width: $faq-switch) {
+  @media (min-width: bp.$bp-desktop) {
     flex-direction: row;
     align-items: flex-start;
     gap: var(--space-20);
@@ -25,7 +25,7 @@ $faq-switch: 56rem;
   z-index: 5;
   width: var(--grid-col-mobile-5);
 
-  @media (min-width: $faq-switch) {
+  @media (min-width: bp.$bp-desktop) {
     display: flex;
     width: var(--grid-col-desktop-2);
     flex-shrink: 0;
@@ -50,7 +50,7 @@ $faq-switch: 56rem;
   gap: var(--space-50);
   width: var(--grid-col-mobile-5);
 
-  @media (min-width: $faq-switch) {
+  @media (min-width: bp.$bp-desktop) {
     width: var(--grid-col-desktop-4);
   }
 }

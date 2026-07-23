@@ -2,9 +2,9 @@
 // + colonne de contenu (col4). Titre + paragraphes à plat, sans cadre.
 // Desktop : flex-row. Mobile : reflow en colonne, sommaire sticky en haut.
 
-$doc-switch: 56rem;
-
 // ─── en-tête de page ────────────────────────────────────────────
+@use '../base/breakpoints' as bp;
+
 .doc__header {
   display: flex;
   flex-direction: column;
@@ -12,7 +12,7 @@ $doc-switch: 56rem;
   width: var(--grid-col-mobile-5);
   margin-bottom: var(--space-40);
 
-  @media (min-width: $doc-switch) {
+  @media (min-width: bp.$bp-desktop) {
     width: var(--grid-col-desktop-5);
   }
 }
@@ -55,7 +55,7 @@ $doc-switch: 56rem;
   align-items: flex-start;
   gap: var(--space-30);
 
-  @media (min-width: $doc-switch) {
+  @media (min-width: bp.$bp-desktop) {
     flex-direction: row;
     gap: var(--space-20);
   }
@@ -66,7 +66,7 @@ $doc-switch: 56rem;
   position: relative;
   width: var(--grid-col-mobile-5);
 
-  @media (min-width: $doc-switch) {
+  @media (min-width: bp.$bp-desktop) {
     width: var(--grid-col-desktop-2);
     flex-shrink: 0;
   }
@@ -103,7 +103,7 @@ $doc-switch: 56rem;
   gap: var(--space-50);
   width: var(--grid-col-mobile-5);
 
-  @media (min-width: $doc-switch) {
+  @media (min-width: bp.$bp-desktop) {
     width: var(--grid-col-desktop-4);
   }
 }

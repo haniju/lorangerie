@@ -5,7 +5,8 @@
 //   • Mobile  (< 56rem, node 44:3547) : empilement de rangées à défilement
 //     horizontal (scroll-snap natif, pas d'Embla) — .bento-mobile
 
-$bento-switch: 56rem;
+@use '../base/breakpoints' as bp;
+
 $bento-gap: var(--space-10);
 
 .bento {
@@ -25,7 +26,7 @@ $bento-gap: var(--space-10);
   display: flex;
 }
 
-@media (min-width: $bento-switch) {
+@media (min-width: bp.$bp-desktop) {
   .bento--desktop {
     display: flex;
   }
@@ -119,7 +120,7 @@ $bento-gap: var(--space-10);
       var(--sable-05) 27%,
       #fed7be 100%);
 
-  @media (min-width: $bento-switch) {
+  @media (min-width: bp.$bp-desktop) {
     gap: var(--space-30);
   }
 }
@@ -131,7 +132,7 @@ $bento-gap: var(--space-10);
   object-fit: cover;
   border-radius: var(--corner-big) var(--corner-big) 0 0; // arrondi haut (forme Figma) — sert de masque à la photo
 
-  @media (min-width: $bento-switch) {
+  @media (min-width: bp.$bp-desktop) {
     width: var(--space-152); // ~93px
     height: var(--space-152); // ~104px
   }

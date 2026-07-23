@@ -1,7 +1,7 @@
 // Section hero (32:2503 desktop / 219:1931 mobile).
 // Décorations (halo jaune du bâtiment, serpentins orange) = Phase 8, non incluses ici.
 
-$hero-switch: 56rem;
+@use '../base/breakpoints' as bp;
 
 .hero {
   display: grid;
@@ -10,7 +10,7 @@ $hero-switch: 56rem;
   align-items: start;
   //padding-bottom: var(--space-50);
 
-  @media (min-width: $hero-switch) {
+  @media (min-width: bp.$bp-desktop) {
     grid-template-columns: 3fr 9fr;
     align-items: center;
     gap: var(--pad-grid);
@@ -26,7 +26,7 @@ $hero-switch: 56rem;
   gap: var(--space-30);
   padding-top: var(--space-70);
 
-  @media (min-width: $hero-switch) {
+  @media (min-width: bp.$bp-desktop) {
     height: 100%;
     margin-top: var(--space-208);
   }
@@ -48,7 +48,7 @@ $hero-switch: 56rem;
   // Mobile : le logo occupe ~60% de la largeur d'écran (bloc = 60vw), le texte
   // s'ajuste au bloc via des container-query units → proportionnel, robuste
   // indépendamment des métriques d'iCiel Cadena.
-  @media (max-width: 55.999rem) {
+  @media (max-width: #{bp.$bp-desktop - 0.001rem}) {
     width: var(--grid-col-mobile-4);
     container-type: inline-size;
 
@@ -68,7 +68,7 @@ $hero-switch: 56rem;
   color: var(--text-warm-dark);
   margin-left: var(--space-30);
 
-  @media (min-width: $hero-switch) {
+  @media (min-width: bp.$bp-desktop) {
     width: var(--grid-col-desktop-2);
     margin-left: var(--space-50);
   }
@@ -86,10 +86,10 @@ $hero-switch: 56rem;
   max-width: none;
   height: auto;
   transform: translateX(-70px);
-  @media (min-width: $hero-switch) {
+  @media (min-width: bp.$bp-desktop) {
     width: 150%;
     max-width: 1240px;
-    transform: translateX(-100px);
+    transform: translateX(-220px);
   }
 }
 
@@ -112,7 +112,7 @@ $hero-switch: 56rem;
   align-self:flex-end;
   //bottom: calc(var(--space-10)* -1);
 
-  @media (min-width: $hero-switch) {
+  @media (min-width: bp.$bp-desktop) {
     position: absolute;
     right: 0;
     bottom: var(--space-20);

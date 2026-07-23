@@ -2,7 +2,7 @@
 // Desktop (≥ 56rem) : tableau-tarifs flex-row, indent 1 col, forfait-a 2 col, div-b 4 col, gap --space-20.
 // Mobile : forfait-a pleine utile (5 col), div-b scroll horizontal natif, instances 4 col chacune.
 
-$tarif-switch: 56rem;
+@use '../base/breakpoints' as bp;
 
 .tarifs {
   display: flex;
@@ -16,7 +16,7 @@ $tarif-switch: 56rem;
   flex-direction: column;
   gap: var(--space-20);
 
-  @media (min-width: $tarif-switch) {
+  @media (min-width: bp.$bp-desktop) {
     flex-direction: row;
     align-items: flex-start;
     padding-left: var(--grid-col-desktop-1);
@@ -31,7 +31,7 @@ $tarif-switch: 56rem;
   gap: var(--space-20);
   width: var(--grid-col-mobile-5); // mobile : pleine largeur utile
 
-  @media (min-width: $tarif-switch) {
+  @media (min-width: bp.$bp-desktop) {
     width: var(--grid-col-desktop-2);
     flex-shrink: 0;
 
@@ -58,7 +58,7 @@ $tarif-switch: 56rem;
     scroll-snap-align: start;
   }
 
-  @media (min-width: $tarif-switch) {
+  @media (min-width: bp.$bp-desktop) {
     display: flex;
     flex-direction: column;
     gap: var(--space-20);
@@ -92,7 +92,7 @@ $tarif-switch: 56rem;
   // Réintroduit l'indent mobile (même que --pad-grid)
   padding-inline: var(--pad-grid);
 
-  @media (min-width: $tarif-switch) {
+  @media (min-width: bp.$bp-desktop) {
     padding-inline: calc(var(--pad-grid) + var(--grid-col-desktop-1));
   }
 }
@@ -107,7 +107,7 @@ $tarif-switch: 56rem;
   gap: var(--space-30);
   min-height: 32rem; // absorbe les rotations et l'overlap
 
-  @media (min-width: $tarif-switch) {
+  @media (min-width: bp.$bp-desktop) {
     min-height: 25rem; // absorbe les rotations et l'overlap
   }
 }
@@ -117,7 +117,7 @@ $tarif-switch: 56rem;
   width: var(--grid-col-mobile-4);
   position: absolute;
 
-  @media (min-width: $tarif-switch) {
+  @media (min-width: bp.$bp-desktop) {
     position: absolute;
     width: var(--grid-col-desktop-3);
   }
@@ -127,7 +127,7 @@ $tarif-switch: 56rem;
   top: var(--space-50);
   transform: rotate(-10.64deg) translate(calc(var(--grid-col-desktop-1)*-.7));
 
-  @media (min-width: $tarif-switch) {
+  @media (min-width: bp.$bp-desktop) {
     top: var(--space-50);
     transform: rotate(-10.64deg) translate(calc(var(--grid-col-desktop-1)*-.7));
   }
@@ -137,7 +137,7 @@ $tarif-switch: 56rem;
   top: var(--space-272);
   transform: rotate(8.9deg) translate(calc(var(--grid-col-desktop-1)*.7));
 
-  @media (min-width: $tarif-switch) {
+  @media (min-width: bp.$bp-desktop) {
     top: var(--space-208);
     transform: rotate(8.9deg) translate(calc(var(--grid-col-desktop-1)*.7));
   }

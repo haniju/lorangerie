@@ -2,7 +2,7 @@
 // sable avec un gros arrondi haut-gauche (100px), le reste en small (8px).
 // Chaque ligne = picto flèche (assets/pictos/simple.svg, local) + texte DM Sans 15/22.
 
-$tbl-switch: 56rem;
+@use '../base/breakpoints' as bp;
 
 .text-box-liste {
   display: flex;
@@ -14,7 +14,7 @@ $tbl-switch: 56rem;
   // gros arrondi haut-gauche (100px, one-off hors échelle corners), reste small (8px)
   border-radius: var(--corner-big) var(--corner-small) var(--corner-small) var(--corner-small);
 
-  @media (min-width: $tbl-switch) {
+  @media (min-width: bp.$bp-desktop) {
     gap: var(--space-20);
     padding: var(--space-50) var(--space-30) var(--space-50) var(--space-50);
     border-radius: 6.25rem var(--corner-small) var(--corner-small) var(--corner-small);
@@ -32,7 +32,7 @@ $tbl-switch: 56rem;
   width: 1rem; // 28px
   height: auto;
   margin-top: 0.125rem; // cale la flèche sur la 1re ligne de texte
-  @media (min-width: $tbl-switch) {
+  @media (min-width: bp.$bp-desktop) {
     width: 1.75rem; // 28px  
   }
 }

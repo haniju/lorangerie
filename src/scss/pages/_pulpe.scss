@@ -3,9 +3,9 @@
 // Desktop (≥ 56rem) : flex-row, align-items:stretch (col-media suit la hauteur des textes).
 //   carousel en position absolute inset:0 | proposition en position absolute top/left -space-50.
 
-$pulpe-switch: 56rem;
-
 // ── intro (composant/proposition, cf. _proposition.scss) ─────────────────────
+@use '../base/breakpoints' as bp;
+
 .pulpe__intro {
   margin-bottom: var(--space-40);
 }
@@ -112,7 +112,7 @@ $pulpe-switch: 56rem;
 // ════════════════════════════════════════════════════════════════════════════════
 // DESKTOP (≥ 56rem)
 // ════════════════════════════════════════════════════════════════════════════════
-@media (min-width: $pulpe-switch) {
+@media (min-width: bp.$bp-desktop) {
   .pulpe__grid {
     flex-direction: row;
     align-items: flex-end; // col-media est plus haut que col-textes

@@ -10,12 +10,12 @@
   background: var(--sapin-80);
   border-bottom: var(--stroke-big) solid var(--sable-14);
   border-radius: var(--corner-small); // 8px
-  box-shadow: 0 0 10px rgba(68, 7, 5, 0.2); // shadow-1
+  box-shadow: var(--shadow-strong);
   color: var(--sable-14);
   font-family: var(--font-display);
   font-size: var(--step-display);
   line-height: 1;
   text-transform: uppercase;
   white-space: nowrap;
-  letter-spacing: 1px;
+  letter-spacing: var(--tracking-label);
 }

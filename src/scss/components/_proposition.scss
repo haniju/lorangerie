@@ -3,6 +3,8 @@
 // 4 surfaces via `color=` : 15 (défaut, plein + ombre) / gradient / none / outline.
 // Le picto est recoloré en currentColor (`--picto-color`) selon la surface.
 
+@use '../base/breakpoints' as bp;
+
 .proposition {
   display: flex;
   align-items: center;
@@ -10,7 +12,7 @@
   padding: var(--space-30);
   overflow: hidden;
   background: var(--sable-14); // color=15
-  box-shadow: 0 0 7px 3px rgba(68, 7, 5, 0.05); // light_shadow_index
+  box-shadow: 0 0 7px 3px rgba(var(--shadow-color-warm), 0.05); // light_shadow_index — variante spread+opacité de --shadow-strong
   font-family: var(--font-heading); // Ortica Linear
   font-weight: 700; // Bold
   font-size: 1rem; // 16px
@@ -70,7 +72,7 @@
   text-align: center;
   border-radius: var(--corner-huge) var(--corner-huge) var(--corner-small) var(--corner-small);
   border-bottom: var(--stroke-big) solid var(--text-cold-dark);
-  box-shadow: 0 0 5px rgba(68, 7, 5, 0.2);
+  box-shadow: var(--shadow-strong);
   font-family: var(--font-body);
   font-style: italic;
   --picto-color: var(--sapin-80);
@@ -89,14 +91,12 @@
 // Largeur figée (col-mobile-5 / col-desktop-3), flush gauche (pas d'indent
 // supplémentaire au-delà du gutter de .u-container), pas de carte (padding=0).
 // Combiner avec .proposition--none pour le fond transparent.
-$proposition-switch: 56rem;
-
 .proposition--section-intro {
   width: var(--grid-col-mobile-5);
   text-align: left;
   justify-content: flex-start;
 
-  @media (min-width: $proposition-switch) {
+  @media (min-width: bp.$bp-desktop) {
     width: var(--grid-col-desktop-3);
   }
 }

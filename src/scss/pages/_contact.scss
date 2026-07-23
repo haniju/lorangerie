@@ -1,6 +1,8 @@
 // page/contact — non maquettée (cf. SITE-PLAN.md) : formulaire (nom, email,
 // objet, message) + coordonnées + carte Leaflet/OSM. Construite depuis le DS.
 
+@use '../base/breakpoints' as bp;
+
 .contact__title {
   margin: 0 0 var(--space-40);
   font-family: var(--font-heading); // Ortica Linear
@@ -14,7 +16,7 @@
   flex-direction: column;
   gap: var(--space-60);
 
-  @media (min-width: 56rem) {
+  @media (min-width: bp.$bp-desktop) {
     flex-direction: row;
     align-items: flex-start;
     gap: var(--space-40);
@@ -29,7 +31,7 @@
   gap: var(--space-20);
   width: var(--grid-col-mobile-5);
 
-  @media (min-width: 56rem) {
+  @media (min-width: bp.$bp-desktop) {
     width: var(--grid-col-desktop-4);
   }
 }
@@ -76,7 +78,7 @@
   gap: var(--space-10);
   width: var(--grid-col-mobile-5);
 
-  @media (min-width: 56rem) {
+  @media (min-width: bp.$bp-desktop) {
     width: var(--grid-col-desktop-3);
   }
 }

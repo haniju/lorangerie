@@ -2,34 +2,56 @@
 // avec un effet parallaxe (data-parallax, cf. src/js/animations.js → initParallax).
 // Réglages par section ci-dessous (top/right/etc.) — centralisés ici plutôt
 // que dispersés dans pages/_*.scss.
+//
+// Position ET largeur exprimées via les tokens --grid-col-desktop-X (_fluid.scss) :
+// homothétiques avec le contenu sous 1550px, puis figées (ancrées au bord du bloc
+// de contenu plafonné) au-delà — même comportement que le reste de la grille,
+// au lieu d'un ancrage au bord du viewport qui dérive dès qu'on change de résolution.
+// Valeurs converties depuis les px réglés à l'œil (~1730×1022) vers la colonne la
+// plus proche : coworking et partenaire collent bien à une colonne pleine,
+// fonctionnement/tarifs/pulpe sont des approximations à confirmer visuellement
+// (resize 440→1920) ou sur Figma.
+
+@use '../base/breakpoints' as bp;
+
 .serpentin {
   position: absolute;
   z-index: -1;
   pointer-events: none;
   user-select: none;
+  display: none;
+  height: auto;
+  @media (min-width: bp.$bp-desktop) {
+    display: flex;
+  }
 }
 
 .coworking .serpentin {
   top: -7rem;
-  right: 470px;
+  right: var(--grid-col-desktop-2);
+  width: var(--grid-col-desktop-4); // ≈ 817px @ 1730 — bon match
 }
 
 .fonctionnement .serpentin {
   top: -6rem;
-  right: 165px;
+  right: 0; // à confirmer : ~75px de la colonne @ 1730, plus proche de flush que d'une colonne
+  width: var(--grid-col-desktop-2); // ≈ 461px @ 1730 — approximation
 }
 
 .tarifs .serpentin {
   top: -22rem;
-  right: 170px;
+  right: 0; // à confirmer : ~80px de la colonne @ 1730, plus proche de flush que d'une colonne
+  width: var(--grid-col-desktop-5); // ≈ 1075px @ 1730 — approximation
 }
 
 .pulpe .serpentin {
   top: -8rem;
-  right: 0px;
+  right: 0; // flush contre le bord du contenu (était 0px viewport, mordait déjà sur la marge)
+  width: var(--grid-col-desktop-2); // ≈ 500px @ 1730 — approximation
 }
 
 .partenaire .serpentin {
   top: -15rem;
-  left: -170px;
+  left: calc(-1 * var(--grid-col-desktop-1)); // déborde à gauche du contenu, à confirmer
+  width: var(--grid-col-desktop-4); // ≈ 888px @ 1730 — bon match
 }

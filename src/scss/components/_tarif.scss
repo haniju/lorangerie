@@ -1,7 +1,7 @@
 // atome/forfait (Figma 176:2508) — carte tarif. 2 niveaux :
 // grand public (défaut, bordure/entête sable) / communautaire (bordure/entête pêche).
 // Picto = assets/pictos/orangerie.svg (local). Prix/desc/details en DM Sans.
-$forfait-switch: 56rem;
+@use '../base/breakpoints' as bp;
 
 .forfait {
   display: flex;
@@ -33,7 +33,7 @@ $forfait-switch: 56rem;
   gap: var(--space-10);
   padding: var(--space-20);
 
-  @media (min-width: $forfait-switch) {
+  @media (min-width: bp.$bp-desktop) {
     gap: var(--space-20);
     padding: var(--space-30);
   }

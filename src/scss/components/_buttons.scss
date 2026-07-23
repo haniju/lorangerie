@@ -1,8 +1,7 @@
 // Boutons — rampe complète construite depuis Figma. Cf. SITE-PLAN.md.
 // primary / secondary / fab / lien-cliquable / nav-primary / nav-secondary.
 // (bouton/charte & bouton/primary_back = morts, ignorés.)
-$bouton-switch: 56rem;
-
+@use '../base/breakpoints' as bp;
 
 %btn-base {
   display: inline-flex;
@@ -34,8 +33,8 @@ $bouton-switch: 56rem;
   background: var(--action-button-primary-initial);
   color: var(--action-button-primary-texte-label);
   border-radius: var(--corner-small);
-  letter-spacing: 1px; // font/label/letter-spacing
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.08); // button-shadow
+  letter-spacing: var(--tracking-label); // font/label/letter-spacing
+  box-shadow: var(--shadow-soft);
   height: 50px;
   width: 100%;
 
@@ -55,7 +54,7 @@ $bouton-switch: 56rem;
     cursor: not-allowed;
   }
 
-  @media (min-width: $bouton-switch) {
+  @media (min-width: bp.$bp-desktop) {
     padding: var(--space-10) var(--space-70);
     height: 40px;
     width: 100%;
@@ -69,8 +68,8 @@ $bouton-switch: 56rem;
   background: var(--action-button-secondary-initial);
   color: var(--action-button-secondary-texte-initial);
   border-radius: var(--corner-small);
-  letter-spacing: 1px;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.08);
+  letter-spacing: var(--tracking-label);
+  box-shadow: var(--shadow-soft);
   height: 45px;
   width: 100%;
 
@@ -90,7 +89,7 @@ $bouton-switch: 56rem;
     cursor: not-allowed;
   }
 
-  @media (min-width: $bouton-switch) {
+  @media (min-width: bp.$bp-desktop) {
     padding: var(--space-10) var(--space-70);
     height: 40px;
     width: max-content;
@@ -105,8 +104,8 @@ $bouton-switch: 56rem;
   padding: var(--space-10);
   background: var(--action-button-primary-initial);
   color: var(--action-button-primary-texte-label);
-  border-radius: 1.875rem; // 30px (initial) — plus rond
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.08);
+  border-radius: var(--corner-medium); // 25px (initial) — plus rond
+  box-shadow: var(--shadow-soft);
 
   &:hover {
     background: var(--action-button-primary-hover);
@@ -190,9 +189,6 @@ $bouton-switch: 56rem;
 }
 
 // ─── bouton/nav-secondary (CTA) ─────────────────────────────
-
-$btn-switch: 56rem;
-
 .btn--nav-secondary {
   @extend %btn-base;
   gap: 0.7rem; // 5px
@@ -209,7 +205,7 @@ $btn-switch: 56rem;
     background: var(--action-nav-nav-secondary-pressed);
   }
 
-  @media (min-width: $btn-switch) {
+  @media (min-width: bp.$bp-desktop) {
     padding-inline: var(--space-40) var(--space-34);
   }
 }

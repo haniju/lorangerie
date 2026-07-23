@@ -1,0 +1,6 @@
+// Seuils de bascule mobile/desktop — point de vérité unique.
+// Remplace les ~18 variables locales identiques ($nav-switch, $bouton-switch,
+// $index-switch...) et les littéraux 56rem/55.999rem dispersés dans les pages.
+// Usage : @use '../base/breakpoints' as bp; puis @media (min-width: bp.$bp-desktop)
+
+$bp-desktop: 56rem; // 896px — seuil unique du site aujourd'hui

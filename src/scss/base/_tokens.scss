@@ -173,6 +173,18 @@
   --tracking-tight: -0.02em;
   --tracking-normal: 0;
   --tracking-wide: 0.04em;
+  --tracking-label: 0.0625rem; // 1px — label bouton/display
+}
+
+// ─── Ombres ─────────────────────────────────────────────────
+// 2 styles seulement : soft (neutre, discret) / strong (teinté, plus présent).
+// --shadow-color-warm exposé séparément pour les variantes ponctuelles
+// (ex. light_shadow_index) qui gardent la teinte mais ajustent flou/spread/opacité.
+
+:root {
+  --shadow-color-warm: 68, 7, 5;
+  --shadow-soft: 0 0 8px rgba(0, 0, 0, 0.08);
+  --shadow-strong: 0 0 10px rgba(var(--shadow-color-warm), 0.2);
 }
 
 // ─── Transitions ────────────────────────────────────────────

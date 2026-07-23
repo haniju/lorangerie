@@ -3,10 +3,10 @@
 // Desktop (≥ 56rem) : padding-left col-desktop-1, flex-row-wrap, col1 = col-desktop-1,
 //   col2 auto → 2.a (logos) = col-desktop-5.
 
-$partenaire-switch: 56rem;
-
 // Hauteur de logo : fixe (90px) jusqu'à 1280px, puis fluide (scale avec le contenu
 // plafonné à 1550px) pour encaisser les résolutions plus larges.
+@use '../base/breakpoints' as bp;
+
 :root {
   --logo-height: max(5.625rem, calc(5.625rem / 80 * min(100vw, var(--content-cap))));
 }
@@ -87,7 +87,7 @@ $partenaire-switch: 56rem;
 // ════════════════════════════════════════════════════════════════════════════════
 // DESKTOP (≥ 56rem)
 // ════════════════════════════════════════════════════════════════════════════════
-@media (min-width: $partenaire-switch) {
+@media (min-width: bp.$bp-desktop) {
 
   .partenaire {
     gap: var(--space-60);

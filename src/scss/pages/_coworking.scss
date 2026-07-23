@@ -1,18 +1,18 @@
 // Section coworking (32:2613). PREMIÈRE PASSE.
 
-$coworking-switch: 56rem;
+@use '../base/breakpoints' as bp;
 
 .coworking {
   display: flex;
   flex-direction: column;
   width: 100%;
   gap: var(--space-40);
-  margin-bottom: 300px;
+  margin-bottom: var(--space-272);
 }
 
 .coworking__cta {
   align-self: center;
-  @media (min-width: $coworking-switch) {
+  @media (min-width: bp.$bp-desktop) {
     width: calc(var(--grid-col-desktop-4) - 5px);
     align-self: flex-start;
   }

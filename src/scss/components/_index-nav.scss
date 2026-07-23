@@ -8,8 +8,6 @@
 //
 // Pastille = tokens `--action-index-*` ; étiquette = Ortica Linear (serif).
 
-$index-switch: 56rem;
-
 // Inset vertical entre la boîte d'un item/deco et le texte du label qu'il
 // contient — produit par le centrage flex de .index-nav__item sur un label
 // dont la hauteur est réduite de 2x cette valeur (cf. .index-nav__label,
@@ -17,6 +15,8 @@ $index-switch: 56rem;
 // ce parent centreur : son `top` sticky compense l'inset manuellement (+1x
 // cette valeur) pour que son texte atterrisse à la même ligne que le label
 // docké (cf. LABEL_TOP_INSET, index-nav.ts).
+@use '../base/breakpoints' as bp;
+
 $item-label-margin: 5px;
 
 // Écart vertical de l'index-nav (rail + deco) sous la navbar.
@@ -25,7 +25,7 @@ $item-label-margin: 5px;
 :root {
   --index-nav-gap: var(--space-7); // mobile
 
-  @media (min-width: $index-switch) {
+  @media (min-width: bp.$bp-desktop) {
     --index-nav-gap: var(--space-10); // desktop — ajuste ici
   }
 
@@ -83,7 +83,7 @@ $item-label-margin: 5px;
   align-items: center;
   gap: var(--space-10);
 
-  @media (min-width: $index-switch) {
+  @media (min-width: bp.$bp-desktop) {
     --dot-size: 0.875rem; // 14px — desktop (bellow / collapsed)
   }
 }
@@ -144,7 +144,7 @@ $item-label-margin: 5px;
 
   width: 20px;
 
-  @media (min-width: $index-switch) {
+  @media (min-width: bp.$bp-desktop) {
     width: 35px;
   }
 }
@@ -187,7 +187,7 @@ $item-label-margin: 5px;
     border-radius: var(--corner-big); // 80px
     font-size: 1.625rem;
 
-    @media (min-width: $index-switch) {
+    @media (min-width: bp.$bp-desktop) {
       font-size: 2.25rem; // 36px — title/h1/section_focus_desktop        
       padding: var(--space-7) var(--space-30) var(--space-10);
     }
@@ -326,7 +326,7 @@ $item-label-margin: 5px;
 // 20 + 50 cumulé
 [data-sentinel-after] {
   top: calc(var(--index-after-offset, 175px)*-1);
-  @media (min-width: $index-switch) {
+  @media (min-width: bp.$bp-desktop) {
     top: calc(var(--index-after-offset, 175px)*-1);
   }
 }
@@ -374,11 +374,11 @@ $item-label-margin: 5px;
     transition: font-size 220ms ease, padding 220ms ease, border-radius 220ms ease;
   }
 
-  @media (min-width: $index-switch) {
+  @media (min-width: bp.$bp-desktop) {
     padding: var(--space-7) var(--space-30) var(--space-10);
   }
   // ── mobile
-  @media (max-width: #{$index-switch}) {
+  @media (max-width: #{bp.$bp-desktop}) {
     font-size: 1.625rem; // 26px
   }
 }
@@ -428,7 +428,7 @@ $item-label-margin: 5px;
     flex-direction: column;
     width: max-content; // se réduit au contenu (pas d'étalement pleine largeur)
 
-    @media (min-width: $index-switch) {
+    @media (min-width: bp.$bp-desktop) {
       gap: 0px;
     }
 
@@ -455,7 +455,7 @@ $item-label-margin: 5px;
       top: 50%;
       transform: translateY(-50%);
 
-      @media (min-width: $index-switch) {
+      @media (min-width: bp.$bp-desktop) {
         left: calc(var(--pad-grid) / 2 - var(--dot-size) / 2 - var(--space-7)); // @dot-pad — retranche le padding pour recentrer le rond
       }
     }
@@ -559,7 +559,6 @@ $item-label-margin: 5px;
   position: relative;
   padding-left: var(--pad-grid);
   padding-block: var(--space-30);
-  background: var(--background-sand-light, #faf8f5);
   border-radius: var(--corner-small);
   margin-block: var(--space-20);
   overflow: visible;
@@ -567,6 +566,7 @@ $item-label-margin: 5px;
   // Position static en démo (pas sticky) pour rester visible
   .index-nav {
     position: static;
+    transform: none;
   }
 }
 
@@ -582,7 +582,6 @@ $item-label-margin: 5px;
 .ds__deco-demo {
   position: relative;
   padding: var(--space-20);
-  background: var(--background-sand-light, #faf8f5);
   border-radius: var(--corner-small);
 
   .index-nav__deco {

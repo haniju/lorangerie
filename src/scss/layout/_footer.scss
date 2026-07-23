@@ -1,7 +1,7 @@
 // footer/NAV-FOOTER — construit depuis Figma 44:4570 (desktop 44:4561 / mobile 44:4571).
 // Un seul point de bascule STRUCTUREL (top : row ↔ column), comme la navbar.
 
-$footer-switch: 56rem;
+@use '../base/breakpoints' as bp;
 
 .site-footer {
   display: flex;
@@ -18,7 +18,7 @@ $footer-switch: 56rem;
     var(--peche-50)
   );
 
-  @media (min-width: $footer-switch) {
+  @media (min-width: bp.$bp-desktop) {
     padding: var(--space-20) var(--space-40);
   }
 }
@@ -28,7 +28,7 @@ $footer-switch: 56rem;
   flex-direction: column;
   gap: var(--space-10);
 
-  @media (min-width: $footer-switch) {
+  @media (min-width: bp.$bp-desktop) {
     flex-direction: row;
     align-items: flex-start;
     justify-content: space-between;
@@ -40,7 +40,7 @@ $footer-switch: 56rem;
   flex-direction: column;
   gap: var(--space-10);
 
-  @media (min-width: $footer-switch) {
+  @media (min-width: bp.$bp-desktop) {
     gap: var(--space-20);
   }
 }
@@ -74,7 +74,7 @@ $footer-switch: 56rem;
   gap: var(--space-30);
   padding-top: var(--space-20);
 
-  @media (min-width: $footer-switch) {
+  @media (min-width: bp.$bp-desktop) {
     flex-direction: row;
     gap: var(--space-60);
     padding-top: var(--space-60);
@@ -89,7 +89,7 @@ $footer-switch: 56rem;
   align-items: flex-start;
 
   .btn--lien { text-align: left; }
-  @media (min-width: $footer-switch) {
+  @media (min-width: bp.$bp-desktop) {
     width: 12vw;
   }
 }
@@ -114,7 +114,7 @@ $footer-switch: 56rem;
   padding-top: var(--space-10);
   border-top: var(--stroke-fine) solid var(--sapin-80);
 
-  @media (min-width: $footer-switch) {
+  @media (min-width: bp.$bp-desktop) {
     flex-direction: row;
     align-items: center;
     gap: var(--space-20);
@@ -124,7 +124,7 @@ $footer-switch: 56rem;
 .site-footer__copyright {
   margin: 0;
 
-  @media (min-width: $footer-switch) {
+  @media (min-width: bp.$bp-desktop) {
     flex: 1 0 0;
   }
 }
