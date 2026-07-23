@@ -1,6 +1,6 @@
 {
   "baseColor": "#FCF7F3",
-  "colors": ["#F6E9D8", "#F9D5BD", "#FDBB91", "#F9D5BD", "#F9D5BD", "#FAE865"],
+  "colors": ["#F6E9D8", "#F9D5BD", "#FDBB91", "#F9D5BD", "#F9D5BD", "#FAE865", "#F6E9D8", "#F9D5BD", "#FDBB91", "#F9D5BD", "#F9D5BD", "#FAE865", "#F6E9D8", "#F9D5BD"],
   "speed": 1,
   "amplitude": 0.7,
   "radius": 0.3,
@@ -13,6 +13,6 @@
   "veil": 0.12,
   "parallax": 0.9,
   "shape": "blob",
-  "shapeIntensity": 0.2,
-  "orbCount": 6
+  "shapeIntensity": 0.9,
+  "orbCount": 14
 }
