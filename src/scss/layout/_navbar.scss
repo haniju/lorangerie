@@ -38,11 +38,15 @@ $nav-switch: 56rem;
   align-items: center;
   padding-inline: var(--space-10);
   font-family: var(--font-display);
-  font-size: 2rem; // 20px
+  font-size: 1.5rem;
   text-transform: uppercase;
   color: var(--sapin-80); // action/NAV/dark (interim)
   text-decoration: none;
   padding-bottom: 7px;
+
+  @media (min-width: $nav-switch) {
+    font-size: 2rem;
+  }
 }
 
 .navbar__actions {
