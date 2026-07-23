@@ -46,6 +46,7 @@ uniform float uVeil;
 uniform vec3 uBaseColor;
 uniform int uShapeMode;      // 0 cercle, 1 ellipse, 2 blob organique, 3 polygone
 uniform float uShapeIntensity; // 0..1
+uniform float uActiveOrbCount; // 1..6 — orbes au-delà de ce nombre masquées
 
 // Grain procédural — remplace le pipeline Canvas2D getImageData/putImageData
 // (cf. WEBGL-BACKGROUND-PLAN.md §1). Un bruit par bloc de pixels (taille
@@ -117,7 +118,10 @@ void main() {
     float radius = uOrbR[i] * uRadiusScale;
     float dist = shapeDist(p - center);
     float falloff = clamp(1.0 - dist / radius, 0.0, 1.0);
-    float alpha = uOrbAlpha * pow(falloff, 2.2);
+    // Masque sans branche (step) plutôt qu'un if/continue — évite la
+    // divergence de flot de contrôle par pixel pour un coût quasi nul.
+    float active = step(float(i) + 0.5, uActiveOrbCount);
+    float alpha = uOrbAlpha * pow(falloff, 2.2) * active;
 
     // équivalent de ctx.globalCompositeOperation = 'multiply' avec alpha :
     // dest * mix(1, src, alpha)
@@ -199,6 +203,7 @@ export function createOrbRenderer(canvas, orbBase) {
     orbColor: gl.getUniformLocation(program, 'uOrbColor[0]'),
     shapeMode: gl.getUniformLocation(program, 'uShapeMode'),
     shapeIntensity: gl.getUniformLocation(program, 'uShapeIntensity'),
+    activeOrbCount: gl.getUniformLocation(program, 'uActiveOrbCount'),
     grainOpacity: gl.getUniformLocation(program, 'uGrainOpacity'),
     grainScale: gl.getUniformLocation(program, 'uGrainScale'),
     grainSeed: gl.getUniformLocation(program, 'uGrainSeed'),
@@ -302,6 +307,7 @@ export function createOrbRenderer(canvas, orbBase) {
       gl.uniform3f(u.baseColor, cfg.baseColor[0] / 255, cfg.baseColor[1] / 255, cfg.baseColor[2] / 255)
       gl.uniform1i(u.shapeMode, Math.max(0, SHAPE_MODES.indexOf(cfg.shape)))
       gl.uniform1f(u.shapeIntensity, cfg.shapeIntensity)
+      gl.uniform1f(u.activeOrbCount, cfg.orbCount ?? ORB_COUNT)
       gl.uniform1f(u.grainOpacity, cfg.grainOpacity)
       gl.uniform1f(u.grainScale, cfg.grainScale)
       gl.uniform1f(u.grainSeed, grainSeed)

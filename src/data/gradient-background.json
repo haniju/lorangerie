@@ -13,5 +13,6 @@
   "veil": 0.12,
   "parallax": 0.9,
   "shape": "blob",
-  "shapeIntensity": 0.2
+  "shapeIntensity": 0.2,
+  "orbCount": 6
 }
