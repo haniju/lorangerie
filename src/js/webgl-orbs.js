@@ -22,6 +22,12 @@ void main() {
 
 const ORB_COUNT = 6
 
+// t (en secondes) wrappe à cette cadence pour rester dans une plage sûre
+// pour la précision mediump des sin/cos côté shader (cf.
+// WEBGL-BACKGROUND-PLAN.md) — le recalage de phase à chaque wrap est géré
+// dans render(), plus bas.
+const TIME_WRAP_SECONDS = 60
+
 // Formes disponibles pour le falloff des orbes (panneau "Forme").
 export const SHAPE_MODES = ['circle', 'ellipse', 'blob', 'polygon']
 
@@ -56,7 +62,14 @@ uniform vec2 uOrbPos[${ORB_COUNT}];
 uniform vec2 uOrbAmp[${ORB_COUNT}];
 uniform vec2 uOrbFreq[${ORB_COUNT}];
 uniform float uOrbR[${ORB_COUNT}];
-uniform float uOrbPhase[${ORB_COUNT}];
+// Phases x/y distinctes (et non un uOrbPhase unique *1.3 comme avant) car le
+// wrap du temps (cf. TIME_WRAP_SECONDS côté JS) doit faire avancer chaque
+// phase de sa propre quantité pour rester raccord — un facteur partagé ne
+// permet pas de recaler x et y indépendamment sans provoquer un saut visible
+// de position à chaque wrap (cf. bug orbes qui "sautent" au milieu de leur
+// trajectoire, signalé le 22/07).
+uniform float uOrbPhaseX[${ORB_COUNT}];
+uniform float uOrbPhaseY[${ORB_COUNT}];
 uniform vec3 uOrbColor[${ORB_COUNT}];
 
 // Distance "déformée" utilisée à la place de length(d) selon la forme
@@ -97,8 +110,8 @@ void main() {
   vec3 color = uBaseColor;
 
   for (int i = 0; i < ${ORB_COUNT}; i++) {
-    float cx = uOrbPos[i].x + sin(uTime * uOrbFreq[i].x + uOrbPhase[i]) * uOrbAmp[i].x * uAmplitude;
-    float cy = uOrbPos[i].y + cos(uTime * uOrbFreq[i].y + uOrbPhase[i] * 1.3) * uOrbAmp[i].y * uAmplitude;
+    float cx = uOrbPos[i].x + sin(uTime * uOrbFreq[i].x + uOrbPhaseX[i]) * uOrbAmp[i].x * uAmplitude;
+    float cy = uOrbPos[i].y + cos(uTime * uOrbFreq[i].y + uOrbPhaseY[i]) * uOrbAmp[i].y * uAmplitude;
     vec2 center = vec2(cx, cy) * uAspect;
 
     float radius = uOrbR[i] * uRadiusScale;
@@ -176,6 +189,8 @@ export function createOrbRenderer(canvas, orbBase) {
     resolution: gl.getUniformLocation(program, 'uResolution'),
     aspect: gl.getUniformLocation(program, 'uAspect'),
     time: gl.getUniformLocation(program, 'uTime'),
+    orbPhaseX: gl.getUniformLocation(program, 'uOrbPhaseX[0]'),
+    orbPhaseY: gl.getUniformLocation(program, 'uOrbPhaseY[0]'),
     amplitude: gl.getUniformLocation(program, 'uAmplitude'),
     radiusScale: gl.getUniformLocation(program, 'uRadiusScale'),
     orbAlpha: gl.getUniformLocation(program, 'uOrbAlpha'),
@@ -196,7 +211,20 @@ export function createOrbRenderer(canvas, orbBase) {
   const orbAmp = new Float32Array(ORB_COUNT * 2)
   const orbFreq = new Float32Array(ORB_COUNT * 2)
   const orbR = new Float32Array(ORB_COUNT)
-  const orbPhase = new Float32Array(ORB_COUNT)
+
+  // Fréquences angulaires en clair (rad/s), gardées côté JS pour le recalage
+  // de phase au wrap (cf. plus bas) — même valeurs que celles envoyées dans
+  // orbFreq, juste non typées Float32 pour ne pas perdre en précision durant
+  // les additions successives.
+  const freqX = orbBase.map(o => o.fx * 1000)
+  const freqY = orbBase.map(o => o.fy * 1000)
+  // Phase courante par orbe/axe — mutable : recalée à chaque wrap du temps
+  // (cf. render()) pour que la position ne saute pas. Reprend les valeurs
+  // d'origine (phaseY = p * 1.3) comme point de départ.
+  const phaseX = orbBase.map(o => o.p)
+  const phaseY = orbBase.map(o => o.p * 1.3)
+  const phaseXBuf = new Float32Array(ORB_COUNT)
+  const phaseYBuf = new Float32Array(ORB_COUNT)
 
   orbBase.forEach((o, i) => {
     orbPos[i * 2] = o.px
@@ -209,16 +237,32 @@ export function createOrbRenderer(canvas, orbBase) {
     orbFreq[i * 2] = o.fx * 1000
     orbFreq[i * 2 + 1] = o.fy * 1000
     orbR[i] = o.r
-    orbPhase[i] = o.p
   })
 
   gl.uniform2fv(gl.getUniformLocation(program, 'uOrbPos[0]'), orbPos)
   gl.uniform2fv(gl.getUniformLocation(program, 'uOrbAmp[0]'), orbAmp)
   gl.uniform2fv(gl.getUniformLocation(program, 'uOrbFreq[0]'), orbFreq)
   gl.uniform1fv(gl.getUniformLocation(program, 'uOrbR[0]'), orbR)
-  gl.uniform1fv(gl.getUniformLocation(program, 'uOrbPhase[0]'), orbPhase)
 
   const orbColorBuf = new Float32Array(ORB_COUNT * 3)
+
+  // Le temps passé au shader doit rester borné (précision mediump des
+  // sin/cos, cf. WEBGL-BACKGROUND-PLAN.md) — on le fait donc "wrapper"
+  // toutes les TIME_WRAP_SECONDS. Mais comme chaque orbe a sa propre
+  // fréquence, un simple modulo sur le temps brut fait retomber le calcul
+  // sin(t*freq+phase) sur une valeur différente de celle d'avant le wrap :
+  // toutes les orbes sautent d'un coup à ce moment-là (bug signalé le
+  // 22/07 : orbes qui "sautent" en plein déplacement et disparaissent).
+  // Pour rester raccord, on recale la phase de chaque orbe/axe exactement
+  // de ce qu'elle aurait avancé pendant l'intervalle écoulé (mod 2π, qui ne
+  // change pas la valeur de sin/cos) au moment du wrap, plutôt que de
+  // remettre le temps à zéro sans compensation.
+  const TWO_PI = Math.PI * 2
+  let wrapBoundary = 0
+  phaseXBuf.set(phaseX)
+  phaseYBuf.set(phaseY)
+  gl.uniform1fv(u.orbPhaseX, phaseXBuf)
+  gl.uniform1fv(u.orbPhaseY, phaseYBuf)
 
   return {
     resize(width, height) {
@@ -235,7 +279,22 @@ export function createOrbRenderer(canvas, orbBase) {
 
     render(cfg, timeSeconds, grainSeed) {
       gl.useProgram(program)
-      gl.uniform1f(u.time, timeSeconds)
+
+      while (timeSeconds - wrapBoundary >= TIME_WRAP_SECONDS) {
+        for (let i = 0; i < ORB_COUNT; i++) {
+          phaseX[i] = (phaseX[i] + freqX[i] * TIME_WRAP_SECONDS) % TWO_PI
+          phaseY[i] = (phaseY[i] + freqY[i] * TIME_WRAP_SECONDS) % TWO_PI
+        }
+        wrapBoundary += TIME_WRAP_SECONDS
+        for (let i = 0; i < ORB_COUNT; i++) {
+          phaseXBuf[i] = phaseX[i]
+          phaseYBuf[i] = phaseY[i]
+        }
+        gl.uniform1fv(u.orbPhaseX, phaseXBuf)
+        gl.uniform1fv(u.orbPhaseY, phaseYBuf)
+      }
+
+      gl.uniform1f(u.time, timeSeconds - wrapBoundary)
       gl.uniform1f(u.amplitude, cfg.amplitude)
       gl.uniform1f(u.radiusScale, cfg.radius)
       gl.uniform1f(u.orbAlpha, cfg.orbAlpha)

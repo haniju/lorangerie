@@ -30,7 +30,6 @@ s3cmd sync dist/ "s3://$S3_BUCKET/" \
   --access_key="$S3_ACCESS_KEY" \
   --secret_key="$S3_SECRET_KEY" \
   --no-mime-magic \
-  --no-check-certificate \
   --delete-removed \
   --add-header="Cache-Control:max-age=3600"
 

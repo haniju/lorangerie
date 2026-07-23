@@ -1,20 +1,13 @@
 {
-  "baseColor": [252, 247, 243],
-  "colors": [
-    [246, 233, 216],
-    [249, 213, 189],
-    [253, 187, 145],
-    [249, 213, 189],
-    [249, 213, 189],
-    [250, 232, 101]
-  ],
+  "baseColor": "#FCF7F3",
+  "colors": ["#F6E9D8", "#F9D5BD", "#FDBB91", "#F9D5BD", "#F9D5BD", "#FAE865"],
   "speed": 1,
   "amplitude": 0.5,
   "radius": 0.5,
   "grainOpacity": 0.05,
   "grainScale": 1,
   "grainFreq": 2,
-  "grainTint": [234, 144, 86],
+  "grainTint": "#EA9056",
   "grainTintMix": 0.2,
   "orbAlpha": 0.54,
   "veil": 0.12,

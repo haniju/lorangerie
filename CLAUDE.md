@@ -27,7 +27,7 @@ Site statique vitrine "L'Orangerie". Approche design system first — le DS est 
 - S3-compatible (IndieHosters, endpoint `hot-objects.liiib.re`)
 - Outil : `s3cmd` (pas aws-cli)
 - `npm run deploy` = build + sync
-- Note : certificat SSL de l'endpoint expiré — `--no-check-certificate` actif en attendant le renouvellement côté hébergeur
+- Certificat SSL de l'endpoint renouvelé (Let's Encrypt, valide jusqu'au 20/09/2026) — `--no-check-certificate` retiré du script deploy
 
 ## Commandes
 
@@ -66,7 +66,6 @@ Si l'une de ces informations manque au moment de démarrer l'implémentation, la
 ## Ne pas faire
 
 - Ne pas commiter `.env` ni les fichiers `.rtf` (clés S3 dedans)
-- Ne pas retirer `--no-check-certificate` du script deploy tant que le certificat n'est pas renouvelé
 - Ne pas utiliser de tailles fixes — toujours passer par les tokens Utopia
 - Ne pas éditer `colors.json` ni `_tokens.scss` à la main (générés depuis Figma) — passer par Figma puis `npm run tokens:colors`
 - Produit B (`design-system.html` / `color-manager.js`) est **gelé** sur ce projet : ne pas l'utiliser comme éditeur de couleurs

@@ -35,6 +35,21 @@ main {
   @media (prefers-reduced-motion: no-preference) {
     scroll-behavior: smooth;
   }
+
+  scrollbar-color: var(--sapin-80) var(--sable-05); // Firefox
+
+  &::-webkit-scrollbar {
+    width: var(--space-8);
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: var(--sable-05);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--sapin-80);
+    border-radius: 999px;
+  }
 }
 
 body {

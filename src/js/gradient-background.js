@@ -28,6 +28,15 @@ const MOBILE_BREAKPOINT = 896
 const MOBILE_RADIUS_SCALE = 0.6
 const MOBILE_PARALLAX = 0.4
 
+// Le JSON stocke les couleurs en HEX (lisible, traçable vers les tokens
+// Figma) ; le renderer WebGL attend des triplets RGB 0-255 (uniformes
+// numériques — un `var()` CSS ne serait de toute façon pas résolvable côté
+// shader).
+function hexToRgb(hex) {
+  const n = parseInt(hex.slice(1), 16)
+  return [(n >> 16) & 255, (n >> 8) & 255, n & 255]
+}
+
 const ORB_BASE = [
   { px: 0.5, py: 0.4, ax: 0.38, ay: 0.28, fx: 0.00017, fy: 0.00013, r: 0.62, ci: 0, p: 0.0 },
   { px: 0.3, py: 0.65, ax: 0.28, ay: 0.32, fx: 0.00012, fy: 0.00018, r: 0.56, ci: 1, p: 1.4 },
@@ -38,7 +47,12 @@ const ORB_BASE = [
 ]
 
 export function initGradientBackground(canvasRoot) {
-  const cfg = { ...BASE_CFG }
+  const cfg = {
+    ...BASE_CFG,
+    baseColor: hexToRgb(BASE_CFG.baseColor),
+    colors: BASE_CFG.colors.map(hexToRgb),
+    grainTint: hexToRgb(BASE_CFG.grainTint),
+  }
   const inner = canvasRoot.querySelector('.gradient-bg__inner')
   const canvas = canvasRoot.querySelector('.gradient-bg__canvas')
   const mainEl = document.querySelector('main')
@@ -130,10 +144,6 @@ export function initGradientBackground(canvasRoot) {
     updateParallax()
   }
 
-  // t en secondes, modulo pour rester dans une plage sûre pour la précision
-  // mediump des sin/cos côté shader (cf. WEBGL-BACKGROUND-PLAN.md).
-  const TIME_WRAP_SECONDS = 60
-
   // Grain procédural (fragment shader, cf. webgl-orbs.js) : le seed ne
   // change qu'à la cadence `grainFreq`, pour le même effet de scintillement
   // discret que l'ancien pipeline Canvas2D à frames pré-calculées — sans le
@@ -143,7 +153,10 @@ export function initGradientBackground(canvasRoot) {
 
   function drawOrbs(tSeconds) {
     if (!orbRenderer) return
-    orbRenderer.render(cfg, tSeconds % TIME_WRAP_SECONDS, grainSeed)
+    // Le wrap du temps (précision mediump côté shader) est géré en interne
+    // par le renderer, avec recalage de phase pour rester raccord — cf.
+    // webgl-orbs.js. On lui passe donc le temps continu, non wrappé.
+    orbRenderer.render(cfg, tSeconds, grainSeed)
   }
 
   let rafId = null

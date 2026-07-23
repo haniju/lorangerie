@@ -96,7 +96,9 @@ $bento-gap: var(--space-10);
 .bento__row--milieu>.bento__photo {
   flex: 1;
 }
-
+.bento__row--milieu {
+  img {width: calc(50% - 5px);}
+}
 // ── bas : 2 colonnes (77 % / 33 %) ──
 .bento__col {
   display: flex;
