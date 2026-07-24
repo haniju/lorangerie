@@ -28,7 +28,10 @@
 
   @media (min-width: bp.$bp-desktop) {
     height: 100%;
-    margin-top: var(--space-208);
+    // Fluide 987→1280px : 0 → --space-208 (208px), pour ne pas pousser le bloc
+    // texte trop bas et laisser .hero__proposition chevaucher l'illustration
+    // en dessous de 1280px. Fige à 0 sous 987px, à 208px au-delà de 1280px.
+    margin-top: clamp(0rem, -43.7925rem + 70.99vw, var(--space-208));
   }
 
 }
@@ -87,9 +90,16 @@
   height: auto;
   transform: translateX(-70px);
   @media (min-width: bp.$bp-desktop) {
-    width: 150%;
     max-width: 1240px;
-    transform: translateX(-220px);
+    // Fluide 896→1300px : la colonne se resserre plus vite que l'image ne
+    // pourrait rétrécir sans mordre sur .hero__subtitle — donc entre ces deux
+    // largeurs l'image grossit (180%→210%). Fige aux valeurs d'origine au-delà
+    // de 1300px (même principe clamp que --pad-grid dans _fluid.scss — pas
+    // besoin d'un 3ᵉ breakpoint, le clamp gèle tout seul en dehors de sa plage).
+    width: clamp(180%, 276.5546% - 7.4257vw, 210%);
+    // Recalibré depuis 2 points mesurés au computed : -220px @ 1300px (valeur
+    // d'origine, inchangée) et -144px @ 926px (retour visuel) → ~-138px @ 896px.
+    transform: translateX(clamp(-13.75rem, 2.7413rem - 20.297vw, -8.625rem));
   }
 }
 
@@ -115,7 +125,10 @@
   @media (min-width: bp.$bp-desktop) {
     position: absolute;
     right: 0;
-    bottom: var(--space-20);
+    // Fluide 987→1100px : -40px → --space-20 (20px, valeur d'origine). Fige à
+    // -40px sous 987px, à 20px au-delà de 1100px. Compense le rapprochement de
+    // .hero__intro (cf. margin-top ci-dessus) pour ne pas chevaucher l'illustration.
+    bottom: clamp(-2.5rem, -35.254rem + 53.0973vw, var(--space-20));
     max-width: var(--grid-col-desktop-3);
     margin-top: 0;
     transform: rotate(9.09deg) skewX(0.35deg);
