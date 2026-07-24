@@ -1,0 +1,33 @@
+---
+// Google Analytics (GA4) — ne se charge qu'après consentement (cf. CookieConsent.astro)
+// et jamais en dev/preview local.
+const gaId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID
+---
+
+{
+  import.meta.env.PROD && gaId && (
+    <script define:vars={{ gaId }} is:inline>
+      function loadGoogleAnalytics() {
+        if (window.gaLoaded) return
+        window.gaLoaded = true
+
+        const script = document.createElement('script')
+        script.async = true
+        script.src = `https://www.googletagmanager.com/gtag/js?id=${gaId}`
+        document.head.appendChild(script)
+
+        window.dataLayer = window.dataLayer || []
+        window.gtag = function gtag() {
+          window.dataLayer.push(arguments)
+        }
+        window.gtag('js', new Date())
+        window.gtag('config', gaId)
+      }
+
+      if (localStorage.getItem('cookie-consent') === 'accepted') {
+        loadGoogleAnalytics()
+      }
+      window.addEventListener('cookie-consent-accepted', loadGoogleAnalytics)
+    </script>
+  )
+}

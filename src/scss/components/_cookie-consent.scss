@@ -1,0 +1,48 @@
+@use '../base/breakpoints' as bp;
+
+.cookie-consent {
+  position: fixed;
+  left: var(--space-20);
+  right: var(--space-20);
+  bottom: var(--space-20);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-20);
+  padding: var(--space-20);
+  background: var(--background-nav);
+  border-radius: var(--corner-small);
+  box-shadow: var(--shadow-strong);
+
+  @media (min-width: bp.$bp-desktop) {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    left: auto;
+    max-width: 32rem;
+  }
+}
+
+.cookie-consent__text {
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  color: var(--text-cold-dark);
+
+  a {
+    color: inherit;
+    text-decoration: underline;
+  }
+}
+
+.cookie-consent__actions {
+  display: flex;
+  gap: var(--space-10);
+  flex-shrink: 0;
+
+  .btn--primary,
+  .btn--secondary {
+    width: max-content;
+    height: auto;
+    padding: var(--space-10) var(--space-20);
+  }
+}

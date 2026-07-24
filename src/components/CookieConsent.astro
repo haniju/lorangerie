@@ -1,0 +1,34 @@
+<div class="cookie-consent" id="cookie-consent" hidden>
+  <p class="cookie-consent__text">
+    Ce site utilise Google Analytics pour mesurer l'audience. Vous pouvez
+    accepter ou refuser ce suivi à tout moment.
+    <a href="/mentions-legales">En savoir plus</a>.
+  </p>
+  <div class="cookie-consent__actions">
+    <button type="button" class="btn--secondary" id="cookie-decline">Refuser</button>
+    <button type="button" class="btn--primary" id="cookie-accept">Accepter</button>
+  </div>
+</div>
+
+<script is:inline>
+  ;(function () {
+    const banner = document.getElementById('cookie-consent')
+    const acceptBtn = document.getElementById('cookie-accept')
+    const declineBtn = document.getElementById('cookie-decline')
+
+    if (!localStorage.getItem('cookie-consent')) {
+      banner.hidden = false
+    }
+
+    acceptBtn.addEventListener('click', () => {
+      localStorage.setItem('cookie-consent', 'accepted')
+      banner.hidden = true
+      window.dispatchEvent(new Event('cookie-consent-accepted'))
+    })
+
+    declineBtn.addEventListener('click', () => {
+      localStorage.setItem('cookie-consent', 'declined')
+      banner.hidden = true
+    })
+  })()
+</script>
