@@ -14,6 +14,10 @@
   border-radius: var(--corner-small);
   box-shadow: var(--shadow-strong);
 
+  &[hidden] {
+    display: none;
+  }
+
   @media (min-width: bp.$bp-desktop) {
     flex-direction: row;
     align-items: center;
