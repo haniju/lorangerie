@@ -23,12 +23,17 @@
     acceptBtn.addEventListener('click', () => {
       localStorage.setItem('cookie-consent', 'accepted')
       banner.hidden = true
-      window.dispatchEvent(new Event('cookie-consent-accepted'))
+      if (window.gtag) {
+        window.gtag('consent', 'update', { analytics_storage: 'granted' })
+      }
     })
 
     declineBtn.addEventListener('click', () => {
       localStorage.setItem('cookie-consent', 'declined')
       banner.hidden = true
+      if (window.gtag) {
+        window.gtag('consent', 'update', { analytics_storage: 'denied' })
+      }
     })
   })()
 </script>
