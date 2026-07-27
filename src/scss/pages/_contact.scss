@@ -1,5 +1,7 @@
 // page/contact — non maquettée (cf. SITE-PLAN.md) : formulaire (nom, email,
 // objet, message) + coordonnées + carte Leaflet/OSM. Construite depuis le DS.
+// Formulaire masqué temporairement (SHOW_FORM=false dans contact.astro) tant
+// que le SMTP n'est pas branché — .contact__form conservé pour réactivation.
 
 @use '../base/breakpoints' as bp;
 
@@ -75,12 +77,18 @@
 .contact__infos {
   display: flex;
   flex-direction: column;
-  gap: var(--space-10);
+  gap: var(--space-40);
   width: var(--grid-col-mobile-5);
 
   @media (min-width: bp.$bp-desktop) {
     width: var(--grid-col-desktop-3);
   }
+}
+
+.contact__bloc {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-10);
 }
 
 .contact__adresse {
@@ -89,6 +97,61 @@
   font-size: 0.9375rem; // 15px
   line-height: 1.47;
   color: var(--text-warm-dark);
+
+  a {
+    color: inherit;
+    text-decoration: underline;
+
+    &:hover {
+      color: var(--action-index-texte-hover);
+    }
+  }
+}
+
+// ─── Email + bouton copier ──────────────────────────────────
+
+.contact__email-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-10);
+}
+
+.contact__copy {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 2.5rem; // 40px
+  height: 2.5rem;
+  background: var(--action-button-secondary-initial);
+  color: var(--action-button-secondary-texte-initial);
+  border: 0;
+  border-radius: var(--corner-small);
+  box-shadow: var(--shadow-soft);
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out);
+
+  &:hover {
+    background: var(--action-button-secondary-hover);
+    color: var(--action-button-secondary-texte-hover);
+  }
+
+  &:active,
+  &.is-copied {
+    background: var(--action-button-secondary-pressed);
+    color: var(--action-button-secondary-texte-pressed);
+  }
+}
+
+.contact__copy-icon {
+  width: 1.125rem; // 18px
+  height: 1.125rem;
+
+  path {
+    fill: currentColor; // override du #000 de l'asset
+  }
 }
 
 .contact__map {

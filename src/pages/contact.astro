@@ -1,11 +1,16 @@
 ---
 import Layout from '../layouts/Layout.astro'
+import Copier from '../assets/pictos/copier.svg'
 import textes from '../data/textes.json'
 
 // Contact — formulaire (nom, email, objet, message) + coordonnées + carte
-// Leaflet/OSM. Page non maquettée (cf. SITE-PLAN.md) : adresse/téléphone
-// depuis textes.json, reste (email, carte) encore placeholder.
-const { adresse, telephone } = textes.contact_
+// Leaflet/OSM. Page non maquettée (cf. SITE-PLAN.md).
+// Formulaire masqué temporairement (SMTP non branché) — coordonnées directes
+// affichées à la place. Remettre SHOW_FORM à true une fois le SMTP connecté.
+const SHOW_FORM = false
+
+const { titre, message_temporaire, email, horaires, adresse, telephone, titre_trouver } = textes.contact_
+const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(adresse)}`
 ---
 
 <Layout title="Contact — L'Orangerie">
@@ -13,40 +18,57 @@ const { adresse, telephone } = textes.contact_
     <h1 class="contact__title">Contact</h1>
 
     <div class="contact__grid">
-      <form class="contact__form" method="post">
-        <div class="contact__field">
-          <label for="nom">Nom</label>
-          <input type="text" id="nom" name="nom" required autocomplete="name" />
-        </div>
-        <div class="contact__field">
-          <label for="email">Email</label>
-          <input type="email" id="email" name="email" required autocomplete="email" />
-        </div>
-        <div class="contact__field">
-          <label for="objet">Objet</label>
-          <input type="text" id="objet" name="objet" required />
-        </div>
-        <div class="contact__field">
-          <label for="message">Message</label>
-          <textarea id="message" name="message" rows="6" required></textarea>
-        </div>
-        <button type="submit" class="btn--primary">Envoyer</button>
-      </form>
+      {SHOW_FORM && (
+        <form class="contact__form" method="post">
+          <div class="contact__field">
+            <label for="nom">Nom</label>
+            <input type="text" id="nom" name="nom" required autocomplete="name" />
+          </div>
+          <div class="contact__field">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required autocomplete="email" />
+          </div>
+          <div class="contact__field">
+            <label for="objet">Objet</label>
+            <input type="text" id="objet" name="objet" required />
+          </div>
+          <div class="contact__field">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" rows="6" required></textarea>
+          </div>
+          <button type="submit" class="btn--primary">Envoyer</button>
+        </form>
+      )}
 
       <aside class="contact__infos">
-        <h2 class="titre-paragraphe">Nous trouver</h2>
-        <address class="contact__adresse">
-          {adresse}
-        </address>
-        <p class="bloc-simple">Lun–Ven, 9h–18h</p>
-        <p class="bloc-simple">
-          <a href={`tel:${telephone.replace(/\s/g, '')}`}>{telephone}</a>
-        </p>
-        <p class="bloc-simple">
-          <a href="mailto:contact@lorangerie.fr">contact@lorangerie.fr</a>
-        </p>
+        <div class="contact__bloc">
+          <h2 class="titre-paragraphe">{titre}</h2>
+          <p class="bloc-simple">{message_temporaire}</p>
+          <p class="bloc-simple contact__email-row">
+            <a href={`mailto:${email}`}>{email}</a>
+            <button
+              type="button"
+              class="contact__copy"
+              data-copy-email={email}
+              aria-label="Copier l'adresse email"
+            >
+              <Copier class="contact__copy-icon" aria-hidden="true" />
+            </button>
+          </p>
+          <p class="bloc-simple">
+            <a href={`tel:${telephone.replace(/\s/g, '')}`}>{telephone}</a>
+          </p>
+        </div>
 
-        <div id="contact-map" class="contact__map" role="img" aria-label="Carte de localisation de L'Orangerie"></div>
+        <div class="contact__bloc">
+          <h2 class="titre-paragraphe">{titre_trouver}</h2>
+          <address class="contact__adresse">
+            <a href={mapsUrl} target="_blank" rel="noopener noreferrer">{adresse}</a>
+          </address>
+          <p class="bloc-simple">{horaires}</p>
+
+          <div id="contact-map" class="contact__map" role="img" aria-label="Carte de localisation de L'Orangerie"></div>
+        </div>
       </aside>
     </div>
   </section>
@@ -84,5 +106,30 @@ const { adresse, telephone } = textes.contact_
     })
 
     L.marker([lat, lng], { icon: markerIcon }).addTo(map)
+  }
+</script>
+
+<script>
+  const copyBtn = document.querySelector<HTMLButtonElement>('.contact__copy')
+  if (copyBtn) {
+    const defaultLabel = copyBtn.getAttribute('aria-label') ?? "Copier l'adresse email"
+
+    copyBtn.addEventListener('click', async () => {
+      const emailAddr = copyBtn.dataset.copyEmail
+      if (!emailAddr) return
+
+      try {
+        await navigator.clipboard.writeText(emailAddr)
+        copyBtn.classList.add('is-copied')
+        copyBtn.setAttribute('aria-label', 'Adresse copiée')
+        setTimeout(() => {
+          copyBtn.classList.remove('is-copied')
+          copyBtn.setAttribute('aria-label', defaultLabel)
+        }, 2000)
+      } catch {
+        // Presse-papiers indisponible (permissions/contexte non sécurisé) : rien à faire,
+        // le mailto reste utilisable.
+      }
+    })
   }
 </script>

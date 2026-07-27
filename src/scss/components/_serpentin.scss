@@ -3,16 +3,22 @@
 // Réglages par section ci-dessous (top/right/etc.) — centralisés ici plutôt
 // que dispersés dans pages/_*.scss.
 //
-// Position ET largeur exprimées via les tokens --grid-col-desktop-X (_fluid.scss) :
-// homothétiques avec le contenu sous 1550px, puis figées (ancrées au bord du bloc
-// de contenu plafonné) au-delà — même comportement que le reste de la grille,
-// au lieu d'un ancrage au bord du viewport qui dérive dès qu'on change de résolution.
-// Valeurs converties depuis les px réglés à l'œil (~1730×1022) vers la colonne la
-// plus proche : coworking et partenaire collent bien à une colonne pleine,
-// fonctionnement/tarifs/pulpe sont des approximations à confirmer visuellement
-// (resize 440→1920) ou sur Figma.
+// Position = edge-offset($k) : ratio $k du bloc de contenu plafonné
+// (min(100vw, --content-cap)) + la même marge dynamique que .index-nav
+// (max(0px, (100vw - --content-cap) / 2)). Homothétique et continu sous
+// 1550px (pas de palier comme --grid-col-desktop-X), figé + marge croissante
+// au-delà — au lieu d'un ancrage au bord du viewport qui dérive dès qu'on
+// change de résolution.
+//
+// $k calibré depuis les px réglés à l'œil à 1730×1022 (marge à cette largeur :
+// max(0, (1730-1550)/2) = 90px) : $k = (valeur_px_originale - 90) / 1550.
+// Reproduit exactement le réglage d'origine à 1730px, pas une approximation.
 
 @use '../base/breakpoints' as bp;
+
+@function edge-offset($k) {
+  @return calc(max(0px, (100vw - var(--content-cap)) / 2) + min(100vw, var(--content-cap)) * #{$k});
+}
 
 .serpentin {
   position: absolute;
@@ -28,30 +34,25 @@
 
 .coworking .serpentin {
   top: -7rem;
-  right: var(--grid-col-desktop-2);
-  width: var(--grid-col-desktop-4); // ≈ 817px @ 1730 — bon match
+  right: edge-offset(0.245161); // (470-90)/1550
 }
 
 .fonctionnement .serpentin {
   top: -6rem;
-  right: 0; // à confirmer : ~75px de la colonne @ 1730, plus proche de flush que d'une colonne
-  width: var(--grid-col-desktop-2); // ≈ 461px @ 1730 — approximation
+  right: edge-offset(0.048387); // (165-90)/1550
 }
 
 .tarifs .serpentin {
   top: -22rem;
-  right: 0; // à confirmer : ~80px de la colonne @ 1730, plus proche de flush que d'une colonne
-  width: var(--grid-col-desktop-5); // ≈ 1075px @ 1730 — approximation
+  right: edge-offset(0.051613); // (170-90)/1550
 }
 
 .pulpe .serpentin {
   top: -8rem;
-  right: 0; // flush contre le bord du contenu (était 0px viewport, mordait déjà sur la marge)
-  width: var(--grid-col-desktop-2); // ≈ 500px @ 1730 — approximation
+  right: edge-offset(-0.058065); // (0-90)/1550 — mord déjà sur la marge à 1730
 }
 
 .partenaire .serpentin {
   top: -15rem;
-  left: calc(-1 * var(--grid-col-desktop-1)); // déborde à gauche du contenu, à confirmer
-  width: var(--grid-col-desktop-4); // ≈ 888px @ 1730 — bon match
+  left: edge-offset(-0.167742); // (-170-90)/1550 — déborde à gauche du contenu
 }
