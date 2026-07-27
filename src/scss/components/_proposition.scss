@@ -41,7 +41,7 @@
 // ─── color = gradient ───────────────────────────────────────────
 // #fed7be ≈ --peche-50 (token le plus proche du stop bas Figma).
 .proposition--gradient {
-  background: linear-gradient(to bottom, var(--sable-05) 21%, var(--peche-50));
+  background: linear-gradient(to bottom, rgb(from var(--sable-14) r g b / 0.9) 21%, var(--peche-50));
   box-shadow: none;
   color: var(--text-warm-dark);
   --picto-color: var(--text-warm-dark);
