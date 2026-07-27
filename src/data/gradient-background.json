@@ -1,18 +1,30 @@
 {
   "baseColor": "#FCF7F3",
-  "colors": ["#F6E9D8", "#F9D5BD", "#FDBB91", "#F9D5BD", "#F9D5BD", "#FAE865", "#F6E9D8", "#F9D5BD", "#FDBB91", "#F9D5BD", "#F9D5BD", "#FAE865", "#F6E9D8", "#F9D5BD"],
+  "presets": [
+    ["#F6E9D8", "#F9D5BD", "#FDBB91"],
+    ["#FAE865", "#F6E9D8", "#F9D5BD", "#FDBB91"],
+    ["#F9D5BD", "#FDBB91", "#FFA164"],
+    ["#F5EEE4", "#F9D5BD", "#FAE865"]
+  ],
   "speed": 1,
   "amplitude": 0.7,
-  "radius": 0.3,
+  "radius": 0.6,
+  "radiusMobile": 0.9,
   "grainOpacity": 0.05,
   "grainScale": 1,
   "grainFreq": 2,
   "grainTint": "#EA9056",
   "grainTintMix": 0.2,
   "orbAlpha": 0.54,
+  "orbAlphaMobile": 0.54,
   "veil": 0.12,
   "parallax": 0.9,
   "shape": "blob",
-  "shapeIntensity": 0.9,
-  "orbCount": 14
+  "shapeIntensity": 0.5,
+  "orbCount": 10,
+  "orbCountMobile": 8,
+  "pages": {
+    "contact": { "orbCount": 6, "orbCountMobile": 4 },
+    "faq": { "orbCount": 6, "orbCountMobile": 4 }
+  }
 }

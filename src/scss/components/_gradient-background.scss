@@ -2,7 +2,7 @@
 // derrière le contenu. Version prod : pas de panneau de réglages (reste sur
 // la branche feature/gradient-background).
 
-// Fenêtre fixe au viewport, qui rogne .gradient-bg__inner (plus haut que
+// Fenêtre fixe au viewport, qui rogne .gradient-bg__inner (plus grand que
 // l'écran → effet parallaxe piloté en JS).
 .gradient-bg {
   position: fixed;
@@ -11,13 +11,12 @@
   overflow: hidden;
 }
 
-// Hauteur posée dynamiquement en JS (entre 100% du viewport et la hauteur
-// de page) ; translaté verticalement au scroll pour le décalage parallaxe.
+// Dimensions et position posées dynamiquement en JS : surface fixe de 1.5x
+// le viewport (dans les deux axes), centrée sur l'écran — jamais indexée sur
+// la hauteur de page (cf. gradient-background.js). Translaté verticalement
+// au scroll, dans la marge disponible, pour le décalage parallaxe.
 .gradient-bg__inner {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
   will-change: transform;
 }
 

@@ -4,12 +4,21 @@
 // shader unique), pas d'UI de configuration ici.
 
 import BASE_CFG from '../data/gradient-background.json'
-import { createOrbRenderer } from './webgl-orbs.js'
+import { createOrbRenderer, ORB_COUNT } from './webgl-orbs.js'
 
 // Résolution du framebuffer WebGL cappée indépendamment du devicePixelRatio
 // réel — le coût d'un shader plein écran scale avec le nombre de pixels,
 // pas avec la complexité de la scène (cf. WEBGL-BACKGROUND-PLAN.md).
 const WEBGL_RESOLUTION_SCALE = 1
+
+// La surface sur laquelle évoluent les orbes fait 1.5x le viewport (dans les
+// deux axes), centrée sur l'écran — jamais indexée sur la hauteur de la
+// page. Les orbes entrent/sortent du cadre visible via leur propre
+// mouvement (sin/cos, cf. ORB_BASE plus bas), sans jamais exposer de bord
+// vide (cf. bug : sur une page longue, le rayon des orbes — normalisé par
+// max(largeur, hauteur) du canvas — explosait avec la hauteur totale
+// scrollable, donnant un rendu différent par page).
+const SURFACE_SCALE = 1.5
 
 // BASE_CFG vient de src/data/gradient-background.json — même fichier que
 // celui utilisé par le panneau de réglages sur feature/gradient-background
@@ -17,15 +26,16 @@ const WEBGL_RESOLUTION_SCALE = 1
 // (sur cette branche, avec les valeurs voulues pour la prod) suffit à faire
 // évoluer le preset figé, plus besoin de coller le JSON exporté à la main.
 
-// Même seuil que $nav-switch dans _navbar.scss (56rem = 896px à 16px/rem).
+// Même seuil que $bp-desktop dans src/scss/base/_breakpoints.scss (56rem =
+// 896px à 16px/rem) — seuil unique du site, dupliqué ici faute de constante
+// JS partagée.
 const MOBILE_BREAKPOINT = 896
 
-// Ajustements mobile : orbes 40% plus petites, parallaxe plus marqué.
+// Ajustement mobile du parallaxe (le rayon mobile vient de BASE_CFG.radiusMobile).
 // NB : plus `parallax` est bas, plus le fond "traîne" derrière le scroll —
 // 0 = fond figé (effet maximal), 1 = fond synchronisé au contenu (~pas
 // d'effet). Le preset desktop est à 0.9 (quasi synchronisé) ; on descend
 // nettement sur mobile pour un décalage bien visible.
-const MOBILE_RADIUS_SCALE = 0.6
 const MOBILE_PARALLAX = 0.4
 
 // Le JSON stocke les couleurs en HEX (lisible, traçable vers les tokens
@@ -54,12 +64,28 @@ const ORB_BASE = [
 ]
 
 export function initGradientBackground(canvasRoot) {
+  // Nombre d'orbes réglable par page (cf. "pages" dans gradient-background.json)
+  // — la clé vient de data-page, posée par GradientBackground.astro depuis
+  // Astro.url.pathname.
+  const pageKey = canvasRoot.dataset.page || 'index'
+  const pageCfg = BASE_CFG.pages?.[pageKey]
+
+  // Couleurs des orbes tirées au hasard parmi les presets définis dans le
+  // JSON, une fois par chargement de page (pas par frame ni par resize).
+  const preset = BASE_CFG.presets[Math.floor(Math.random() * BASE_CFG.presets.length)]
+
   const cfg = {
     ...BASE_CFG,
     baseColor: hexToRgb(BASE_CFG.baseColor),
-    colors: BASE_CFG.colors.map(hexToRgb),
+    colors: Array.from({ length: ORB_COUNT }, (_, i) => hexToRgb(preset[i % preset.length])),
     grainTint: hexToRgb(BASE_CFG.grainTint),
   }
+
+  function resolveOrbCount(isMobile) {
+    if (isMobile) return pageCfg?.orbCountMobile ?? BASE_CFG.orbCountMobile ?? BASE_CFG.orbCount
+    return pageCfg?.orbCount ?? BASE_CFG.orbCount
+  }
+
   const inner = canvasRoot.querySelector('.gradient-bg__inner')
   const canvas = canvasRoot.querySelector('.gradient-bg__canvas')
   const mainEl = document.querySelector('main')
@@ -100,6 +126,8 @@ export function initGradientBackground(canvasRoot) {
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
   let W, H
+  let marginX = 0
+  let marginY = 0
 
   // Parallaxe pilotée à la main plutôt que via GSAP/ScrollTrigger : ici le
   // trigger et le scroller sont le même élément (`main` défile sur
@@ -107,13 +135,16 @@ export function initGradientBackground(canvasRoot) {
   // (start/end calculés par rapport à l'élément lui-même) — le tween ne se
   // déclenchait jamais. Un listener de scroll direct est plus simple et
   // fiable pour ce cas précis.
-  let parallaxTravel = 0
-
+  //
+  // La course est bornée par la marge disponible (marginY, cf. resize()) —
+  // jamais par la hauteur de page — donc jamais de bord vide exposé, quelle
+  // que soit la longueur du contenu.
   function updateParallax() {
-    if (reduceMotion || parallaxTravel <= 0) return
+    if (reduceMotion) return
     const maxScroll = mainEl.scrollHeight - mainEl.clientHeight
     const progress = maxScroll > 0 ? mainEl.scrollTop / maxScroll : 0
-    inner.style.transform = `translateY(${-progress * parallaxTravel}px)`
+    const travel = marginY * (1 - cfg.parallax)
+    inner.style.transform = `translateY(${-progress * travel}px)`
   }
 
   let parallaxTicking = false
@@ -127,16 +158,24 @@ export function initGradientBackground(canvasRoot) {
   })
 
   function resize() {
+    const viewportW = window.innerWidth
     const viewportH = window.innerHeight
-    W = window.innerWidth
 
-    const isMobile = W < MOBILE_BREAKPOINT
-    cfg.radius = isMobile ? BASE_CFG.radius * MOBILE_RADIUS_SCALE : BASE_CFG.radius
+    const isMobile = viewportW < MOBILE_BREAKPOINT
+    cfg.radius = isMobile ? BASE_CFG.radiusMobile ?? BASE_CFG.radius : BASE_CFG.radius
+    cfg.orbAlpha = isMobile ? BASE_CFG.orbAlphaMobile ?? BASE_CFG.orbAlpha : BASE_CFG.orbAlpha
     cfg.parallax = isMobile ? MOBILE_PARALLAX : BASE_CFG.parallax
+    cfg.orbCount = resolveOrbCount(isMobile)
 
-    const pageH = reduceMotion ? viewportH : Math.max(mainEl.scrollHeight, viewportH)
-    H = Math.round(viewportH + (pageH - viewportH) * cfg.parallax)
+    W = Math.round(viewportW * SURFACE_SCALE)
+    H = Math.round(viewportH * SURFACE_SCALE)
+    marginX = (W - viewportW) / 2
+    marginY = (H - viewportH) / 2
+
+    inner.style.width = `${W}px`
     inner.style.height = `${H}px`
+    inner.style.left = `${-marginX}px`
+    inner.style.top = `${-marginY}px`
 
     if (orbRenderer) {
       canvas.width = Math.round(W * WEBGL_RESOLUTION_SCALE)
@@ -147,7 +186,6 @@ export function initGradientBackground(canvasRoot) {
     }
     applyStaticFallback()
 
-    parallaxTravel = H - viewportH
     updateParallax()
   }
 

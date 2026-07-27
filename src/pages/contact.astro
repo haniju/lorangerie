@@ -44,27 +44,30 @@ const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComp
         <div class="contact__bloc">
           <h2 class="titre-paragraphe">{titre}</h2>
           <p class="bloc-simple">{message_temporaire}</p>
-          <p class="bloc-simple contact__email-row">
-            <a href={`mailto:${email}`}>{email}</a>
+          <div class="bloc-simple contact__email-row">
+            <a class="btn--lien" href={`mailto:${email}`}>{email}</a>
             <button
               type="button"
-              class="contact__copy"
+              class="btn--lien contact__copy"
               data-copy-email={email}
-              aria-label="Copier l'adresse email"
             >
               <Copier class="contact__copy-icon" aria-hidden="true" />
             </button>
-          </p>
-          <p class="bloc-simple">
-            <a href={`tel:${telephone.replace(/\s/g, '')}`}>{telephone}</a>
-          </p>
+          </div>
+
+          <div class="bloc-simple">
+            <a class="btn--lien" href={`tel:${telephone.replace(/\s/g, '')}`}>{telephone}</a>
+          </div>
         </div>
 
         <div class="contact__bloc">
           <h2 class="titre-paragraphe">{titre_trouver}</h2>
-          <address class="contact__adresse">
-            <a href={mapsUrl} target="_blank" rel="noopener noreferrer">{adresse}</a>
-          </address>
+          <div class="bloc-simple contact__email-row">  
+            <address class="contact__adresse">
+              {adresse}
+            </address>
+            <a class="btn--lien" href={mapsUrl} target="_blank" rel="noopener noreferrer">Ouvrir dans maps</a>
+          </div>
           <p class="bloc-simple">{horaires}</p>
 
           <div id="contact-map" class="contact__map" role="img" aria-label="Carte de localisation de L'Orangerie"></div>
@@ -111,8 +114,9 @@ const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComp
 
 <script>
   const copyBtn = document.querySelector<HTMLButtonElement>('.contact__copy')
-  if (copyBtn) {
-    const defaultLabel = copyBtn.getAttribute('aria-label') ?? "Copier l'adresse email"
+  const copyLabel = copyBtn?.querySelector<HTMLElement>('.contact__copy-label')
+  if (copyBtn && copyLabel) {
+    const defaultLabel = copyLabel.textContent ?? "Copier l'adresse"
 
     copyBtn.addEventListener('click', async () => {
       const emailAddr = copyBtn.dataset.copyEmail
@@ -120,11 +124,9 @@ const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComp
 
       try {
         await navigator.clipboard.writeText(emailAddr)
-        copyBtn.classList.add('is-copied')
-        copyBtn.setAttribute('aria-label', 'Adresse copiée')
+        copyLabel.textContent = 'Adresse copiée'
         setTimeout(() => {
-          copyBtn.classList.remove('is-copied')
-          copyBtn.setAttribute('aria-label', defaultLabel)
+          copyLabel.textContent = defaultLabel
         }, 2000)
       } catch {
         // Presse-papiers indisponible (permissions/contexte non sécurisé) : rien à faire,

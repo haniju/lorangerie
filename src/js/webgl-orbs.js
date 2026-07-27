@@ -20,7 +20,7 @@ void main() {
 }
 `
 
-const ORB_COUNT = 14
+export const ORB_COUNT = 14
 
 // t (en secondes) wrappe à cette cadence pour rester dans une plage sûre
 // pour la précision mediump des sin/cos côté shader (cf.

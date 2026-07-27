@@ -8,7 +8,6 @@ const links = [
   { label: "Découvrir l'Orangerie", href: '/' },
   { label: 'F.A.Q.', href: '/faq' },
   { label: 'Nous contacter', href: '/contact' },
-  { label: 'Design System', href: '/design-system' },
 ]
 // normalise le slash final (Astro sert /faq/, /design-system/…) pour l'état actif
 const stripSlash = (p: string) => (p !== '/' ? p.replace(/\/$/, '') : p)

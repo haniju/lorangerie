@@ -109,10 +109,10 @@
     "titre": "Nous contacter",
     "message_temporaire": "En attendant que notre formulaire de contact soit finalisé, contactez-nous directement :",
     "email": "contact@pulpe.fr",
-    "horaires": "Lun–Ven, 9h–18h",
-    "adresse": "9/13 faubourg Sainte-Anne, 56140 Malestroit",
     "telephone": "+33 7 66 60 94 61",
-    "titre_trouver": "Sinon venez nous voir !"
+    "titre_trouver": "Sinon venez nous voir !",
+    "adresse": "9/13 faubourg Sainte-Anne, 56140 Malestroit",
+    "horaires": "Ouvert du Lundi au Samedi, de 9h à 18h"
   },
   "footer": {
     "description": "L'espace de coworking écologique et chaleureux conçu par PULPE à Malestroit Morbihan.",
@@ -123,7 +123,8 @@
     "titreplan2": "AUTRES PAGES",
     "bouton6": "Contactez-nous",
     "bouton7": "Foire Aux Questions (F.A.Q.)",
-    "facebook": "https://facebook.com",
+    "bouton8": "Design System",
+    "facebook": "https://www.facebook.com/pulpe.bzh/",
     "linkedin": "https://linkedin.com"
   }
 }
